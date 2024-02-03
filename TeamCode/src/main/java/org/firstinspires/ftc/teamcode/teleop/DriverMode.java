@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -80,6 +81,8 @@ public class DriverMode extends OpMode {
         rightSlides.setMode(STOP_AND_RESET_ENCODER);
         //set direction
         leftSlides.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        rightSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //MOTORS
         //SENSORS
         pixel1 = hardwareMap.get(RevTouchSensor.class,"pixel1");
@@ -140,13 +143,15 @@ public class DriverMode extends OpMode {
             }
             else if(gamepad1.dpad_right){
                 climb.setPower(1);
-                leftSlides.setPower(0.9);
-                rightSlides.setPower(0.9);
+                leftSlides.setPower(0.5);
+                rightSlides.setPower(0.5);
             }
             else if(gamepad1.dpad_left){
                 climb.setPower(-1);
-                // leftSlides.setPower(-1);
-                // rightSlides.setPower(-1);
+                if (Pos > 1000) {
+                    leftSlides.setPower(-1);
+                    rightSlides.setPower(-1);
+                }
             }
             else{
                 climb.setPower(0);
