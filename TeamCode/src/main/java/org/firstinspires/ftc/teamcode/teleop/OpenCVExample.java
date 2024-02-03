@@ -34,6 +34,8 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
+import java.util.Arrays;
+
 /*
  * This sample demonstrates how to run analysis during INIT
  * and then snapshot that value for later use when the START
@@ -120,9 +122,9 @@ public class OpenCVExample extends LinearOpMode
             leftavgfin = leftavg.val[0];
             middleavgfin = middleavg.val[0];
             rightavgfin = rightavg.val[0];
-            telemetry.addData("leftavgfin ", leftavgfin);
-            telemetry.addData("middleavgfin ", middleavgfin);
-            telemetry.addData("rightavgfin ", rightavgfin);
+            telemetry.addData("leftavgfin ", Arrays.toString(leftavg.val));
+            telemetry.addData("middleavgfin ", Arrays.toString(middleavg.val));
+            telemetry.addData("rightavgfin ", Arrays.toString(rightavg.val));
             telemetry.update();
             return output;
         }

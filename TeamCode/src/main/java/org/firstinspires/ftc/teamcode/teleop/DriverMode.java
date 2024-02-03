@@ -81,8 +81,8 @@ public class DriverMode extends OpMode {
         rightSlides.setMode(STOP_AND_RESET_ENCODER);
         //set direction
         leftSlides.setDirection(DcMotorSimple.Direction.REVERSE);
-        leftSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //leftSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //rightSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         //MOTORS
         //SENSORS
         pixel1 = hardwareMap.get(RevTouchSensor.class,"pixel1");
@@ -143,8 +143,8 @@ public class DriverMode extends OpMode {
             }
             else if(gamepad1.dpad_right){
                 climb.setPower(1);
-                leftSlides.setPower(0.5);
-                rightSlides.setPower(0.5);
+                leftSlides.setPower(0.8);
+                rightSlides.setPower(0.8);
             }
             else if(gamepad1.dpad_left){
                 climb.setPower(-1);
