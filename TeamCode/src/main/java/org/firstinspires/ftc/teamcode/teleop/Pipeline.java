@@ -18,22 +18,20 @@ public class Pipeline extends OpenCvPipeline {
 
     //Telemetry telemetry;
 
-    static int color_zone = 1;
+    static Zone color_zone = Zone.MIDDLE;
 
     int toggleShow = 1;
 
     Mat original;
 
-    Mat zone1;
-    Mat zone2;
+    Mat zoneLeft,zoneMiddle,zoneRight; //Set 3 color zones
 
-    Scalar avgColor1;
-    Scalar avgColor2;
+    Scalar avgColorLeft,avgColorMiddle,avgColorRight;
 
-    double distance1 = 1;
-    double distance2 = 1;
-
-    double max_distance = 0;
+    double distanceLeft = 1;
+    double distanceMiddle = 1;
+    double distanceRight = 1;
+    double min_distance = 0;
 
 
     @Override
@@ -46,42 +44,48 @@ public class Pipeline extends OpenCvPipeline {
 
         //Defining Zones
         //Rect(top left x, top left y, bottom right x, bottom right y)
-        zone1 = input.submat(new Rect(60, 170, 356, 285));
-        zone2 = input.submat(new Rect(735, 170, 253, 230));
+        Rect leftRect = new Rect(1, 179, 213, 300);
+        Rect middleRect = new Rect(213, 179, 213, 300);
+        Rect rightRect = new Rect(426, 179, 213, 300);
+
+        zoneLeft = input.submat(leftRect);
+        zoneMiddle = input.submat(middleRect);
+        zoneRight = input.submat(rightRect);
 
         //Averaging the colors in the zones
-        avgColor1 = Core.mean(zone1);
-        avgColor2 = Core.mean(zone2);
+        avgColorLeft = Core.mean(zoneLeft);
+        avgColorMiddle = Core.mean(zoneMiddle);
+        avgColorRight = Core.mean(zoneRight);
 
         //Putting averaged colors on zones (we can see on camera now)
-        zone1.setTo(avgColor1);
-        zone2.setTo(avgColor2);
+        zoneLeft.setTo(avgColorLeft);
+        zoneMiddle.setTo(avgColorMiddle);
+        zoneRight.setTo(avgColorRight);
 
-        distance1 = color_distance(avgColor1, ELEMENT_COLOR);
-        distance2 = color_distance(avgColor2, ELEMENT_COLOR);
+        distanceLeft = color_distance(avgColorLeft, ELEMENT_COLOR);
+        distanceMiddle = color_distance(avgColorMiddle, ELEMENT_COLOR);
+        distanceRight = color_distance(avgColorRight, ELEMENT_COLOR);
 
-        if ((distance1 > 195) && (distance2 > 190)){
-            color_zone = 3;
-            max_distance = -1;
+        min_distance = Math.min(Math.min(distanceLeft,distanceMiddle),distanceRight)
+
+
+        if(min_distance == distanceLeft){
+            color_zone=Zone.LEFT;
+        }else if(min_distance == distanceMiddle){
+            color_zone = Zone.MIDDLE;
+        }else if(min_distance == distanceRight){
+            color_zone = Zone.RIGHT;
         }else{
-            max_distance = Math.min(distance1, distance2);
-
-            if (max_distance == distance1) {
-                telemetry.addData("Zone 1 Has Element", distance1);
-                color_zone = 1;
-
-            }else{
-                telemetry.addData("Zone 2 Has Element", distance2);
-                color_zone = 2;
-            }
+            color_zone = Zone.NONE;
         }
 
-        // Allowing for the showing of the averages on the stream
-        if (toggleShow == 1){
-            return input;
-        }else{
-            return original;
-        }
+//
+//        // Allowing for the showing of the averages on the stream
+//        if (toggleShow == 1){
+//            return input;
+//        }else{
+//            return original;
+//        }
     }
 
     public double color_distance(Scalar color1, List color2){
@@ -104,12 +108,12 @@ public class Pipeline extends OpenCvPipeline {
         }
     }
 
-    public int get_element_zone(){
+    public Zone get_element_zone(){
         return color_zone;
     }
 
-    public double getMaxDistance(){
-        return max_distance;
+    public double getMinDistance(){
+        return min_distance;
     }
 
     public void toggleAverageZonePipe(){

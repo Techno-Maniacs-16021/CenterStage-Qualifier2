@@ -216,8 +216,9 @@ public class BPixelFar extends LinearOpMode {
             Actions.runBlocking(drive.actionBuilder(new Pose2d(51,-36, Math.PI))
                     .strafeTo((new Vector2d(60,-12)))
                     .build());
+            requestOpModeStop();
         }
-        requestOpModeStop();
+
     }
 
     public static int getError(int current, double target){
