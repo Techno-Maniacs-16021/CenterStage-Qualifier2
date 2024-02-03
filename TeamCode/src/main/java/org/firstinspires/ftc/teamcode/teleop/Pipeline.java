@@ -14,7 +14,7 @@ import java.util.List;
 
 public class Pipeline extends OpenCvPipeline {
 
-    List<Integer> ELEMENT_COLOR = Arrays.asList(255, 0, 0); //(red, green, blue)
+    List<Integer> ELEMENT_COLOR = Arrays.asList(255, 0, 0); //(red, green, blue), Set to red alliance at first
 
     //Telemetry telemetry;
 
@@ -66,7 +66,7 @@ public class Pipeline extends OpenCvPipeline {
         distanceMiddle = color_distance(avgColorMiddle, ELEMENT_COLOR);
         distanceRight = color_distance(avgColorRight, ELEMENT_COLOR);
 
-        min_distance = Math.min(Math.min(distanceLeft,distanceMiddle),distanceRight)
+        min_distance = Math.min(Math.min(distanceLeft,distanceMiddle),distanceRight);
 
 
         if(min_distance == distanceLeft){
@@ -79,13 +79,12 @@ public class Pipeline extends OpenCvPipeline {
             color_zone = Zone.NONE;
         }
 
-//
-//        // Allowing for the showing of the averages on the stream
-//        if (toggleShow == 1){
-//            return input;
-//        }else{
-//            return original;
-//        }
+        // Allowing for the showing of the averages on the stream
+        if (toggleShow == 1){
+            return input;
+        }else{
+            return original;
+        }
     }
 
     public double color_distance(Scalar color1, List color2){
@@ -99,7 +98,6 @@ public class Pipeline extends OpenCvPipeline {
 
         return Math.sqrt(Math.pow((r1 - r2), 2) + Math.pow((g1 - g2), 2) + Math.pow((b1 - b2), 2));
     }
-
     public void setAlliancePipe(String alliance){
         if (alliance.equals("red")){
             ELEMENT_COLOR = Arrays.asList(255, 0, 0);
@@ -107,17 +105,23 @@ public class Pipeline extends OpenCvPipeline {
             ELEMENT_COLOR = Arrays.asList(0, 0, 255);
         }
     }
-
-    public Zone get_element_zone(){
+    public Zone getElementZone(){
         return color_zone;
     }
-
     public double getMinDistance(){
         return min_distance;
     }
 
+    public double getDistanceLeft(){
+        return distanceLeft;
+    }
+    public double getDistanceMiddle(){
+        return distanceMiddle;
+    }
+    public double getDistanceRight() {
+        return distanceRight;
+    }
     public void toggleAverageZonePipe(){
         toggleShow = toggleShow * -1;
     }
-
 }

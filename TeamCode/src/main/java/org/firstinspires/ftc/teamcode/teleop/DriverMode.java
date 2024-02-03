@@ -259,7 +259,7 @@ public class DriverMode extends OpMode {
             clawGrip.setPosition(0.5);
             clawAngle.setPosition(ANGLE);
             clawArm.setPosition(ARM+0.1);
-            if(getArmAngle<50&&getTiltAngle>310){
+            if(getArmAngle<75/*&&getTiltAngle>280*/){
                 Target=0;
                 telemetry.addLine("0");
                 outtaked=false;

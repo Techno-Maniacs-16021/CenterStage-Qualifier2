@@ -142,10 +142,10 @@ public class BPixelFar extends LinearOpMode {
         while (opModeIsActive() && !isStopRequested()) {
             int randomization = 2;
             if(getXPosition()>400){
-                randomization = 3;
+                randomization = 1;
             }
             else if(getXPosition()<200){
-                randomization = 1;
+                randomization = 3;
             }
             visionPortal.stopStreaming();
             clawArm.setPosition(0.825);
@@ -162,7 +162,7 @@ public class BPixelFar extends LinearOpMode {
             else if(randomization==2){
                 telemetry.addLine("middle");
                 telemetry.update();
-                Actions.runBlocking(drive.actionBuilder(new Pose2d(-36,-64, Math.PI / 2))
+                Actions.runBlocking(drive.actionBuilder(new Pose2d(-36,64, Math.PI / 2))
                         .strafeTo(new Vector2d(-46,40))
                         .turn(Math.PI/2)
                         .strafeTo(new Vector2d(-50,24))
@@ -171,7 +171,7 @@ public class BPixelFar extends LinearOpMode {
             else{
                 telemetry.addLine("left");
                 telemetry.update();
-                Actions.runBlocking(drive.actionBuilder(new Pose2d(-36,-64, Math.PI / 2))
+                Actions.runBlocking(drive.actionBuilder(new Pose2d(-36,64, Math.PI / 2))
                         .strafeTo(new Vector2d(-58,40))
                         .turn(Math.PI/2)
                         .strafeTo(new Vector2d(-58,33))
