@@ -36,6 +36,8 @@ import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.Arrays;
 
+import javax.swing.text.ZoneView;
+
 /*
  * This sample demonstrates how to run analysis during INIT
  * and then snapshot that value for later use when the START
@@ -80,7 +82,18 @@ public class TestingColorDetection extends LinearOpMode
         while (!isStarted() && !isStopRequested())
         {
             Zone currentZone = pipeline.getElementZone();
-
+            if(currentZone == Zone.LEFT){
+                telemetry.addLine("Left Detected");
+            }else if (currentZone == Zone.MIDDLE){
+                telemetry.addLine("Left Detected");
+            }else if (currentZone == Zone.RIGHT){
+                telemetry.addLine("Right Detected");
+            }else{
+                telemetry.addLine("Nothing Detected :(");
+            }
+            telemetry.addLine("Left distance", pipeline.getDistanceLeft());
+            telemetry.addLine("Middle distance", pipeline.getDistanceMiddle());
+            telemetry.addLine("Right distance", pipeline.getDistanceRight());
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);
         }
