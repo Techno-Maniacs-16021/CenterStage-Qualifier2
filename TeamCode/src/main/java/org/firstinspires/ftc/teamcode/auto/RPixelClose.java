@@ -158,7 +158,6 @@ public class RPixelClose extends LinearOpMode {
                         .strafeTo(new Vector2d(14,-40))
                         .turn(-Math.PI/2)
                         .strafeTo(new Vector2d(14,-33))
-                        .strafeTo(new Vector2d(14, -48))
                         .build());
             }
             else if(randomization==2){
@@ -185,11 +184,11 @@ public class RPixelClose extends LinearOpMode {
             clawAngle.setPosition(0);
             clawArm.setPosition(0.3);
             sleep(2000);
-            Actions.runBlocking(drive.actionBuilder(new Pose2d(14,-48, Math.PI))
+            Actions.runBlocking(drive.actionBuilder(new Pose2d(14,-52, Math.PI))
                     .strafeTo(new Vector2d(48,-48))
                     .build());
             if(randomization==1){
-                Actions.runBlocking(drive.actionBuilder(new Pose2d(48,-48,  Math.PI))
+                Actions.runBlocking(drive.actionBuilder(new Pose2d(48,-52,  Math.PI))
                         .strafeTo((new Vector2d(52,-43)))
                         .build());
             }
@@ -218,17 +217,8 @@ public class RPixelClose extends LinearOpMode {
             Actions.runBlocking(drive.actionBuilder(new Pose2d(51,-36, Math.PI))
                     .strafeTo((new Vector2d(60,-60)))
                     .build());
+            requestOpModeStop();
         }
-        requestOpModeStop();
-    }
-
-    public static int getError(int current, double target){
-        int error = Math.abs((int)target-current);
-        return error;
-    }
-
-    public boolean setPositionOfSlides(double Target){
-        return getError((rightSlides.getCurrentPosition()), Target) >= ALLOWED_ERROR && opModeIsActive();
     }
     private void initTfod() {
 
@@ -328,10 +318,6 @@ public class RPixelClose extends LinearOpMode {
             }
         }
         return output;
-    }
-
-    private void releaseOnePixel(){
-
     }
 
 }

@@ -216,8 +216,8 @@ public class RPixelFar extends LinearOpMode {
             Actions.runBlocking(drive.actionBuilder(new Pose2d(51,-36, Math.PI))
                     .strafeTo((new Vector2d(60,-12)))
                     .build());
+            requestOpModeStop();
         }
-        requestOpModeStop();
     }
 
     public static int getError(int current, double target){
@@ -256,6 +256,7 @@ public class RPixelFar extends LinearOpMode {
         } else {
             builder.setCamera(BuiltinCameraDirection.BACK);
         }
+
 
         // Choose a camera resolution. Not all cameras support all resolutions.
         //builder.setCameraResolution(new Size(640, 480));
@@ -300,31 +301,27 @@ public class RPixelFar extends LinearOpMode {
     private float getXPosition(){
         List<Recognition> currentRecognitions = tfod.getRecognitions();
         telemetry.addData("# Objects Detected", currentRecognitions.size());
-        telemetry.update();
         float output = 0;
         float minWidth = Float.MAX_VALUE;
         if(currentRecognitions.size() == 0) {
             telemetry.addLine("Hail Mary, Full of grace");
-            telemetry.update();
         }
         else if(currentRecognitions.size() == 1) {
             telemetry.addData("Rec x: ", currentRecognitions.get(0).getLeft());
             telemetry.addData("Rec width: ", currentRecognitions.get(0).getWidth());
-            telemetry.update();
             output = currentRecognitions.get(0).getLeft();
         }else{
             telemetry.addLine("hm...");
-            telemetry.update();
             for(Recognition r : currentRecognitions){
                 telemetry.addData("Rec x: ", r.getLeft());
                 telemetry.addData("Rec width: ", r.getWidth());
-                telemetry.update();
                 if(r.getWidth() < minWidth){
                     minWidth = r.getWidth();
                     output = r.getLeft();
                 }
             }
         }
+        telemetry.update();
         return output;
     }
 

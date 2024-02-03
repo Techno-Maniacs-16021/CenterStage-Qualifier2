@@ -33,8 +33,9 @@ public class DriverMode extends OpMode {
     DcMotorEx leftSlides,rightSlides,intake,climb;
     AnalogInput clawAnglePosition,clawPusherPosition,clawArmPosition,clawGripPosition;
     RevColorSensorV3 pixelDetector;
-    RevBlinkinLedDriver blinkinLedDriver;
-    RevBlinkinLedDriver.BlinkinPattern pattern;
+    RevBlinkinLedDriver blinkinLedDriverLeft;
+    RevBlinkinLedDriver blinkinLedDriverRight;
+    RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
     RevTouchSensor pixel1,pixel2;
     /////////////////////////////////////////////
     private ElapsedTime loopTime = new ElapsedTime();
@@ -44,6 +45,7 @@ public class DriverMode extends OpMode {
     boolean intaking,intaked,locked, outtaked,actionInit,PIDEnabled;
     public static int INTAKE_OFFSET,INTIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR;
     public static double ARM,ANGLE;
+
     //700 is minimum
     @Override
     public void init(){
@@ -87,6 +89,8 @@ public class DriverMode extends OpMode {
         clawPusherPosition = hardwareMap.get(AnalogInput.class,"claw_pusher_position");
         clawGripPosition = hardwareMap.get(AnalogInput.class,"claw_grip_position");
         //SENSORS
+        blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
+        blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         ////////////////////////PID CONTROLLERS//////////////
         Controller = new PIDController(p,i,d);
 ////////////////////////DASHBOARD TELEMETRY//////////
@@ -100,6 +104,8 @@ public class DriverMode extends OpMode {
         INTIAL_OFFSET = 800;PIXEL_LAYER= 300;ALLOWED_ERROR=50;INTAKE_OFFSET=300;ARM=0.05;ANGLE=0.03;intaking=false;
         intaked = false; outtaked = false; actionInit = false;locked=false;PIDEnabled=true;
         hookRelease.setPosition(1);
+
+
     }
     @Override
     public void init_loop(){
@@ -160,7 +166,34 @@ public class DriverMode extends OpMode {
         }
         if(gamepad1.a)actionInit=true;
 
+        if (gamepad2.circle) {
+            pattern = RevBlinkinLedDriver.BlinkinPattern.YELLOW;
+        }
+        else if (gamepad2.square) {
+            pattern = RevBlinkinLedDriver.BlinkinPattern.GREEN;
+        }
+        else if (gamepad2.triangle) {
+            pattern = RevBlinkinLedDriver.BlinkinPattern.VIOLET;
+        }
+        else if (gamepad2.cross) {
+            pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
+        }
+        else if (gamepad2.dpad_up) {
+            pattern = RevBlinkinLedDriver.BlinkinPattern.BLUE;
+        }
+        else if (gamepad2.dpad_down) {
+            pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
+        }
+        blinkinLedDriverRight.setPattern(pattern);
+        blinkinLedDriverLeft.setPattern(pattern);
+
         if(gamepad1.right_trigger!=0){
+            if(pixels == 0){
+                blinkinLedDriverRight.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+                blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+            }else if(pixels == 1){
+                blinkinLedDriverLeft.setPattern(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+            }
             clawGrip.setPosition(0.5);
             clawAngle.setPosition(ANGLE);
             clawArm.setPosition(ARM);
@@ -242,8 +275,11 @@ public class DriverMode extends OpMode {
                 -gamepad1.right_stick_x
         ));
 
+
+
         drive.updatePoseEstimate();
-        if(gamepad2.start)drone.setPosition(1);
+        if(gamepad2.touchpad)drone.setPosition(1);
+        else if(gamepad2.start)drone.setPosition(0);
         telemetry.addData("pixels in intake: ", pixels);
         telemetry.addData("arm: ",getArmAngle);//switch with pusher
         telemetry.addData("angle: ",getTiltAngle);//switch with arm
