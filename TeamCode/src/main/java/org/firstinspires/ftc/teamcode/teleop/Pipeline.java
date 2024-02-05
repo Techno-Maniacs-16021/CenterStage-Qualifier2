@@ -16,15 +16,11 @@ public class Pipeline extends OpenCvPipeline {
 
     List<Integer> ELEMENT_COLOR = Arrays.asList(255, 0, 0); //(red, green, blue), Set to red alliance at first
 
-    //Telemetry telemetry;
+    Telemetry telemetry;
 
     static Zone color_zone = Zone.MIDDLE;
 
     int toggleShow = 1;
-
-    Mat original;
-
-    Mat zoneLeft,zoneMiddle,zoneRight; //Set 3 color zones
 
     Scalar avgColorLeft,avgColorMiddle,avgColorRight;
 
@@ -36,31 +32,22 @@ public class Pipeline extends OpenCvPipeline {
 
     @Override
     public Mat processFrame(Mat input) {
-
-        //Creating duplicate of original frame with no edits
-        original = input.clone();
-
-        //input = input.submat(new Rect(0));
-
+        telemetry.addLine("pipeline running");
         //Defining Zones
         //Rect(top left x, top left y, bottom right x, bottom right y)
         Rect leftRect = new Rect(1, 179, 213, 300);
         Rect middleRect = new Rect(213, 179, 213, 300);
         Rect rightRect = new Rect(426, 179, 213, 300);
 
-        zoneLeft = input.submat(leftRect);
-        zoneMiddle = input.submat(middleRect);
-        zoneRight = input.submat(rightRect);
-
         //Averaging the colors in the zones
-        avgColorLeft = Core.mean(zoneLeft);
-        avgColorMiddle = Core.mean(zoneMiddle);
-        avgColorRight = Core.mean(zoneRight);
+        avgColorLeft = Core.mean(input.submat(leftRect));
+        avgColorMiddle = Core.mean(input.submat(middleRect));
+        avgColorRight = Core.mean(input.submat(rightRect));
 
         //Putting averaged colors on zones (we can see on camera now)
-        zoneLeft.setTo(avgColorLeft);
-        zoneMiddle.setTo(avgColorMiddle);
-        zoneRight.setTo(avgColorRight);
+        input.submat(leftRect).setTo(avgColorLeft);
+        input.submat(middleRect).setTo(avgColorMiddle);
+        input.submat(rightRect).setTo(avgColorRight);
 
         distanceLeft = color_distance(avgColorLeft, ELEMENT_COLOR);
         distanceMiddle = color_distance(avgColorMiddle, ELEMENT_COLOR);
@@ -71,20 +58,24 @@ public class Pipeline extends OpenCvPipeline {
 
         if(min_distance == distanceLeft){
             color_zone=Zone.LEFT;
+            telemetry.addLine("Left Detected");
         }else if(min_distance == distanceMiddle){
             color_zone = Zone.MIDDLE;
+            telemetry.addLine("Middle Detected");
         }else if(min_distance == distanceRight){
             color_zone = Zone.RIGHT;
+            telemetry.addLine("Right Detected");
         }else{
             color_zone = Zone.NONE;
+            telemetry.addLine("None Detected");
         }
-
+        telemetry.addData("Left distance", distanceLeft);
+        telemetry.addData("Middle distance", distanceMiddle);
+        telemetry.addData("Right distance", distanceRight);
         // Allowing for the showing of the averages on the stream
-        if (toggleShow == 1){
-            return input;
-        }else{
-            return original;
-        }
+
+    return input;
+
     }
 
     public double color_distance(Scalar color1, List color2){
