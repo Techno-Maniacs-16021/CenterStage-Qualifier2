@@ -68,12 +68,12 @@ public class NewColorDetection extends LinearOpMode
 
         while (!isStarted() && !isStopRequested()) {
 
-            sleep(50);
+            sleep(250);
         }
         while (opModeIsActive())
         {
             // Don't burn CPU cycles busy-looping in this sample
-            sleep(50);
+            sleep(1000);
         }
     }
     public class Pipeline extends OpenCvPipeline {
@@ -83,13 +83,13 @@ public class NewColorDetection extends LinearOpMode
         Rect size = new Rect();
         int midx;
         List<Integer> ELEMENT_COLOR = Arrays.asList(0, 0, 0); //(Hue, Sateration, Value), Set to blue alliance at first
-        Mat gaus_img = new Mat();
         Mat org = new Mat();
         Mat mask0 = new Mat();
         Mat mask1 = new Mat();
         Mat mask = new Mat();
         Mat edge = new Mat();
         Mat max = new Mat();
+        Mat hier = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
         List<MatOfPoint> max_list = new ArrayList<>();
         Scalar lower_1 = new Scalar(0.0, 50.0, 0.0);
@@ -99,41 +99,53 @@ public class NewColorDetection extends LinearOpMode
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
+            contours.clear();
+            max.empty();
             org = input;
-            Imgproc.GaussianBlur(input,gaus_img, new Size(101,101),0);
-            Imgproc.cvtColor(gaus_img,gaus_img,Imgproc.COLOR_RGB2HSV);
-            Core.inRange(gaus_img,lower_1,upper_1,mask0);
-            Core.inRange(gaus_img,lower_2,upper_2,mask1);
+            Imgproc.GaussianBlur(input,input, new Size(101,101),0);
+            Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
+            Core.inRange(input,lower_1,upper_1,mask0);
+            Core.inRange(input,lower_2,upper_2,mask1);
             Core.add(mask0,mask1,mask);
+            input.setTo(new Scalar(255,255,255),mask);
             Core.bitwise_not(mask,mask);
-            gaus_img.setTo(new Scalar(0,0,0),mask);
-            Imgproc.Canny(gaus_img,edge,30,70);
-            Imgproc.findContours(edge, contours,new Mat(),Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_NONE);
+            input.setTo(new Scalar(0,0,0),mask);
+            Imgproc.GaussianBlur(input,input, new Size(101,101),0);
+            Imgproc.threshold(input,input,100,255,Imgproc.THRESH_BINARY);
+            Imgproc.Canny(input,edge,30,70);
+            Imgproc.findContours(edge, contours,hier,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_NONE);
+
             Imgproc.drawContours(org,contours,-1,new Scalar(0,255,0),3);
-//            for (int i = 0; i < contours.size(); i++){
-//                if(contours.size()>0 && (max.empty() || Imgproc.contourArea(contours.get(i))>Imgproc.contourArea(max))){
-//                    max = contours.get(i);
-//                    if(contours.size()>0){
-//                        max_list.set(0,contours.get(i));
-//                    }
-//                    max_list.add(contours.get(i));
-//                }
-//            }
-//            size = Imgproc.boundingRect(max);
-//            midx = size.x+size.width/2;
-//            if(midx<input.size().width/3){
-//                color_zone = Zone.LEFT;
-//                telemetry.addLine("Left detected");
-//            }else if (midx>input.size().width*2/3){
-//                color_zone = Zone.RIGHT;
-//                telemetry.addLine("Right detected");
-//            }else{
-//                color_zone = Zone.MIDDLE;
-//                telemetry.addLine("Middle detected");
-//            }
+            if(contours.size()>0){
+                max = contours.get(0);
+                for (int i = 0; i < contours.size(); i++){
+                    if(Imgproc.contourArea(contours.get(i)) > Imgproc.contourArea(max)){
+                        max = contours.get(i);
+                        max_list.clear();
+                        max_list.add(contours.get(i));
+
+                    }
+                }
+            }
+
+
+            Imgproc.drawContours(org,max_list,-1,new Scalar(255,0,0),3);
+            size = Imgproc.boundingRect(max);
+            midx = size.x+size.width/2;
+            if(midx<input.size().width/3){
+                color_zone = Zone.LEFT;
+                telemetry.addLine("Left detected");
+            }else if (midx>input.size().width*2/3){
+                color_zone = Zone.RIGHT;
+                telemetry.addLine("Right detected");
+            }else{
+                color_zone = Zone.MIDDLE;
+                telemetry.addLine("Middle detected");
+            }
 //            if(max_list.size()!=0){
-//                Imgproc.drawContours(org,max_list,0,new Scalar(0,255,0),3);
+//                Imgproc.drawContours(org,max_list,-1,new Scalar(0,255,0),3);
 //            }
+            telemetry.addData("X pos",midx);
             telemetry.update();
             return input;
         }

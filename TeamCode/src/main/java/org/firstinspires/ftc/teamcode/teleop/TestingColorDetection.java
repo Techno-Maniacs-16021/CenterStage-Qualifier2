@@ -75,7 +75,6 @@
             int toggleShow = 1;
             Mat HSV = new Mat();
             Scalar avgColorLeft,avgColorMiddle,avgColorRight;
-
             double distanceLeft = 1;
             double distanceMiddle = 1;
             double distanceRight = 1;
@@ -106,9 +105,8 @@
                 Imgproc.rectangle(input, middleRect, new Scalar(255.0, 0.0, 0.0), 2);
                 Imgproc.rectangle(input, rightRect, new Scalar(255.0, 0.0, 0.0), 2);
                 distanceLeft = color_distance(avgColorLeft, ELEMENT_COLOR);
-                distanceMiddle = color_distance(avgColorMiddle, ELEMENT_COLOR);
+                distanceMiddle = color_distance(avgColorMiddle, ELEMENT_COLOR)*0.96;
                 distanceRight = color_distance(avgColorRight, ELEMENT_COLOR);
-
                 min_distance = Math.min(Math.min(distanceLeft,distanceMiddle),distanceRight);
 
 
