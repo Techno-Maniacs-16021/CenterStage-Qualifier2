@@ -107,9 +107,9 @@ public class OpenCVExample extends LinearOpMode
             Rect middleRect = new Rect(213, 179, 213, 300);
             Rect rightRect = new Rect(426, 179, 213, 300);
             input.copyTo(output);
-            Imgproc.rectangle(output, leftRect, rectColor, 2);
-            Imgproc.rectangle(output, middleRect, rectColor, 2);
-            Imgproc.rectangle(output, rightRect, rectColor, 2);
+//            Imgproc.rectangle(output, leftRect, rectColor, 2);
+//            Imgproc.rectangle(output, middleRect, rectColor, 2);
+//            Imgproc.rectangle(output, rightRect, rectColor, 2);
             leftCrop = YCbCr.submat(leftRect);
             middleCrop = YCbCr.submat(middleRect);
             rightCrop = YCbCr.submat(rightRect);

@@ -29,6 +29,7 @@
 
 package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
@@ -56,6 +57,9 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     /**
      * The variable to store our instance of the TensorFlow Object Detection processor.
      */
+    RevBlinkinLedDriver blinkinLedDriverLeft;
+    RevBlinkinLedDriver blinkinLedDriverRight;
+    RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
     private TfodProcessor tfod;
 
     /**
@@ -68,7 +72,10 @@ public class ConceptTensorFlowObjectDetection extends LinearOpMode {
     };
     @Override
     public void runOpMode() {
-
+        blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
+        blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
+        blinkinLedDriverRight.setPattern(pattern);
+        blinkinLedDriverLeft.setPattern(pattern);
         initTfod();
 
         // Wait for the DS start button to be touched.
