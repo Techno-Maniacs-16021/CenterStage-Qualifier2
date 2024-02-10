@@ -25,7 +25,7 @@ public class MeepMeepTesting {
                 .setColorScheme(new ColorSchemeRedDark())
                 .build();
 
-        redCloseMain(meepMeep, myBot);
+        redFarMain(meepMeep, myBot);
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_CENTERSTAGE_JUICE_DARK)
                 .setDarkMode(true)
@@ -36,7 +36,7 @@ public class MeepMeepTesting {
     public static void redCloseMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
         String detection = "left";
         Action start = myBot.getCurrentAction();
-        Action detect = myBot.getCurrentAction();
+        Action plusZero = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();
         if (detection.equals("right")) {
             start = myBot.getDrive().actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
@@ -44,7 +44,7 @@ public class MeepMeepTesting {
                     .splineToSplineHeading(new Pose2d(34,-32,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            detect = myBot.getDrive().actionBuilder(new Pose2d(34, -32, Math.toRadians(180)))
+            plusZero = myBot.getDrive().actionBuilder(new Pose2d(34, -32, Math.toRadians(180)))
                     .setTangent(Math.toRadians(-30))
                     .lineToX(50)
                     .waitSeconds(1) //drop yellow
@@ -60,7 +60,7 @@ public class MeepMeepTesting {
                     .splineToSplineHeading(new Pose2d(24,-24,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            detect = myBot.getDrive().actionBuilder(new Pose2d(24, -24, Math.toRadians(180)))
+            plusZero = myBot.getDrive().actionBuilder(new Pose2d(24, -24, Math.toRadians(180)))
                     .setTangent(Math.toRadians(0))
                     .splineToConstantHeading(new Vector2d(50,-36),Math.toRadians(0))
                     .waitSeconds(1) //drop yellow
@@ -76,7 +76,7 @@ public class MeepMeepTesting {
                     .splineToSplineHeading(new Pose2d(12,-30,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            detect = myBot.getDrive().actionBuilder(new Pose2d(12, -30, Math.toRadians(180)))
+            plusZero = myBot.getDrive().actionBuilder(new Pose2d(12, -30, Math.toRadians(180)))
                     .lineToX(50)
                     .waitSeconds(1) //drop yellow
                     .build();
@@ -85,14 +85,14 @@ public class MeepMeepTesting {
                     .lineToY(-58)
                     .build();
         }
-        myBot.runAction(new SequentialAction(start,detect,park));
+        myBot.runAction(new SequentialAction(start,plusZero,park));
 
     }
 
     public static void redFarMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
-        String detection = "right";
+        String detection = "left";
         Action start = myBot.getCurrentAction();
-        Action detect = myBot.getCurrentAction();
+        Action plusOne = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();
         if (detection.equals("right")) {
             start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
@@ -100,7 +100,7 @@ public class MeepMeepTesting {
                     .splineToSplineHeading(new Pose2d(-36,-30,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            detect = myBot.getDrive().actionBuilder(new Pose2d(-36, -30, Math.toRadians(180)))
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-36, -30, Math.toRadians(180)))
                     .setTangent(Math.toRadians(165))
                     .lineToX(-60)
                     .waitSeconds(1) //pick up white
@@ -120,7 +120,7 @@ public class MeepMeepTesting {
                     .splineToSplineHeading(new Pose2d(-48,-24,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            detect = myBot.getDrive().actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
                     .lineToX(-60)
                     .waitSeconds(1) //pick up white
                     .setTangent(Math.toRadians(45))
@@ -139,10 +139,10 @@ public class MeepMeepTesting {
                     .splineToSplineHeading(new Pose2d(-56,-40,Math.toRadians(180)),Math.toRadians(90))
                     .lineToY(-30)
                     .waitSeconds(1) //drop purple
+                    .build();
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-56, -30, Math.toRadians(180)))
                     .splineToConstantHeading(new Vector2d(-60,-24),Math.toRadians(90))
                     .waitSeconds(1) //pick up white
-                    .build();
-            detect = myBot.getDrive().actionBuilder(new Pose2d(-60, -24, Math.toRadians(180)))
                     .setTangent(Math.toRadians(50))
                     .splineToConstantHeading(new Vector2d(36,-12),Math.toRadians(0))
                     .splineToConstantHeading(new Vector2d(50,-30),Math.toRadians(270))
@@ -153,7 +153,7 @@ public class MeepMeepTesting {
                     .lineToY(-14)
                     .build();
         }
-        myBot.runAction(new SequentialAction(start,detect,park));
+        myBot.runAction(new SequentialAction(start,plusOne,park));
 
     }
 }
