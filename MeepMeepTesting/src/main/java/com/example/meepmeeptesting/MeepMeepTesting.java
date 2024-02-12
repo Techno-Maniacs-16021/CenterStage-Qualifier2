@@ -90,10 +90,11 @@ public class MeepMeepTesting {
     }
 
     public static void redFarMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
-        String detection = "left";
+        String detection = "right";
         Action start = myBot.getCurrentAction();
         Action plusOne = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();
+        Action cycle = myBot.getCurrentAction();
         if (detection.equals("right")) {
             start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
@@ -112,6 +113,16 @@ public class MeepMeepTesting {
             park = myBot.getDrive().actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-14)
+                    .build();
+            cycle = myBot.getDrive().actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(36,-12),Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(-60,-23.5692193817),Math.toRadians(210))
+                    .waitSeconds(1) //pick up white
+                    .setTangent(Math.toRadians(30))
+                    .splineToConstantHeading(new Vector2d(36,-12),Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(50,-42),Math.toRadians(270))
+                    .waitSeconds(1) //drop white
                     .build();
         }
         else if (detection.equals("middle")) {
@@ -153,7 +164,226 @@ public class MeepMeepTesting {
                     .lineToY(-14)
                     .build();
         }
-        myBot.runAction(new SequentialAction(start,plusOne,park));
+        myBot.runAction(new SequentialAction(start,plusOne,cycle,park));
+
+    }
+
+    public static void redFarAlt(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
+        String detection = "right";
+        Action start = myBot.getCurrentAction();
+        Action plusOne = myBot.getCurrentAction();
+        Action park = myBot.getCurrentAction();
+        Action cycle = myBot.getCurrentAction();
+        if (detection.equals("right")) {
+            start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-36,-30,Math.toRadians(180)),Math.toRadians(90))
+                    .waitSeconds(1) //drop purple
+                    .build();
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-36, -30, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(193))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-42),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+            park = myBot.getDrive().actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-56)
+                    .build();
+            cycle = myBot.getDrive().actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
+                    .lineToX(-41.5841522885)
+                    .setTangent(Math.toRadians(127.5))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white pixel
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-42),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+        }
+        else if (detection.equals("middle")) {
+            start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-48,-24,Math.toRadians(180)),Math.toRadians(90))
+                    .waitSeconds(1) //drop purple
+                    .build();
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
+                    .splineToConstantHeading(new Vector2d(-60,-36),Math.toRadians(270))
+                    .waitSeconds(1) //pick up white
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-36),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+            park = myBot.getDrive().actionBuilder(new Pose2d(50,-36,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-56)
+                    .build();
+            cycle = myBot.getDrive().actionBuilder(new Pose2d(50,-36,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
+                    .lineToX(-41.5841522885)
+                    .setTangent(Math.toRadians(127.5))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white pixel
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-36),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+        }
+        else if (detection.equals("left")) {
+            start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-56,-40,Math.toRadians(180)),Math.toRadians(90))
+                    .lineToY(-30)
+                    .waitSeconds(1) //drop purple
+                    .build();
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-56, -30, Math.toRadians(180)))
+                    .splineToConstantHeading(new Vector2d(-60,-36),Math.toRadians(270))
+                    .waitSeconds(1) //pick up white
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-30),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+            park = myBot.getDrive().actionBuilder(new Pose2d(50,-30,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-56)
+                    .build();
+            cycle = myBot.getDrive().actionBuilder(new Pose2d(50,-30,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
+                    .lineToX(-41.5841522885)
+                    .setTangent(Math.toRadians(127.5))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white pixel
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-30),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+        }
+
+
+        myBot.runAction(new SequentialAction(start,plusOne,cycle,park));
+
+    }
+
+    public static void redCloseAlt(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
+        String detection = "left";
+        Action start = myBot.getCurrentAction();
+        Action plusZero = myBot.getCurrentAction();
+        Action park = myBot.getCurrentAction();
+        Action cycle = myBot.getCurrentAction();
+        if (detection.equals("right")) {
+            start = myBot.getDrive().actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+                    .setTangent(0)
+                    .splineToSplineHeading(new Pose2d(34,-32,Math.toRadians(180)),Math.toRadians(90))
+                    .waitSeconds(1) //drop purple
+                    .build();
+            plusZero = myBot.getDrive().actionBuilder(new Pose2d(34, -32, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(-30))
+                    .lineToX(50)
+                    .waitSeconds(1) //drop yellow
+                    .build();
+            park = myBot.getDrive().actionBuilder(new Pose2d(50,-32-(16/Math.sqrt(3)),Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-58)
+                    .build();
+            cycle = myBot.getDrive().actionBuilder(new Pose2d(50,-32-(16/Math.sqrt(3)),Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
+                    .lineToX(-41.5841522885)
+                    .setTangent(Math.toRadians(127.5))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white pixel
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-32-(16/Math.sqrt(3))),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+        }
+        else if (detection.equals("middle")) {
+            start = myBot.getDrive().actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(24,-24,Math.toRadians(180)),Math.toRadians(90))
+                    .waitSeconds(1) //drop purple
+                    .build();
+            plusZero = myBot.getDrive().actionBuilder(new Pose2d(24, -24, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(50,-36),Math.toRadians(0))
+                    .waitSeconds(1) //drop yellow
+                    .build();
+            park = myBot.getDrive().actionBuilder(new Pose2d(50,-36,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-58)
+                    .build();
+            cycle = myBot.getDrive().actionBuilder(new Pose2d(50,-36,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
+                    .lineToX(-41.5841522885)
+                    .setTangent(Math.toRadians(127.5))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white pixel
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-36),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+        }
+        else if (detection.equals("left")) {
+            start = myBot.getDrive().actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(12,-30,Math.toRadians(180)),Math.toRadians(90))
+                    .waitSeconds(1) //drop purple
+                    .build();
+            plusZero = myBot.getDrive().actionBuilder(new Pose2d(12, -30, Math.toRadians(180)))
+                    .lineToX(50)
+                    .waitSeconds(1) //drop yellow
+                    .build();
+            park = myBot.getDrive().actionBuilder(new Pose2d(50, -30, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-58)
+                    .build();
+            cycle = myBot.getDrive().actionBuilder(new Pose2d(50,-30,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
+                    .lineToX(-41.5841522885)
+                    .setTangent(Math.toRadians(127.5))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white pixel
+                    .setTangent(Math.toRadians(307.5))
+                    .lineToY(-60)
+                    .setTangent(0)
+                    .lineToX(36)
+                    .splineToConstantHeading(new Vector2d(50,-30),Math.toRadians(90))
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+
+        }
+        myBot.runAction(new SequentialAction(start,plusZero,cycle,park));
 
     }
 }
