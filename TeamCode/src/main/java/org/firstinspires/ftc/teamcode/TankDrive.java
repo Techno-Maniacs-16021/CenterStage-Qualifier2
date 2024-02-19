@@ -48,7 +48,7 @@ import com.qualcomm.robotcore.hardware.VoltageSensor;
 import org.firstinspires.ftc.teamcode.messages.DriveCommandMessage;
 import org.firstinspires.ftc.teamcode.messages.PoseMessage;
 import org.firstinspires.ftc.teamcode.messages.TankCommandMessage;
-import org.firstinspires.ftc.teamcode.messages.TankEncodersMessage;
+import org.firstinspires.ftc.teamcode.messages.TankLocalizerInputsMessage;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -129,6 +129,7 @@ public final class TankDrive {
         public final List<Encoder> leftEncs, rightEncs;
 
         private double lastLeftPos, lastRightPos;
+        private boolean initialized;
 
         public DriveLocalizer() {
             {
@@ -151,16 +152,6 @@ public final class TankDrive {
 
             // TODO: reverse encoder directions if needed
             //   leftEncs.get(0).setDirection(DcMotorSimple.Direction.REVERSE);
-
-            for (Encoder e : leftEncs) {
-                lastLeftPos += e.getPositionAndVelocity().position;
-            }
-            lastLeftPos /= leftEncs.size();
-
-            for (Encoder e : rightEncs) {
-                lastRightPos += e.getPositionAndVelocity().position;
-            }
-            lastRightPos /= rightEncs.size();
         }
 
         @Override
@@ -186,8 +177,20 @@ public final class TankDrive {
             meanRightPos /= rightEncs.size();
             meanRightVel /= rightEncs.size();
 
-            FlightRecorder.write("TANK_ENCODERS",
-                    new TankEncodersMessage(leftReadings, rightReadings));
+            FlightRecorder.write("TANK_LOCALIZER_INPUTS",
+                     new TankLocalizerInputsMessage(leftReadings, rightReadings));
+
+            if (!initialized) {
+                initialized = true;
+
+                lastLeftPos = meanLeftPos;
+                lastRightPos = meanRightPos;
+
+                return new Twist2dDual<>(
+                        Vector2dDual.constant(new Vector2d(0.0, 0.0), 2),
+                        DualNum.constant(0.0, 2)
+                );
+            }
 
             TankKinematics.WheelIncrements<Time> twist = new TankKinematics.WheelIncrements<>(
                     new DualNum<Time>(new double[] {
@@ -343,10 +346,10 @@ public final class TankDrive {
             drawPoseHistory(c);
 
             c.setStroke("#4CAF50");
-            drawRobot(c, txWorldTarget.value());
+            Drawing.drawRobot(c, txWorldTarget.value());
 
             c.setStroke("#3F51B5");
-            drawRobot(c, pose);
+            Drawing.drawRobot(c, pose);
 
             c.setStroke("#4CAF50FF");
             c.setStrokeWidth(1);
@@ -426,10 +429,10 @@ public final class TankDrive {
             drawPoseHistory(c);
 
             c.setStroke("#4CAF50");
-            drawRobot(c, txWorldTarget.value());
+            Drawing.drawRobot(c, txWorldTarget.value());
 
             c.setStroke("#3F51B5");
-            drawRobot(c, pose);
+            Drawing.drawRobot(c, pose);
 
             c.setStroke("#7C4DFFFF");
             c.fillCircle(turn.beginPose.position.x, turn.beginPose.position.y, 2);
@@ -473,18 +476,6 @@ public final class TankDrive {
         c.setStrokeWidth(1);
         c.setStroke("#3F51B5");
         c.strokePolyline(xPoints, yPoints);
-    }
-
-    private static void drawRobot(Canvas c, Pose2d t) {
-        final double ROBOT_RADIUS = 9;
-
-        c.setStrokeWidth(1);
-        c.strokeCircle(t.position.x, t.position.y, ROBOT_RADIUS);
-
-        Vector2d halfv = t.heading.vec().times(0.5 * ROBOT_RADIUS);
-        Vector2d p1 = t.position.plus(halfv);
-        Vector2d p2 = p1.plus(halfv);
-        c.strokeLine(p1.x, p1.y, p2.x, p2.y);
     }
 
     public TrajectoryActionBuilder actionBuilder(Pose2d beginPose) {
