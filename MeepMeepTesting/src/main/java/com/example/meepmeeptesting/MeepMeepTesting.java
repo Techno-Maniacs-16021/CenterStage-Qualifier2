@@ -26,7 +26,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        blueFarMain(meepMeep, myBot);
+        redCloseMain(meepMeep, myBot);
 
 
 
