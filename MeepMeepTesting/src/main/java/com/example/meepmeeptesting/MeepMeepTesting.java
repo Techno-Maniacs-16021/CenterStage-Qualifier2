@@ -26,7 +26,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        redCloseMain(meepMeep, myBot);
+        redFarAlt(meepMeep, myBot);
 
 
 
@@ -221,7 +221,7 @@ public class MeepMeepTesting {
     }
 
     public static void redFarAlt(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
-        String detection = "right";
+        String detection = "left";
         Action start = myBot.getCurrentAction();
         Action plusOne = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();

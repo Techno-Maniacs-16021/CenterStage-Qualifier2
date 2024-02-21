@@ -45,7 +45,7 @@ public class RedFarAlt extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -60, 3 * Math.PI / 2));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -60, Math.toRadians(270)));
 
 ////////////////////////DASHBOARD TELEMETRY//////////
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -67,14 +67,14 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-60)
                     .setTangent(0)
                     .lineToX(36)
-                    .splineToConstantHeading(new Vector2d(50,-42),Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(46,-42),Math.toRadians(90))
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            park = drive.actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
+            park = drive.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-56)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
+            cycle = drive.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
                     .lineToX(-41.5841522885)
@@ -85,7 +85,7 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-60)
                     .setTangent(0)
                     .lineToX(36)
-                    .splineToConstantHeading(new Vector2d(50,-42),Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(46,-42),Math.toRadians(90))
                     .waitSeconds(1) //drop yellow and white
                     .build();
         }

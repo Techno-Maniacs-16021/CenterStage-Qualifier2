@@ -45,7 +45,7 @@ public class RedCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -60, 3 * Math.PI / 2));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -60, Math.toRadians(270)));
 
 ////////////////////////DASHBOARD TELEMETRY//////////
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -61,21 +61,21 @@ public class RedCloseMain extends LinearOpMode {
                     .waitSeconds(1) //drop purple
                     .build();
             plusZero = drive.actionBuilder(new Pose2d(34, -32, Math.toRadians(180)))
-                    .setTangent(Math.toRadians(-30))
+                    .setTangent(Math.toRadians(-45))
                     .lineToX(46)
                     .waitSeconds(1) //drop yellow
                     .build();
-            park = drive.actionBuilder(new Pose2d(46,-32-(12/Math.sqrt(3)),Math.toRadians(180)))
+            park = drive.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-58)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(46,-32-(12/Math.sqrt(3)),Math.toRadians(180)))
+            cycle = drive.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(180))
                     .lineToX(-60)
                     .waitSeconds(1) //pick up white
                     .lineToX(36)
-                    .splineToConstantHeading(new Vector2d(46,-32-(12/Math.sqrt(3))),Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(46,-44),Math.toRadians(270))
                     .waitSeconds(1) //drop white
                     .build();
         }

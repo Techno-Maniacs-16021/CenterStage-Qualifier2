@@ -44,7 +44,7 @@ public class RedCloseAlt extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -60, 3 * Math.PI / 2));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -60, Math.toRadians(270)));
 
 ////////////////////////DASHBOARD TELEMETRY//////////
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -59,15 +59,15 @@ public class RedCloseAlt extends LinearOpMode {
                     .waitSeconds(1) //drop purple
                     .build();
             plusZero = drive.actionBuilder(new Pose2d(34, -32, Math.toRadians(180)))
-                    .setTangent(Math.toRadians(-30))
-                    .lineToX(50)
+                    .setTangent(Math.toRadians(-45))
+                    .lineToX(46)
                     .waitSeconds(1) //drop yellow
                     .build();
-            park = drive.actionBuilder(new Pose2d(50,-32-(16/Math.sqrt(3)),Math.toRadians(180)))
+            park = drive.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-58)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(50,-32-(16/Math.sqrt(3)),Math.toRadians(180)))
+            cycle = drive.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .splineToConstantHeading(new Vector2d(36,-60),Math.toRadians(180))
                     .lineToX(-41.5841522885)
@@ -78,7 +78,7 @@ public class RedCloseAlt extends LinearOpMode {
                     .lineToY(-60)
                     .setTangent(0)
                     .lineToX(36)
-                    .splineToConstantHeading(new Vector2d(50,-32-(16/Math.sqrt(3))),Math.toRadians(90))
+                    .splineToConstantHeading(new Vector2d(46,-44),Math.toRadians(90))
                     .waitSeconds(1) //drop yellow and white
                     .build();
         }

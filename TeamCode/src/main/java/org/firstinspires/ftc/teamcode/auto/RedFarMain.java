@@ -45,7 +45,7 @@ public class RedFarMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -60, 3 * Math.PI / 2));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -60, Math.toRadians(270)));
 
 ////////////////////////DASHBOARD TELEMETRY//////////
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -64,22 +64,22 @@ public class RedFarMain extends LinearOpMode {
                     .lineToX(-60)
                     .waitSeconds(1) //pick up white
                     .setTangent(Math.toRadians(30))
-                    .splineToConstantHeading(new Vector2d(36,-12),Math.toRadians(0))
-                    .splineToConstantHeading(new Vector2d(50,-42),Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(0))
+                    .splineToConstantHeading(new Vector2d(46,-42),Math.toRadians(270))
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            park = drive.actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
+            park = drive.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-14)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(50,-42,Math.toRadians(180)))
+            cycle = drive.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
-                    .splineToConstantHeading(new Vector2d(36,-12),Math.toRadians(180))
+                    .splineToConstantHeading(new Vector2d(36,-10),Math.toRadians(180))
                     .splineToConstantHeading(new Vector2d(-60,-23.5692193817),Math.toRadians(210))
                     .waitSeconds(1) //pick up white
                     .setTangent(Math.toRadians(30))
                     .splineToConstantHeading(new Vector2d(36,-12),Math.toRadians(0))
-                    .splineToConstantHeading(new Vector2d(50,-42),Math.toRadians(270))
+                    .splineToConstantHeading(new Vector2d(46,-42),Math.toRadians(270))
                     .waitSeconds(1) //drop white
                     .build();
         }
