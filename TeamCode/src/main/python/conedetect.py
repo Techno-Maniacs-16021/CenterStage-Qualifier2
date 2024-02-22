@@ -40,11 +40,10 @@ def imgrec(img):
     if midx < width//3:
         print("left")
     elif midx > 2*width//3:
-        print("right")  
+        print("right")
     else:
         print("center")
-    cv2.drawContours(cropped_img, max, -1, (0, 255, 0), 3) 
-    
+    cv2.drawContours(cropped_img, max, -1, (0, 255, 0), 3)
     return cropped_img
 
 a = imgrec(cv2.imread("./TeamCode/src/main/python/img.png"))
