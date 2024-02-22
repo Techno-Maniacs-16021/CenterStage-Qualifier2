@@ -254,6 +254,25 @@ public final class MecanumDrive {
         rightFront.setPower(wheelVels.rightFront.get(0) / maxPowerMag);
     }
 
+    public void setCentricDrivePowers(PoseVelocity2d powers, double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
+        MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
+                PoseVelocity2dDual.constant(powers, 1));
+
+        //double maxPowerMag = 1;
+        for (DualNum<Time> power : wheelVels.all()) {
+            //maxPowerMag = Math.max(maxPowerMag, power.value());
+            frontLeftPower = Math.max(frontLeftPower, power.value());
+            frontRightPower = Math.max(frontRightPower, power.value());
+            backLeftPower = Math.max(backLeftPower, power.value());
+            backRightPower = Math.max(backRightPower, power.value());
+        }
+
+        leftFront.setPower(wheelVels.leftFront.get(0) / frontLeftPower);
+        leftBack.setPower(wheelVels.leftBack.get(0) / backLeftPower);
+        rightBack.setPower(wheelVels.rightBack.get(0) / backRightPower);
+        rightFront.setPower(wheelVels.rightFront.get(0) / frontRightPower);
+    }
+
     public final class FollowTrajectoryAction implements Action {
         public final TimeTrajectory timeTrajectory;
         private double beginTs = -1;
