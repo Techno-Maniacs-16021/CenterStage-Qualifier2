@@ -67,13 +67,13 @@ public class DriverModeForKids extends OpMode {
             ));
         }
 
-        if(gamepad2.dpad_up && loopTime.milliseconds() >= 100){
-            loopTime.reset();
-            speed_limiter-=0.05;
-        }
-        if (gamepad2.dpad_down && loopTime.milliseconds() >= 100){
+        if(gamepad2.dpad_up && loopTime.milliseconds() >= 1000){
             loopTime.reset();
             speed_limiter+=0.05;
+        }
+        if (gamepad2.dpad_down && loopTime.milliseconds() >= 1000){
+            loopTime.reset();
+            speed_limiter-=0.05;
         }
 
         drive.updatePoseEstimate();
