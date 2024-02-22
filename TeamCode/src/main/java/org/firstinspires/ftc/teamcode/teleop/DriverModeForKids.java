@@ -29,8 +29,6 @@ public class DriverModeForKids extends OpMode {
         drive = new MecanumDrive(hardwareMap, new Pose2d(0, 0, 0));
         telemetry.addData("Status", "Initialized");
 
-
-
     }
     @Override
     public void init_loop(){
@@ -73,7 +71,7 @@ public class DriverModeForKids extends OpMode {
             loopTime.reset();
             speed_limiter-=0.05;
         }
-        if (gamepad2.dpad_up && loopTime.milliseconds() >= 100){
+        if (gamepad2.dpad_down && loopTime.milliseconds() >= 100){
             loopTime.reset();
             speed_limiter+=0.05;
         }
