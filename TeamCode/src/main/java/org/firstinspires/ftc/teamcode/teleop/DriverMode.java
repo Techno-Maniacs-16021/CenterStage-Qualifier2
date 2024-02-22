@@ -28,7 +28,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 @TeleOp
 public class DriverMode extends OpMode {
     /////////////////////////////////////////////
-    ServoImplEx clawAngle,clawPusher,clawArm,clawGrip,leftIntakeLinkage,rightIntakeLinkage;
+    ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage;
     DcMotorEx leftSlides,rightSlides,intake;
     AnalogInput clawAnglePosition,clawPusherPosition,clawArmPosition,clawGripPosition,leftIntakeLinkagePosition,rightIntakeLinkagePosition;
     RevColorSensorV3 pixelDetector;
@@ -37,33 +37,36 @@ public class DriverMode extends OpMode {
     RevTouchSensor pixel1,pixel2;
     /////////////////////////////////////////////
     private ElapsedTime loopTime = new ElapsedTime();
+    private ElapsedTime actionCoolDown = new ElapsedTime();
     private MecanumDrive drive;
     public static double p,i,d,f,Target;
     private PIDController Controller;
     boolean intaking,intaked,locked, outtaked,actionInit,PIDEnabled;
     public static int INTAKE_OFFSET,INTIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR;
     public static double ARM,ANGLE;
+    public static String mode = "intake";
 
     //700 is minimum
     @Override
     public void init(){
         //SERVOS
         //hardware map
-        clawAngle = hardwareMap.get(ServoImplEx.class,"claw_angle");
-        clawArm = hardwareMap.get(ServoImplEx.class,"claw_arm");
-        clawPusher = hardwareMap.get(ServoImplEx.class,"claw_pusher");
-        clawGrip = hardwareMap.get(ServoImplEx.class,"claw_grip");
+        angle = hardwareMap.get(ServoImplEx.class,"claw_angle");
+        arm = hardwareMap.get(ServoImplEx.class,"claw_arm");
+        pusher = hardwareMap.get(ServoImplEx.class,"claw_pusher");
+        grip = hardwareMap.get(ServoImplEx.class,"claw_grip");
         leftIntakeLinkage = hardwareMap.get(ServoImplEx.class,"left_intake_linkage");
         rightIntakeLinkage = hardwareMap.get(ServoImplEx.class,"right_intake_linkage");
         //pwm ranges
-        clawAngle.setPwmRange(new PwmControl.PwmRange(510,2490));
-        clawArm.setPwmRange(new PwmControl.PwmRange(510,2490));
-        clawGrip.setPwmRange(new PwmControl.PwmRange(510,2490));
-        clawPusher.setPwmRange(new PwmControl.PwmRange(1100,2150));
+        angle.setPwmRange(new PwmControl.PwmRange(510,2490));
+        arm.setPwmRange(new PwmControl.PwmRange(510,2490));
+        grip.setPwmRange(new PwmControl.PwmRange(510,2490));
+        pusher.setPwmRange(new PwmControl.PwmRange(1100,2150));
         leftIntakeLinkage.setPwmRange(new PwmControl.PwmRange(510,2490));
         rightIntakeLinkage.setPwmRange(new PwmControl.PwmRange(510,2490));
         //set direction
-        clawPusher.setDirection(Servo.Direction.REVERSE);
+        pusher.setDirection(Servo.Direction.REVERSE);
+        rightIntakeLinkage.setDirection(Servo.Direction.REVERSE);
         //SERVOS
         //MOTORS
         //hardware map
@@ -71,8 +74,13 @@ public class DriverMode extends OpMode {
         rightSlides = hardwareMap.get(DcMotorEx.class,"right_slides");
         intake = hardwareMap.get(DcMotorEx.class,"intake");
         //encoder
-        //rightSlides.setMode(RUN_WITHOUT_ENCODER);
-        //rightSlides.setMode(STOP_AND_RESET_ENCODER);
+        rightSlides.setMode(STOP_AND_RESET_ENCODER);
+        rightSlides.setMode(RUN_WITHOUT_ENCODER);
+        leftSlides.setMode(STOP_AND_RESET_ENCODER);
+        leftSlides.setMode(RUN_WITHOUT_ENCODER);
+        intake.setMode(STOP_AND_RESET_ENCODER);
+        intake.setMode(RUN_WITHOUT_ENCODER);
+
         //set direction
         leftSlides.setDirection(DcMotorSimple.Direction.REVERSE);
         //leftSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -105,31 +113,112 @@ public class DriverMode extends OpMode {
     }
     @Override
     public void init_loop(){
-
+        grip.setPosition(0.5);
     }
     @Override
     public void start(){
+        grip.setPosition(0.5);
+        arm.setPosition(0);
+        angle.setPosition(0);
 
     }
     @Override
     public void loop(){
+        //|DATA
         int pixels = (int)pixel1.getValue()+(int)pixel2.getValue();
-        //SLIDES PID
-        //SLIDES PID
-        rightSlides.setPower(gamepad2.left_stick_y);
-        leftSlides.setPower(gamepad2.left_stick_y);
-        if(gamepad1.dpad_left){
-            clawArm.setPosition(1);
-            clawAngle.setPosition(0.6);
+        double averageRotation = ((intake.getCurrentPosition()/8192)+(leftSlides.getCurrentPosition()/537.7)+(rightSlides.getCurrentPosition()/537.7))/3;
+        //DATA|
+        //|MODE LOGIC
+        if(gamepad1.touchpad)mode = "intake";
+        else if(gamepad1.options)mode = "outtake";
+        else if(gamepad1.share)mode = "end game";
+        else if(gamepad1.ps)mode = "manual";
+        //MODE LOGIC|
+        //|INTAKE
+        if(mode.equals("intake")){
+            if(gamepad1.square) {
+                leftIntakeLinkage.setPosition(1);
+                rightIntakeLinkage.setPosition(1);
+            }
+            else if(gamepad1.triangle){
+                leftIntakeLinkage.setPosition(0);
+                rightIntakeLinkage.setPosition(0);
+            }
+            if(gamepad1.right_trigger>0&&averageRotation<1){
+                leftSlides.setPower(1);
+                rightSlides.setPower(1);
+            }
+            else if(gamepad1.dpad_down){
+                leftSlides.setPower(-0.5);
+                rightSlides.setPower(-0.5);
+                intake.setPower(0);
+            }
+            else {
+                leftSlides.setPower(0);
+                rightSlides.setPower(0);
+            }
+            if(gamepad1.dpad_right)grip.setPosition(1);
+            if(pixels<2||averageRotation<1) intake.setPower(gamepad1.right_trigger);
+            else intake.setPower(-1);
+
         }
-        else if(gamepad1.dpad_up){
-            clawArm.setPosition(0.5);
-            clawAngle.setPosition(0.3);
+        //INTAKE|
+        //|OUTTAKE
+        else if(mode.equals("outtake")){
+            if(gamepad1.right_trigger>0){
+                leftSlides.setPower(gamepad1.right_trigger);
+                rightSlides.setPower(gamepad1.right_trigger);
+            }
+            else{
+                leftSlides.setPower(-gamepad1.left_trigger);
+                rightSlides.setPower(-gamepad1.left_trigger);
+            }
+            if(gamepad1.circle){
+                arm.setPosition(0);
+                angle.setPosition(0);
+                grip.setPosition(0.5);
+            }
+            else if(gamepad1.square){
+                arm.setPosition(0.7);
+                angle.setPosition(0.8);
+            }
+            else if(gamepad1.triangle&&actionCoolDown.milliseconds()>100){
+                arm.setPosition(arm.getPosition()-0.05);
+                actionCoolDown.reset();
+            }
+            else if(gamepad1.cross&&actionCoolDown.milliseconds()>100){
+                arm.setPosition(arm.getPosition()+0.05);
+                actionCoolDown.reset();
+            }
+            if(gamepad1.left_bumper)grip.setPosition(0);
+            if(gamepad1.right_bumper)pusher.setPosition(1);
+            else pusher.setPosition(0);
         }
-        else if(gamepad1.dpad_right) {
-            clawArm.setPosition(0);
-            clawAngle.setPosition(0);
+        //OUTTAKE|
+        //|END GAME
+        else if(mode.equals("end game")){
+            arm.setPosition(0.5);
+            angle.setPosition(0.7);
+
+
+            if(gamepad1.right_trigger>0){
+                leftSlides.setPower(gamepad1.right_trigger);
+                rightSlides.setPower(gamepad1.right_trigger);
+            }
+            else{
+                leftSlides.setPower(-gamepad1.left_trigger);
+                rightSlides.setPower(-gamepad1.left_trigger);
+            }
         }
+        //END GAME|
+        //|MANUAL
+        else if(mode.equals("manual")){
+
+        }
+        //MANUAL|
+        //|DRIVER 2
+
+        //Driver 2|
         drive.setDrivePowers(new PoseVelocity2d(
                 new Vector2d(
                         -gamepad1.left_stick_y ,
@@ -137,11 +226,15 @@ public class DriverMode extends OpMode {
                 ),
                 -gamepad1.right_stick_x
         ));
+
         drive.updatePoseEstimate();
         telemetry.addData("pixels in intake: ", pixels);
         telemetry.addData("target pos: ",Target);
-        telemetry.addData("intaking: ",intaking);
-        telemetry.addData("intaked?: ",intaked);
+        telemetry.addData("average rotation: ", averageRotation);
+        telemetry.addData("mode: ",mode);
+        telemetry.addData("slides: ", intake.getCurrentPosition());
+        telemetry.addData("right slides: ",rightSlides.getCurrentPosition());
+        telemetry.addData("left slides: ",leftSlides.getCurrentPosition());
         telemetry.update();
     }
     @Override
