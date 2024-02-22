@@ -77,7 +77,7 @@ public class DriverModeForKids extends OpMode {
         }
 
         drive.updatePoseEstimate();
-        telemetry.addData("Speed limiter: ",(int)(speed_limiter*10)/10.0);
+        telemetry.addData("Speed limiter: ",((int)(speed_limiter*10.0))/10.0);
 //        telemetry.addData("intaking: ",intaking);
 //        telemetry.addData("intaked?: ",intaked);
         telemetry.update();
