@@ -18,6 +18,7 @@ import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Config
 public class RedFarMain extends LinearOpMode {
     public static String detection = "right";
+    private static int plus = 0;
 
     private ElapsedTime loopTime = new ElapsedTime();
 
@@ -48,6 +49,15 @@ public class RedFarMain extends LinearOpMode {
                     .setTangent(Math.toRadians(131.9872125))
                     .lineToX(-60)
                     .waitSeconds(1) //pick up white
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-42)
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
+            plusZero = drive.actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
                     .setTangent(Math.toRadians(0))
                     .lineToX(46)
                     .setTangent(Math.toRadians(270))
@@ -86,6 +96,15 @@ public class RedFarMain extends LinearOpMode {
                     .lineToY(-36)
                     .waitSeconds(1) //drop yellow and white
                     .build();
+            plusZero = drive.actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-36)
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
             park = drive.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-14)
@@ -118,6 +137,15 @@ public class RedFarMain extends LinearOpMode {
                     .lineToY(-30)
                     .waitSeconds(1) //drop yellow and white
                     .build();
+            plusZero = drive.actionBuilder(new Pose2d(-60, -30, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-30)
+                    .waitSeconds(1) //drop yellow and white
+                    .build();
             park = drive.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-14)
@@ -138,8 +166,18 @@ public class RedFarMain extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()){
-            Actions.runBlocking(new SequentialAction(start,plusOne,cycle,park));
-            requestOpModeStop();
+            if (plus == 0) {
+                Actions.runBlocking(new SequentialAction(start, plusZero, park));
+                requestOpModeStop();
+            }
+            else if (plus == 1) {
+                Actions.runBlocking(new SequentialAction(start, plusOne, park));
+                requestOpModeStop();
+            }
+            else {
+                Actions.runBlocking(new SequentialAction(start, plusOne, cycle, park));
+                requestOpModeStop();
+            }
         }
     }
 }

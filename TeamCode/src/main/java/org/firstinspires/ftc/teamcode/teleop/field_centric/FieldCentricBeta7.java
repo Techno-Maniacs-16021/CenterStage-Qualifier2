@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.teleop.field_centric;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
@@ -28,7 +27,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.MecanumDrive;
 @Config
 @TeleOp
-public class FieldCentricDriverMode extends OpMode {
+public class FieldCentricBeta7 extends OpMode {
     /////////////////////////////////////////////
     ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage;
     DcMotorEx leftSlides,rightSlides,intake;
@@ -127,100 +126,7 @@ public class FieldCentricDriverMode extends OpMode {
     @Override
     public void loop(){
         //|DATA
-        int pixels = (int)pixel1.getValue()+(int)pixel2.getValue();
-        double averageRotation = ((intake.getCurrentPosition()/8192)+(leftSlides.getCurrentPosition()/537.7)+(rightSlides.getCurrentPosition()/537.7))/3;
-        //DATA|
-        //|MODE LOGIC
-        if(gamepad1.touchpad)mode = "intake";
-        else if(gamepad1.options)mode = "outtake";
-        else if(gamepad1.share)mode = "end game";
-        else if(gamepad1.ps)mode = "manual";
-        //MODE LOGIC|
-        //|INTAKE
-        if(mode.equals("intake")){
-            if(gamepad1.square) {
-                leftIntakeLinkage.setPosition(1);
-                rightIntakeLinkage.setPosition(1);
-            }
-            else if(gamepad1.triangle){
-                leftIntakeLinkage.setPosition(0);
-                rightIntakeLinkage.setPosition(0);
-            }
-            if(gamepad1.right_trigger>0&&averageRotation<1){
-                leftSlides.setPower(1);
-                rightSlides.setPower(1);
-            }
-            else if(gamepad1.dpad_down){
-                leftSlides.setPower(-0.5);
-                rightSlides.setPower(-0.5);
-                intake.setPower(0);
-            }
-            else {
-                leftSlides.setPower(0);
-                rightSlides.setPower(0);
-            }
-            if(gamepad1.dpad_right)grip.setPosition(1);
-            if(pixels<2||averageRotation<1) intake.setPower(gamepad1.right_trigger);
-            else intake.setPower(-1);
 
-        }
-        //INTAKE|
-        //|OUTTAKE
-        else if(mode.equals("outtake")){
-            if(gamepad1.right_trigger>0){
-                leftSlides.setPower(gamepad1.right_trigger);
-                rightSlides.setPower(gamepad1.right_trigger);
-            }
-            else{
-                leftSlides.setPower(-gamepad1.left_trigger);
-                rightSlides.setPower(-gamepad1.left_trigger);
-            }
-            if(gamepad1.circle){
-                arm.setPosition(0);
-                angle.setPosition(0);
-                grip.setPosition(0.5);
-            }
-            else if(gamepad1.square){
-                arm.setPosition(0.7);
-                angle.setPosition(0.8);
-            }
-            else if(gamepad1.triangle&&actionCoolDown.milliseconds()>100){
-                arm.setPosition(arm.getPosition()-0.05);
-                actionCoolDown.reset();
-            }
-            else if(gamepad1.cross&&actionCoolDown.milliseconds()>100){
-                arm.setPosition(arm.getPosition()+0.05);
-                actionCoolDown.reset();
-            }
-            if(gamepad1.left_bumper)grip.setPosition(0);
-            if(gamepad1.right_bumper)pusher.setPosition(1);
-            else pusher.setPosition(0);
-        }
-        //OUTTAKE|
-        //|END GAME
-        else if(mode.equals("end game")){
-            arm.setPosition(0.5);
-            angle.setPosition(0.7);
-
-
-            if(gamepad1.right_trigger>0){
-                leftSlides.setPower(gamepad1.right_trigger);
-                rightSlides.setPower(gamepad1.right_trigger);
-            }
-            else{
-                leftSlides.setPower(-gamepad1.left_trigger);
-                rightSlides.setPower(-gamepad1.left_trigger);
-            }
-        }
-        //END GAME|
-        //|MANUAL
-        else if(mode.equals("manual")){
-
-        }
-        //MANUAL|
-        //|DRIVER 2
-
-        //Driver 2|
         //Field Centric Drive
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = gamepad1.left_stick_x;
@@ -249,22 +155,15 @@ public class FieldCentricDriverMode extends OpMode {
         double backLeftPower = (rotY - rotX + rx) / denominator;
         double frontRightPower = (rotY - rotX - rx) / denominator;
         double backRightPower = (rotY + rotX - rx) / denominator;
-        drive.setCentricDrivePowers(new PoseVelocity2d(
+        drive.setCentricDrivePowers3(new PoseVelocity2d(
                 new Vector2d(
-                        -gamepad1.left_stick_y ,
-                        -gamepad1.left_stick_x
+                        y ,
+                        x
                 ),
-                -gamepad1.right_stick_x
+                rx
         ),frontLeftPower,frontRightPower,backLeftPower,backRightPower);
 
         drive.updatePoseEstimate();
-        telemetry.addData("pixels in intake: ", pixels);
-        telemetry.addData("target pos: ",Target);
-        telemetry.addData("average rotation: ", averageRotation);
-        telemetry.addData("mode: ",mode);
-        telemetry.addData("slides: ", intake.getCurrentPosition());
-        telemetry.addData("right slides: ",rightSlides.getCurrentPosition());
-        telemetry.addData("left slides: ",leftSlides.getCurrentPosition());
         telemetry.update();
     }
     @Override

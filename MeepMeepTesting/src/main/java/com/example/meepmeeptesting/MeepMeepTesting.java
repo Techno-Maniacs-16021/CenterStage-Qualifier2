@@ -26,7 +26,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        redCloseAlt(meepMeep, myBot);
+        redFarMain(meepMeep, myBot);
 
 
 
@@ -129,7 +129,7 @@ public class MeepMeepTesting {
     }
 
     public static void redFarMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
-        String detection = "middle";
+        String detection = "left";
         Action start = myBot.getCurrentAction();
         Action plusOne = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();
@@ -235,7 +235,7 @@ public class MeepMeepTesting {
     }
 
     public static void redFarAlt(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
-        String detection = "right";
+        String detection = "left";
         Action start = myBot.getCurrentAction();
         Action plusOne = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();

@@ -72,9 +72,9 @@ public final class MecanumDrive {
         public double kA = 0.000015;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
+        public double maxWheelVel = 30; //originally 50
         public double minProfileAccel = -30;
-        public double maxProfileAccel = 50;
+        public double maxProfileAccel = 30; //originally 50
 
         // turn profile parameters (in radians)
         public double maxAngVel = Math.PI; // shared with path
@@ -271,6 +271,43 @@ public final class MecanumDrive {
         leftBack.setPower(wheelVels.leftBack.get(0) / backLeftPower);
         rightBack.setPower(wheelVels.rightBack.get(0) / backRightPower);
         rightFront.setPower(wheelVels.rightFront.get(0) / frontRightPower);
+    }
+
+    public void setCentricDrivePowers2(PoseVelocity2d powers, double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
+        MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
+                PoseVelocity2dDual.constant(powers, 1));
+
+        double maxPowerMag = 1;
+        for (DualNum<Time> power : wheelVels.all()) {
+            maxPowerMag = Math.max(maxPowerMag, power.value());
+        }
+
+        leftFront.setPower(frontLeftPower / maxPowerMag);
+        leftBack.setPower(backLeftPower / maxPowerMag);
+        rightBack.setPower(backRightPower / maxPowerMag);
+        rightFront.setPower(frontRightPower / maxPowerMag);
+    }
+
+    public void setCentricDrivePowers3(PoseVelocity2d powers, double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
+        MecanumKinematics.WheelVelocities<Time> wheelVels = new MecanumKinematics(1).inverse(
+                PoseVelocity2dDual.constant(powers, 1));
+
+        double maxPowerMag = 1;
+        for (DualNum<Time> power : wheelVels.all()) {
+            maxPowerMag = Math.max(maxPowerMag, power.value());
+        }
+
+        leftFront.setPower(frontLeftPower);
+        leftBack.setPower(backLeftPower);
+        rightBack.setPower(backRightPower);
+        rightFront.setPower(frontRightPower);
+    }
+
+    public void setCentricDrivePowers4(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
+        leftFront.setPower(frontLeftPower);
+        leftBack.setPower(backLeftPower);
+        rightBack.setPower(backRightPower);
+        rightFront.setPower(frontRightPower);
     }
 
     public final class FollowTrajectoryAction implements Action {
