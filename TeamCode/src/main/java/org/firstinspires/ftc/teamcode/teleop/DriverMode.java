@@ -32,7 +32,7 @@ public class DriverMode extends OpMode {
     /////////////////////////////////////////////
     ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage;
     DcMotorEx leftSlides,rightSlides,intake;
-    AnalogInput clawAnglePosition,clawPusherPosition,clawArmPosition,clawGripPosition,leftIntakeLinkagePosition,rightIntakeLinkagePosition;
+    AnalogInput getAngle,getPusherPosition,getArmPosition,getGripPosition,leftIntakeLinkagePosition,rightIntakeLinkagePosition;
     RevColorSensorV3 pixelDetector;
     //RevBlinkinLedDriver blinkinLedDriverLeft,blinkinLedDriverRight;
     RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
@@ -43,9 +43,8 @@ public class DriverMode extends OpMode {
     private MecanumDrive drive;
     public static double p,i,d,f,Target;
     private PIDController Controller;
-    boolean intaking,intaked,locked, outtaked,actionInit,PIDEnabled;
-    public static int INTAKE_OFFSET,INTIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR;
-    public static double ARM,ANGLE;
+     public static boolean intaking,intaked, outtakeReady,aBoolean,outtaked;
+    public static double INTIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR,ZERO_POSITION,ZERO_POWER;
     public static String mode = "intake";
 
     //700 is minimum
@@ -85,16 +84,16 @@ public class DriverMode extends OpMode {
 
         //set direction
         leftSlides.setDirection(DcMotorSimple.Direction.REVERSE);
-        //leftSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        //rightSlides.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftSlides.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
+        rightSlides.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         //MOTORS
         //SENSORS
         pixel1 = hardwareMap.get(RevTouchSensor.class,"pixel1");
         pixel2 = hardwareMap.get(RevTouchSensor.class,"pixel2");
-        clawAnglePosition = hardwareMap.get(AnalogInput.class,"claw_angle_position");
-        clawArmPosition = hardwareMap.get(AnalogInput.class,"claw_arm_position");
-        clawPusherPosition = hardwareMap.get(AnalogInput.class,"claw_pusher_position");
-        clawGripPosition = hardwareMap.get(AnalogInput.class,"claw_grip_position");
+        getAngle = hardwareMap.get(AnalogInput.class,"claw_angle_position");
+        getArmPosition = hardwareMap.get(AnalogInput.class,"claw_arm_position");
+        getPusherPosition = hardwareMap.get(AnalogInput.class,"claw_pusher_position");
+        getGripPosition = hardwareMap.get(AnalogInput.class,"claw_grip_position");
         leftIntakeLinkagePosition = hardwareMap.get(AnalogInput.class,"left_intake_linkage_position");
         rightIntakeLinkagePosition = hardwareMap.get(AnalogInput.class,"right_intake_linkage_position");
         //SENSORS
@@ -107,9 +106,9 @@ public class DriverMode extends OpMode {
 ////////////////////////STATUS UPDATE////////////////
         telemetry.addData("Status", "Initialized");
 /////////////////////////////////////////////////////
-        p=0;i=0;d=0;f=0;Target = 0;
-        INTIAL_OFFSET = 800;PIXEL_LAYER= 300;ALLOWED_ERROR=50;INTAKE_OFFSET=300;ARM=0.05;ANGLE=0.03;intaking=false;
-        intaked = false; outtaked = false; actionInit = false;locked=false;PIDEnabled=true;
+        p=2.5;i=0;d=0;f=0;Target = 0;mode="intake";
+        INTIAL_OFFSET = 0.6;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;
+        intaked = false;intaking=false; outtakeReady = false;outtaked=false;aBoolean=false;
 
 
     }
@@ -128,7 +127,16 @@ public class DriverMode extends OpMode {
     public void loop(){
         //|DATA
         int pixels = (int)pixel1.getValue()+(int)pixel2.getValue();
-        double averageRotation = ((intake.getCurrentPosition()/8192)+(leftSlides.getCurrentPosition()/537.7)+(rightSlides.getCurrentPosition()/537.7))/3;
+        double Pos = ((intake.getCurrentPosition()/8192)+(leftSlides.getCurrentPosition()/537.7)+(rightSlides.getCurrentPosition()/537.7))/3;
+        Controller.setPID(p, i, d);
+        double PID = Controller.calculate(Pos, Target);
+        double Power = f;
+        if(getError(Pos,Target)>ALLOWED_ERROR)Power=PID;
+        if(Target==ZERO_POSITION)Power-=ZERO_POWER;
+        double currentAngle=Math.abs(((getAngle.getVoltage()/3.3)*360)-348);
+        double currentArmPosition=Math.abs(((getArmPosition.getVoltage()/3.3)*360)-275);
+        double currentGripPosition=((getGripPosition.getVoltage()/3.3)*360);
+        double clawPusherPosition=((getPusherPosition.getVoltage()/3.3)*360);
         //DATA|
         //|MODE LOGIC
         if(gamepad1.touchpad)mode = "intake";
@@ -138,6 +146,15 @@ public class DriverMode extends OpMode {
         //MODE LOGIC|
         //|INTAKE
         if(mode.equals("intake")){
+            outtakeReady=false;
+            intaked=false;
+            //Setting slides to PID
+                leftSlides.setPower(Power);
+                rightSlides.setPower(Power);
+
+
+            //servo position
+
             if(gamepad1.square) {
                 leftIntakeLinkage.setPosition(1);
                 rightIntakeLinkage.setPosition(1);
@@ -146,54 +163,84 @@ public class DriverMode extends OpMode {
                 leftIntakeLinkage.setPosition(0);
                 rightIntakeLinkage.setPosition(0);
             }
-            if(gamepad1.right_trigger>0&&averageRotation<1){
-                leftSlides.setPower(1);
-                rightSlides.setPower(1);
+            if(pixels>0&&Pos>(INTIAL_OFFSET-ALLOWED_ERROR))intaking=true;
+            if(gamepad1.right_trigger>0){
+                Target=INTIAL_OFFSET;
+                grip.setPosition(0.5);
             }
-            else if(gamepad1.dpad_down){
-                leftSlides.setPower(-0.5);
-                rightSlides.setPower(-0.5);
+            else if(pixels==2&&intaking||gamepad1.dpad_down){
+            //else if(pixels==2||gamepad1.dpad_down){
+                Target=ZERO_POSITION;
                 intake.setPower(0);
-            }
-            else {
-                leftSlides.setPower(0);
-                rightSlides.setPower(0);
+                if(getError(Pos,Target)<ALLOWED_ERROR)grip.setPosition(1);
             }
             if(gamepad1.dpad_right)grip.setPosition(1);
-            if(pixels<2||averageRotation<1) intake.setPower(gamepad1.right_trigger);
+
+            if(pixels<2||Pos<1) intake.setPower(gamepad1.right_trigger);
             else intake.setPower(-1);
 
         }
         //INTAKE|
         //|OUTTAKE
         else if(mode.equals("outtake")){
-            if(gamepad1.right_trigger>0){
-                leftSlides.setPower(gamepad1.right_trigger);
-                rightSlides.setPower(gamepad1.right_trigger);
+            if(!intaked){
+                Target=INTIAL_OFFSET;
+                intaked=true;
+                intaking = false;
             }
-            else{
-                leftSlides.setPower(-gamepad1.left_trigger);
-                rightSlides.setPower(-gamepad1.left_trigger);
+            //Setting slides to PID
+                leftSlides.setPower(Power);
+                rightSlides.setPower(Power);
+
+            //slides
+                if (gamepad1.right_trigger > 0&&actionCoolDown.milliseconds()>50) {
+                    Target+=0.1;
+                    actionCoolDown.reset();
+                }
+                else if (gamepad1.left_trigger > 0&actionCoolDown.milliseconds()>50) {
+                    Target-=0.1;
+                    actionCoolDown.reset();
+                }
+
+            //arm
+            if(!outtakeReady&&getError(Pos,Target)<ALLOWED_ERROR) {
+                    arm.setPosition(0.4);
+                    angle.setPosition(0.8);
+                    outtakeReady = true;
             }
-            if(gamepad1.circle){
-                arm.setPosition(0);
-                angle.setPosition(0);
-                grip.setPosition(0.5);
+            if(gamepad1.square){
+                if(Pos<2*INTIAL_OFFSET)Target+=1;
+                else {
+                    arm.setPosition(0);
+                    angle.setPosition(0);
+                    grip.setPosition(0.5);
+                }
             }
-            else if(gamepad1.square){
-                arm.setPosition(0.7);
-                angle.setPosition(0.8);
-            }
-            else if(gamepad1.triangle&&actionCoolDown.milliseconds()>100){
-                arm.setPosition(arm.getPosition()-0.05);
+            else if(gamepad1.triangle&&actionCoolDown.milliseconds()>50){
+                arm.setPosition(arm.getPosition()-0.03);
                 actionCoolDown.reset();
             }
-            else if(gamepad1.cross&&actionCoolDown.milliseconds()>100){
-                arm.setPosition(arm.getPosition()+0.05);
+            else if(gamepad1.cross&&actionCoolDown.milliseconds()>50){
+                arm.setPosition(arm.getPosition()+0.03);
                 actionCoolDown.reset();
             }
-            if(gamepad1.left_bumper)grip.setPosition(0);
-            if(gamepad1.right_bumper)pusher.setPosition(1);
+
+            //auto retract
+            if(currentArmPosition<25&&outtaked){
+                Target=0;
+                outtaked=false;
+                mode="intake";
+            }
+
+            //claw
+            if(gamepad1.left_bumper){
+                grip.setPosition(0);
+                outtaked=true;
+            }
+            if(gamepad1.right_bumper){
+                pusher.setPosition(1);
+                outtaked=true;
+            }
             else pusher.setPosition(0);
         }
         //OUTTAKE|
@@ -215,12 +262,25 @@ public class DriverMode extends OpMode {
         //END GAME|
         //|MANUAL
         else if(mode.equals("manual")){
+                leftSlides.setPower(Power);
+                rightSlides.setPower(Power);
+
+            if(aBoolean) {
+                arm.setPosition(0.4);
+                angle.setPosition(0.8);
+            }
+            else{
+                arm.setPosition(0);
+                angle.setPosition(0);
+            }
 
         }
         //MANUAL|
         //|DRIVER 2
 
         //Driver 2|
+        /*
+
         //Field Centric Drive
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = gamepad1.left_stick_x;
@@ -256,22 +316,33 @@ public class DriverMode extends OpMode {
                 ),
                 -gamepad1.right_stick_x
         ),frontLeftPower,frontRightPower,backLeftPower,backRightPower);
-
+*/        drive.setDrivePowers(new PoseVelocity2d(
+                new Vector2d(
+                        -gamepad1.left_stick_y ,
+                        -gamepad1.left_stick_x
+                ),
+                -gamepad1.right_stick_x
+        ));
         drive.updatePoseEstimate();
         telemetry.addData("pixels in intake: ", pixels);
-        telemetry.addData("target pos: ",Target);
-        telemetry.addData("average rotation: ", averageRotation);
+        telemetry.addData("target position: ",Target);
+        telemetry.addData("current position: ", Pos);
+        telemetry.addData("error: ",getError(Pos,Target));
         telemetry.addData("mode: ",mode);
         telemetry.addData("slides: ", intake.getCurrentPosition());
         telemetry.addData("right slides: ",rightSlides.getCurrentPosition());
         telemetry.addData("left slides: ",leftSlides.getCurrentPosition());
+        telemetry.addData("angle: ",currentAngle);
+        telemetry.addData("arm position: ",currentArmPosition);
+        telemetry.addData("loop time: ", loopTime.milliseconds());
         telemetry.update();
+        loopTime.reset();
     }
     @Override
     public void stop(){
     }
-    public static int getError(int current, double target){
-        int error = Math.abs((int)target-current);
+    public static double getError(double current, double target){
+        double error = Math.abs(target-current);
         return error;
     }
 }

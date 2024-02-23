@@ -67,17 +67,17 @@ public class DriverModeForKids extends OpMode {
             ));
         }
 
-        if(gamepad2.dpad_up && loopTime.milliseconds() >= 1000){
+        if(gamepad2.dpad_up && loopTime.milliseconds() >= 100){
             loopTime.reset();
             speed_limiter+=0.05;
         }
-        if (gamepad2.dpad_down && loopTime.milliseconds() >= 1000){
+        if (gamepad2.dpad_down && loopTime.milliseconds() >= 100){
             loopTime.reset();
             speed_limiter-=0.05;
         }
 
         drive.updatePoseEstimate();
-        telemetry.addData("Speed limiter: ",((int)(speed_limiter*10.0))/10.0);
+        telemetry.addData("Speed limiter: ",speed_limiter);
 //        telemetry.addData("intaking: ",intaking);
 //        telemetry.addData("intaked?: ",intaked);
         telemetry.update();
