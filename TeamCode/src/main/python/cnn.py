@@ -35,3 +35,5 @@ plt.ylim([0.5, 1])
 plt.legend(loc='lower right')
 
 plt.savefig("output_report.png")
+
+model.predict(test_images)

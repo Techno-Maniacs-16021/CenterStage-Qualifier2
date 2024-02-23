@@ -54,7 +54,7 @@ public class NewColorDetection extends LinearOpMode
             @Override
             public void onOpened()
             {
-                webcam.startStreaming(640,480, OpenCvCameraRotation.UPSIDE_DOWN);
+                webcam.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
             }
 
             @Override
