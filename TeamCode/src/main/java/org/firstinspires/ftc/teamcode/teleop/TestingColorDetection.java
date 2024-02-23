@@ -86,9 +86,9 @@
                 telemetry.addLine("pipeline running");
                 //Defining Zones
                 //Rect(top left x, top left y, bottom right x, bottom right y)
-                Rect leftRect = new Rect(20, 180, 130, 120);
-                Rect middleRect = new Rect(210, 180, 210, 75);
-                Rect rightRect = new Rect(460, 180, 130, 120);
+                Rect leftRect = new Rect(20, 20, 130, 120);
+                Rect middleRect = new Rect(210, 20, 210, 75);
+                Rect rightRect = new Rect(460, 20, 130, 120);
 
                 Imgproc.cvtColor(input, HSV, Imgproc.COLOR_RGB2HSV);
 
