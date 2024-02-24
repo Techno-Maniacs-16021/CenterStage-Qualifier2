@@ -165,17 +165,17 @@ public class RedCloseMain extends LinearOpMode {
         if (color_zone == Zone.RIGHT) {
             start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(0))
-                    .lineToX(35)
+                    .lineToX(32)
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(35,-36,Math.toRadians(0)),Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(32,-36,Math.toRadians(0)),Math.toRadians(90))
 //                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(35, -36, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(32, -36, Math.toRadians(0)))
                     .setTangent(Math.toRadians(-45))
-                    .splineToSplineHeading(new Pose2d(43.5,-42,Math.toRadians(180)),Math.toRadians(315))
+                    .splineToSplineHeading(new Pose2d(43.5,-48,Math.toRadians(180)),Math.toRadians(315))
 //                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(43.5,-42,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(43.5,-48,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-64)
                     .setTangent(0)
