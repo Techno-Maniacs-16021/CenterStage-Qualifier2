@@ -13,9 +13,12 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
+import com.qualcomm.hardware.rev.RevTouchSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -27,6 +30,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.NewColorDetection;
 import org.firstinspires.ftc.teamcode.teleop.Zone;
 import org.opencv.core.Core;
@@ -51,19 +55,29 @@ import java.util.List;
 public class RedCloseAlt extends LinearOpMode {
     //public static String detection = "right";
 
-    private ElapsedTime loopTime = new ElapsedTime();
-
     private static Action start;
     private static Action plusZero;
     private static Action park;
     private static Action cycle;
+
+    AnalogInput getAngle,getPusherPosition,getArmPosition,getGripPosition,leftIntakeLinkagePosition,rightIntakeLinkagePosition;
+
 
     RevBlinkinLedDriver blinkinLedDriverLeft;
     RevBlinkinLedDriver blinkinLedDriverRight;
     RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
     OpenCvWebcam webcam;
 
-    public class ClawAngle {
+    RevTouchSensor pixel1,pixel2;
+    /////////////////////////////////////////////
+    private ElapsedTime loopTime = new ElapsedTime();
+    private ElapsedTime actionCoolDown = new ElapsedTime();
+    public static double p,i,d,f,Target;
+    private PIDController Controller;
+    public static boolean intaking,intaked, outtakeReady,aBoolean,outtaked;
+    public static double INTIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR,ZERO_POSITION,ZERO_POWER;
+
+    /*public class ClawAngle {
         private ServoImplEx angle;
 
         public ClawAngle (HardwareMap hardwareMap) {
@@ -71,7 +85,21 @@ public class RedCloseAlt extends LinearOpMode {
             angle.setPwmRange(new PwmControl.PwmRange(510,2490));
         }
 
-        public class AngleAction implements Action {
+        public class ResetClaw implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceGround implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceBackboard implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 //action in here (return false = action rerun, return true = action stops)
@@ -79,8 +107,14 @@ public class RedCloseAlt extends LinearOpMode {
             }
         }
 
-        public Action angleAction() {
-            return new AngleAction();
+        public Action resetClaw() {
+            return new ResetClaw();
+        }
+        public Action placeBackboard() {
+            return new PlaceBackboard();
+        }
+        public Action placeGround() {
+            return new PlaceGround();
         }
     }
 
@@ -91,7 +125,21 @@ public class RedCloseAlt extends LinearOpMode {
             arm.setPwmRange(new PwmControl.PwmRange(510,2490));
         }
 
-        public class ArmAction implements Action {
+        public class ResetClaw implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceGround implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceBackboard implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 //action in here (return false = action rerun, return true = action stops)
@@ -99,8 +147,14 @@ public class RedCloseAlt extends LinearOpMode {
             }
         }
 
-        public Action armAction() {
-            return new ArmAction();
+        public Action resetClaw() {
+            return new ResetClaw();
+        }
+        public Action placeBackboard() {
+            return new PlaceBackboard();
+        }
+        public Action placeGround() {
+            return new PlaceGround();
         }
     }
 
@@ -112,7 +166,21 @@ public class RedCloseAlt extends LinearOpMode {
             pusher.setDirection(Servo.Direction.REVERSE);
         }
 
-        public class PusherAction implements Action {
+        public class ResetClaw implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceGround implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceBackboard implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 //action in here (return false = action rerun, return true = action stops)
@@ -120,8 +188,14 @@ public class RedCloseAlt extends LinearOpMode {
             }
         }
 
-        public Action pusherAction() {
-            return new PusherAction();
+        public Action resetClaw() {
+            return new ResetClaw();
+        }
+        public Action placeBackboard() {
+            return new PlaceBackboard();
+        }
+        public Action placeGround() {
+            return new PlaceGround();
         }
     }
 
@@ -132,7 +206,21 @@ public class RedCloseAlt extends LinearOpMode {
             grip.setPwmRange(new PwmControl.PwmRange(510,2490));
         }
 
-        public class GripAction implements Action {
+        public class ResetClaw implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceGround implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceBackboard implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 //action in here (return false = action rerun, return true = action stops)
@@ -140,8 +228,14 @@ public class RedCloseAlt extends LinearOpMode {
             }
         }
 
-        public Action gripAction() {
-            return new GripAction();
+        public Action resetClaw() {
+            return new ResetClaw();
+        }
+        public Action placeBackboard() {
+            return new PlaceBackboard();
+        }
+        public Action placeGround() {
+            return new PlaceGround();
         }
     }
 
@@ -196,7 +290,21 @@ public class RedCloseAlt extends LinearOpMode {
             leftSlides.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         }
 
-        public class LeftSlideAction implements Action {
+        public class ResetClaw implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceGround implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceBackboard implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 //action in here (return false = action rerun, return true = action stops)
@@ -204,8 +312,14 @@ public class RedCloseAlt extends LinearOpMode {
             }
         }
 
-        public Action leftSlideAction() {
-            return new LeftSlideAction();
+        public Action resetClaw() {
+            return new ResetClaw();
+        }
+        public Action placeBackboard() {
+            return new PlaceBackboard();
+        }
+        public Action placeGround() {
+            return new PlaceGround();
         }
     }
 
@@ -218,7 +332,21 @@ public class RedCloseAlt extends LinearOpMode {
             rightSlides.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
         }
 
-        public class RightSlideAction implements Action {
+        public class ResetClaw implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceGround implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //action in here (return false = action rerun, return true = action stops)
+                return false;
+            }
+        }
+        public class PlaceBackboard implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 //action in here (return false = action rerun, return true = action stops)
@@ -226,8 +354,14 @@ public class RedCloseAlt extends LinearOpMode {
             }
         }
 
-        public Action rightSlideAcion() {
-            return new RightSlideAction();
+        public Action resetClaw() {
+            return new ResetClaw();
+        }
+        public Action placeBackboard() {
+            return new PlaceBackboard();
+        }
+        public Action placeGround() {
+            return new PlaceGround();
         }
     }
 
@@ -239,7 +373,7 @@ public class RedCloseAlt extends LinearOpMode {
             intake.setMode(RUN_WITHOUT_ENCODER);
         }
 
-        public class IntakeAction implements Action {
+        public class IntakePixel implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
                 //action in here (return false = action rerun, return true = action stops)
@@ -247,9 +381,71 @@ public class RedCloseAlt extends LinearOpMode {
             }
         }
 
-        public Action intakeAction() {
-            return new IntakeAction();
+        public Action intakePixel() {
+            return new IntakePixel();
         }
+    }*/
+
+    public class Robot {
+        private RobotV3 bot;
+        public Robot (HardwareMap hardwareMap, Pose2d pose) {
+            bot = new RobotV3(hardwareMap, pose);
+        }
+
+        public class PlaceGround implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                bot.setTarget(1);
+                bot.activateSlides();
+                if(!bot.slidesWithinRange(0.1)) return true;
+                bot.setAnglePosition(0.9);
+                bot.setArmPosition(1);
+                if(bot.getCurrentArmPosition() < 180 || bot.getCurrentAngle() < 180) return true;
+                bot.setGripPosition(0);
+                sleep(50);
+                bot.setPusherPosition(1);
+                sleep(100);
+                bot.setPusherPosition(0);
+                return false;
+            }
+        }
+
+        public class Outtake implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                bot.openIntake();
+                sleep(100);
+                bot.setIntakePower(-1);
+                sleep(250);
+                bot.closeIntake();
+                //outtake pixel through intake
+                return false;
+            }
+        }
+
+        public class PlaceBackboard implements Action {
+            @Override
+            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
+                //raise slides
+                //angle arm
+                //angle claw angle to face backboard
+                //push one pixel onto backboard
+                return false;
+            }
+        }
+
+        public Action placeGround() {
+            return new PlaceGround();
+        }
+
+        public Action placeBackboard() {
+            return new PlaceBackboard();
+        }
+
+        public Action outtake() {
+            return new Outtake();
+        }
+
     }
 
     public static Zone color_zone = Zone.MIDDLE;
@@ -331,6 +527,7 @@ public class RedCloseAlt extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -64, Math.toRadians(270)));
+        Robot bot = new Robot(hardwareMap, new Pose2d(-36,-64, Math.toRadians(270)));
 
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
@@ -353,11 +550,28 @@ public class RedCloseAlt extends LinearOpMode {
             public void onError(int errorCode) {}
         });
 
+        //SENSORS
+        pixel1 = hardwareMap.get(RevTouchSensor.class,"pixel1");
+        pixel2 = hardwareMap.get(RevTouchSensor.class,"pixel2");
+        getAngle = hardwareMap.get(AnalogInput.class,"claw_angle_position");
+        getArmPosition = hardwareMap.get(AnalogInput.class,"claw_arm_position");
+        getPusherPosition = hardwareMap.get(AnalogInput.class,"claw_pusher_position");
+        getGripPosition = hardwareMap.get(AnalogInput.class,"claw_grip_position");
+        leftIntakeLinkagePosition = hardwareMap.get(AnalogInput.class,"left_intake_linkage_position");
+        rightIntakeLinkagePosition = hardwareMap.get(AnalogInput.class,"right_intake_linkage_position");
+        //SENSORS
+        ////////////////////////PID CONTROLLERS//////////////
+        Controller = new PIDController(p,i,d);
+
 ////////////////////////DASHBOARD TELEMETRY//////////
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 ////////////////////////STATUS UPDATE////////////////
         telemetry.addData("Status", "Initialized");
 /////////////////////////////////////////////////////
+
+        p=2.5;i=0;d=0;f=0;Target = 0;
+        INTIAL_OFFSET = 0.6;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;
+        intaked = false;intaking=false; outtakeReady = false;outtaked=false;aBoolean=false;
 
         if (color_zone == Zone.RIGHT) {
             start = drive.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
@@ -459,7 +673,7 @@ public class RedCloseAlt extends LinearOpMode {
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()){
-            Actions.runBlocking(new SequentialAction(start,plusZero,cycle,park));
+            Actions.runBlocking(new SequentialAction(bot.placeGround()));
             requestOpModeStop();
         }
     }
