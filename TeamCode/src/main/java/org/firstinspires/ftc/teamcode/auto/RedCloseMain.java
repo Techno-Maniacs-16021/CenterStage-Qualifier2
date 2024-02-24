@@ -170,7 +170,7 @@ public class RedCloseMain extends LinearOpMode {
                     .splineToSplineHeading(new Pose2d(33,-36,Math.toRadians(0)),Math.toRadians(90))
 //                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(32, -36, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(33, -36, Math.toRadians(0)))
                     .setTangent(Math.toRadians(-45))
                     .splineToSplineHeading(new Pose2d(44,-50,Math.toRadians(180)),Math.toRadians(315))
 //                    .waitSeconds(1) //drop yellow

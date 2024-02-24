@@ -1073,7 +1073,7 @@ public class MeepMeepTesting {
 
 
     public static void blueCloseMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot) {
-    String detection = "middle";
+    String detection = "right";
 
     Action start = myBot.getCurrentAction();
     Action plusZero = myBot.getCurrentAction();
