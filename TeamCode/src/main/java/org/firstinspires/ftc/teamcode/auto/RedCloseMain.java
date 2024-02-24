@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import android.util.Log;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -15,6 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.Zone;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -128,8 +131,7 @@ public class RedCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -64, Math.toRadians(270)));
-
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-64, Math.toRadians(270)));
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         blinkinLedDriverRight.setPattern(pattern);
@@ -156,25 +158,30 @@ public class RedCloseMain extends LinearOpMode {
 ////////////////////////STATUS UPDATE////////////////
         telemetry.addData("Status", "Initialized");
 /////////////////////////////////////////////////////
-
+        bot.setGripPosition(1);
+        bot.setArmPosition(0);
+        bot.setAnglePosition(0);
+        waitForStart();
         if (color_zone == Zone.RIGHT) {
-            start = drive.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(0))
-                    .lineToX(34)
+                    .lineToX(36)
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(34,-32,Math.toRadians(0)),Math.toRadians(90))
-                    .waitSeconds(1) //drop purple
+                    .splineToSplineHeading(new Pose2d(36,-32,Math.toRadians(0)),Math.toRadians(90))
+//                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(34, -32, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(34, -32, Math.toRadians(0)))
                     .setTangent(Math.toRadians(-45))
-                    .splineToSplineHeading(new Pose2d(46,-44,Math.toRadians(180)),Math.toRadians(315))
-                    .waitSeconds(1) //drop yellow
+                    .splineToSplineHeading(new Pose2d(43.5,-44,Math.toRadians(180)),Math.toRadians(315))
+//                    .waitSeconds(1) //drop yellow
                     .build();
-            park = drive.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(43.5,-44,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
-                    .lineToY(-58)
+                    .lineToY(-64)
+                    .setTangent(0)
+                    .lineToX(48)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-10)
                     .setTangent(Math.toRadians(180))
@@ -187,22 +194,25 @@ public class RedCloseMain extends LinearOpMode {
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
-            start = drive.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(73.3007558))
-                    .splineToSplineHeading(new Pose2d(24,-24,Math.toRadians(0)),Math.toRadians(73.3007558))
-                    .waitSeconds(1) //drop purple
+                    .splineToSplineHeading(new Pose2d(28,-27,Math.toRadians(0)),Math.toRadians(73.3007558))
+                    //.waitSeconds(1) //drop purple
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(24, -24, Math.toRadians(0)))
-                    .setTangent(Math.toRadians(331.3895403))
-                    .splineToSplineHeading(new Pose2d(46,-36,Math.toRadians(180)),Math.toRadians(331.3895403))
-                    .lineToX(46)
-                    .waitSeconds(1) //drop yellow
+            plusZero = bot.actionBuilder(new Pose2d(28, -27, Math.toRadians(0)))
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(32)
+                    .turn(Math.toRadians(180))
+                    .strafeTo(new Vector2d(45, -44))
+                    //.waitSeconds(1) //drop yellow
                     .build();
-            park = drive.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(43.5, -44,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
-                    .lineToY(-58)
+                    .lineToY(-64)
+                    .setTangent(0)
+                    .lineToX(48)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(43.5,-36,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-10)
                     .setTangent(Math.toRadians(180))
@@ -216,21 +226,23 @@ public class RedCloseMain extends LinearOpMode {
                     .build();
         }
         else if (color_zone == Zone.LEFT) {
-            start = drive.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(12,-30,Math.toRadians(0)),Math.toRadians(90))
-                    .waitSeconds(1) //drop purple
+                    .splineToSplineHeading(new Pose2d(11,-33,Math.toRadians(0)),Math.toRadians(90))
+//                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(12, -30, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(11, -33, Math.toRadians(0)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(46,-30,Math.toRadians(180)),Math.toRadians(0))
-                    .waitSeconds(1) //drop yellow
+                    .splineToSplineHeading(new Pose2d(45,-38,Math.toRadians(180)),Math.toRadians(0))
+//                    .waitSeconds(1) //drop yellow
                     .build();
-            park = drive.actionBuilder(new Pose2d(46, -30, Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(45, -38, Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
-                    .lineToY(-58)
+                    .lineToY(-64)
+                    .setTangent(0)
+                    .lineToX(48)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-10)
                     .setTangent(Math.toRadians(180))
@@ -242,12 +254,72 @@ public class RedCloseMain extends LinearOpMode {
                     .waitSeconds(1) //drop white
                     .build();
         }
-
-        waitForStart();
-
         while(opModeIsActive() && !isStopRequested()){
-            Actions.runBlocking(new SequentialAction(start,plusZero,cycle,park));
+            Log.d("color_zone", String.valueOf(color_zone));
+            Actions.runBlocking(new SequentialAction(start,placeGround(bot), retractBack(bot), plusZero, placeLastOnBackBoard(bot), retractBack(bot), park));
             requestOpModeStop();
         }
+    }
+    public Action placeGround(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setAnglePosition(1);
+            bot.setArmPosition(1);
+            if(bot.getCurrentArmPosition() < 180 || bot.getCurrentAngle() < 200) return true;
+            sleep(150);
+            bot.setGripPosition(0);
+            sleep(500);
+            return false;
+        };
+    }
+    public Action retractBack(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.updateRobotState();
+            bot.setAnglePosition(0.02);
+            bot.setArmPosition(0);
+            if(bot.getCurrentArmPosition() > 15 || bot.getCurrentAngle() > 15) return true;
+            sleep(200);
+            bot.setTarget(0);
+            bot.slideZeroCondition(0, 0.2);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+
+            return false;
+        };
+    }
+    public Action placeLastOnBackBoard(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(0.7);
+            bot.setAnglePosition(0.8);
+            if(bot.getCurrentArmPosition() < 120 || bot.getCurrentAngle() < 160) return true;
+            sleep(150);
+            bot.setPusherPosition(1);
+            sleep(250);
+            bot.setPusherPosition(0);
+
+            return false;
+        };
+    }
+    public Action outtake(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.openIntake();
+            sleep(1000);
+            bot.setIntakePower(-1);
+            sleep(1000);
+            bot.closeIntake();
+            //outtake pixel through intake
+            return false;
+        };
     }
 }
