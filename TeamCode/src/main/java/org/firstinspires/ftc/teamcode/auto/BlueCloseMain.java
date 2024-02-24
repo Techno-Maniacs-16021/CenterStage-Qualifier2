@@ -38,7 +38,7 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class RedCloseMain extends LinearOpMode {
+public class BlueCloseMain extends LinearOpMode {
     public static String detection = "right";
 
     private ElapsedTime loopTime = new ElapsedTime();
@@ -131,7 +131,7 @@ public class RedCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-64, Math.toRadians(270)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,64, Math.toRadians(90)));
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         blinkinLedDriverRight.setPattern(pattern);
@@ -162,22 +162,22 @@ public class RedCloseMain extends LinearOpMode {
         bot.setArmPosition(0);
         bot.setAnglePosition(0);
         waitForStart();
-        if (color_zone == Zone.RIGHT) {
-            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+        if (color_zone == Zone.LEFT) {
+            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
                     .setTangent(Math.toRadians(0))
                     .lineToX(33)
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(33,-36,Math.toRadians(0)),Math.toRadians(90))
+                    .setTangent(Math.toRadians(270))
+                    .splineToSplineHeading(new Pose2d(33,36,Math.toRadians(0)),Math.toRadians(270))
 //                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(33, -36, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(32, 36, Math.toRadians(0)))
                     .setTangent(Math.toRadians(-45))
-                    .splineToSplineHeading(new Pose2d(44,-50,Math.toRadians(180)),Math.toRadians(315))
+                    .splineToSplineHeading(new Pose2d(44,50,Math.toRadians(180)),Math.toRadians(315))
 //                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(44,-50,Math.toRadians(180)))
-                    .setTangent(Math.toRadians(270))
-                    .lineToY(-64)
+            park = bot.actionBuilder(new Pose2d(44,50,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(64)
                     .setTangent(0)
                     .lineToX(48)
                     .build();
@@ -194,21 +194,21 @@ public class RedCloseMain extends LinearOpMode {
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
-            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
                     .setTangent(Math.toRadians(73.3007558))
-                    .splineToSplineHeading(new Pose2d(28,-27,Math.toRadians(0)),Math.toRadians(73.3007558))
+                    .splineToSplineHeading(new Pose2d(28,27,Math.toRadians(0)),Math.toRadians(73.3007558))
                     //.waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(28, -27, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(28, 27, Math.toRadians(0)))
                     .setTangent(Math.toRadians(0))
                     .lineToX(32)
                     .turn(Math.toRadians(180))
-                    .strafeTo(new Vector2d(43, -44))
+                    .strafeTo(new Vector2d(43, 44))
                     //.waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(43, -44,Math.toRadians(180)))
-                    .setTangent(Math.toRadians(270))
-                    .lineToY(-64)
+            park = bot.actionBuilder(new Pose2d(43, 44,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(64)
                     .setTangent(0)
                     .lineToX(48)
                     .build();
@@ -225,20 +225,20 @@ public class RedCloseMain extends LinearOpMode {
                     .waitSeconds(1) //drop white
                     .build();
         }
-        else if (color_zone == Zone.LEFT) {
-            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(11,-34,Math.toRadians(0)),Math.toRadians(90))
+        else if (color_zone == Zone.RIGHT) {
+            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToSplineHeading(new Pose2d(11,34,Math.toRadians(0)),Math.toRadians(270))
 //                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(11, -34, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(11, 34, Math.toRadians(0)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(44,-38,Math.toRadians(180)),Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(44,38,Math.toRadians(180)),Math.toRadians(0))
 //                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(44, -38, Math.toRadians(180)))
-                    .setTangent(Math.toRadians(270))
-                    .lineToY(-64)
+            park = bot.actionBuilder(new Pose2d(44, 38, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(64)
                     .setTangent(0)
                     .lineToX(48)
                     .build();
@@ -307,7 +307,7 @@ public class RedCloseMain extends LinearOpMode {
             bot.setPusherPosition(1);
             sleep(250);
             bot.setPusherPosition(0);
-            sleep(250);
+
             return false;
         };
     }
