@@ -160,8 +160,8 @@ public class RedFarMain extends LinearOpMode {
 
         if (color_zone == Zone.RIGHT) {
             start = drive.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(-42,-30,Math.toRadians(180)),Math.toRadians(90))
+                    .setTangent(Math.toRadians(100.0079798))
+                    .splineToSplineHeading(new Pose2d(-42,-30,Math.toRadians(180)),Math.toRadians(100.0079798))
                     .waitSeconds(1) //drop purple
                     .build();
             plusOne = drive.actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
@@ -201,8 +201,8 @@ public class RedFarMain extends LinearOpMode {
         }
         else if (color_zone == Zone.MIDDLE) {
             start = drive.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(-48,-24,Math.toRadians(180)),Math.toRadians(90))
+                    .setTangent(Math.toRadians(106.6992442))
+                    .splineToSplineHeading(new Pose2d(-48,-24,Math.toRadians(180)),Math.toRadians(106.6992442))
                     .waitSeconds(1) //drop purple
                     .build();
             plusOne = drive.actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
@@ -242,8 +242,8 @@ public class RedFarMain extends LinearOpMode {
         }
         else if (color_zone == Zone.LEFT) {
             start = drive.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(-60,-30,Math.toRadians(180)),Math.toRadians(90))
+                    .setTangent(Math.toRadians(125.217593))
+                    .splineToSplineHeading(new Pose2d(-60,-30,Math.toRadians(180)),Math.toRadians(125.217593))
                     .waitSeconds(1) //drop purple
                     .build();
             plusOne = drive.actionBuilder(new Pose2d(-60, -30, Math.toRadians(180)))

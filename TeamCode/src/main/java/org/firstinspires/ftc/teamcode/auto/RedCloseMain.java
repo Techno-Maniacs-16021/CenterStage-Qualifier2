@@ -159,13 +159,15 @@ public class RedCloseMain extends LinearOpMode {
 
         if (color_zone == Zone.RIGHT) {
             start = drive.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
-                    .setTangent(0)
-                    .splineToSplineHeading(new Pose2d(34,-32,Math.toRadians(180)),Math.toRadians(90))
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(34)
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(34,-32,Math.toRadians(0)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(34, -32, Math.toRadians(180)))
+            plusZero = drive.actionBuilder(new Pose2d(34, -32, Math.toRadians(0)))
                     .setTangent(Math.toRadians(-45))
-                    .lineToX(46)
+                    .splineToSplineHeading(new Pose2d(46,-44,Math.toRadians(180)),Math.toRadians(315))
                     .waitSeconds(1) //drop yellow
                     .build();
             park = drive.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
@@ -186,12 +188,13 @@ public class RedCloseMain extends LinearOpMode {
         }
         else if (color_zone == Zone.MIDDLE) {
             start = drive.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(24,-24,Math.toRadians(180)),Math.toRadians(90))
+                    .setTangent(Math.toRadians(73.3007558))
+                    .splineToSplineHeading(new Pose2d(24,-24,Math.toRadians(0)),Math.toRadians(73.3007558))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(24, -24, Math.toRadians(180)))
+            plusZero = drive.actionBuilder(new Pose2d(24, -24, Math.toRadians(0)))
                     .setTangent(Math.toRadians(331.3895403))
+                    .splineToSplineHeading(new Pose2d(46,-36,Math.toRadians(180)),Math.toRadians(331.3895403))
                     .lineToX(46)
                     .waitSeconds(1) //drop yellow
                     .build();
@@ -215,11 +218,12 @@ public class RedCloseMain extends LinearOpMode {
         else if (color_zone == Zone.LEFT) {
             start = drive.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(12,-30,Math.toRadians(180)),Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(12,-30,Math.toRadians(0)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(12, -30, Math.toRadians(180)))
-                    .lineToX(46)
+            plusZero = drive.actionBuilder(new Pose2d(12, -30, Math.toRadians(0)))
+                    .setTangent(Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(46,-30,Math.toRadians(180)),Math.toRadians(0))
                     .waitSeconds(1) //drop yellow
                     .build();
             park = drive.actionBuilder(new Pose2d(46, -30, Math.toRadians(180)))
