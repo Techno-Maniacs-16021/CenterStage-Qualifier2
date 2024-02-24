@@ -33,7 +33,7 @@ public class ModularDrive extends OpMode {
     public void init() {
 //        p=2.5;i=0;d=0;f=0;
         bot = new RobotV3(hardwareMap, new Pose2d(0,0,0));
-        INITIAL_OFFSET = 1;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;ZERO_ANGLE=0.0 ;
+        INITIAL_OFFSET = 1;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;ZERO_ANGLE=0.02 ;
         tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).build();
         visionPortal = new VisionPortal.Builder().addProcessor(tagProcessor).setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")).setCameraResolution(new Size(640, 480)).setStreamFormat(VisionPortal.StreamFormat.MJPEG).build();
     }
@@ -129,7 +129,10 @@ public class ModularDrive extends OpMode {
             bot.setTarget(INITIAL_OFFSET);
             bot.setGripPosition(0.5);
             bot.openIntake();
-            if(bot.getPixels()<2) bot.setIntakePower(gamepad1.right_trigger);
+            if(bot.getPixels()<2){
+                if(gamepad1.right_trigger>0)bot.setIntakePower(gamepad1.right_trigger);
+                else bot.setIntakePower(0);
+            }
             else bot.setIntakePower(-1);
         }else if(((bot.getLinearSlidePosition()>INITIAL_OFFSET-3*ALLOWED_ERROR||bot.slidesWithinRange(ALLOWED_ERROR)) && bot.getPixels() == 2) || gamepad1.dpad_down){
             bot.setTarget(ZERO_POSITION);
@@ -200,9 +203,9 @@ public class ModularDrive extends OpMode {
             bot.closeIntake();
         }
         if(gamepad1.triangle)
-            bot.setTarget(4);
+            bot.setTarget(3.7);
         if(gamepad1.circle)
-            bot.setTarget(3.5);
+            bot.setTarget(3.3);
         if(gamepad1.cross)
             bot.setTarget(ZERO_POSITION);
     }
