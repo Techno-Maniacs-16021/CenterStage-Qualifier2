@@ -363,7 +363,7 @@ public class RedCloseAlt extends LinearOpMode {
         public Action placeGround() {
             return new PlaceGround();
         }
-    }
+    }*/
 
     public class Intake {
         private DcMotorEx intake;
@@ -376,7 +376,9 @@ public class RedCloseAlt extends LinearOpMode {
         public class IntakePixel implements Action {
             @Override
             public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                //action in here (return false = action rerun, return true = action stops)
+                intake.setPower(-1);
+                sleep(1000);
+                intake.setPower(0);
                 return false;
             }
         }
@@ -384,68 +386,6 @@ public class RedCloseAlt extends LinearOpMode {
         public Action intakePixel() {
             return new IntakePixel();
         }
-    }*/
-
-    public class Robot {
-        private RobotV3 bot;
-        public Robot (HardwareMap hardwareMap, Pose2d pose) {
-            bot = new RobotV3(hardwareMap, pose);
-        }
-
-        public class PlaceGround implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                bot.setTarget(1);
-                bot.activateSlides();
-                if(!bot.slidesWithinRange(0.1)) return true;
-                bot.setAnglePosition(0.9);
-                bot.setArmPosition(1);
-                if(bot.getCurrentArmPosition() < 180 || bot.getCurrentAngle() < 180) return true;
-                bot.setGripPosition(0);
-                sleep(50);
-                bot.setPusherPosition(1);
-                sleep(100);
-                bot.setPusherPosition(0);
-                return false;
-            }
-        }
-
-        public class Outtake implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                bot.openIntake();
-                sleep(100);
-                bot.setIntakePower(-1);
-                sleep(250);
-                bot.closeIntake();
-                //outtake pixel through intake
-                return false;
-            }
-        }
-
-        public class PlaceBackboard implements Action {
-            @Override
-            public boolean run(@NonNull TelemetryPacket telemetryPacket) {
-                //raise slides
-                //angle arm
-                //angle claw angle to face backboard
-                //push one pixel onto backboard
-                return false;
-            }
-        }
-
-        public Action placeGround() {
-            return new PlaceGround();
-        }
-
-        public Action placeBackboard() {
-            return new PlaceBackboard();
-        }
-
-        public Action outtake() {
-            return new Outtake();
-        }
-
     }
 
     public static Zone color_zone = Zone.MIDDLE;
@@ -526,8 +466,10 @@ public class RedCloseAlt extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -64, Math.toRadians(270)));
-        Robot bot = new Robot(hardwareMap, new Pose2d(-36,-64, Math.toRadians(270)));
+        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(12, -64, Math.toRadians(270)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-64, Math.toRadians(270)));
+
+        Intake intake = new Intake(hardwareMap);
 
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
@@ -669,12 +611,80 @@ public class RedCloseAlt extends LinearOpMode {
                     .build();
 
         }
-
+        bot.setGripPosition(1);
+        bot.setArmPosition(0);
+        bot.setAnglePosition(0);
         waitForStart();
 
         while(opModeIsActive() && !isStopRequested()){
-            Actions.runBlocking(new SequentialAction(bot.placeGround()));
+            telemetry.addLine("action perhaps?");
+            telemetry.update();
+            Actions.runBlocking(new SequentialAction(placeGround(bot), retractBack(bot), placeLastOnBackBoard(bot), retractBack(bot)));
+            telemetry.addLine("please run");
+            telemetry.update();
             requestOpModeStop();
         }
+    }
+    public Action placeGround(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setAnglePosition(1);
+            bot.setArmPosition(1);
+            if(bot.getCurrentArmPosition() < 180 || bot.getCurrentAngle() < 200) return true;
+            sleep(150);
+            bot.setGripPosition(0);
+            sleep(500);
+            return false;
+        };
+    }
+    public Action retractBack(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.updateRobotState();
+            bot.setAnglePosition(0.02);
+            bot.setArmPosition(0);
+            if(bot.getCurrentArmPosition() > 15 || bot.getCurrentAngle() > 15) return true;
+            sleep(200);
+            bot.setTarget(0);
+            bot.slideZeroCondition(0, 0.2);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+
+            return false;
+        };
+    }
+    public Action placeLastOnBackBoard(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(1);
+            bot.setAnglePosition(0.8);
+            if(bot.getCurrentArmPosition() < 180 || bot.getCurrentAngle() < 160) return true;
+            sleep(150);
+            bot.setPusherPosition(1);
+            sleep(250);
+            bot.setPusherPosition(0);
+
+            return false;
+        };
+    }
+    public Action outtake(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.openIntake();
+            sleep(1000);
+            bot.setIntakePower(-1);
+            sleep(1000);
+            bot.closeIntake();
+            //outtake pixel through intake
+            return false;
+        };
     }
 }
