@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.hardware.rev.RevTouchSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.RUN_WITHOUT_ENCODER;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
@@ -24,8 +23,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 @Config
 @TeleOp
 public class DriverMode extends OpMode {
@@ -40,10 +38,11 @@ public class DriverMode extends OpMode {
     /////////////////////////////////////////////
     private ElapsedTime loopTime = new ElapsedTime();
     private ElapsedTime actionCoolDown = new ElapsedTime();
+    private ElapsedTime atTarget = new ElapsedTime();
     private MecanumDrive drive;
     public static double p,i,d,f,Target;
     private PIDController Controller;
-     public static boolean intaking,intaked, outtakeReady,aBoolean,outtaked;
+    public static boolean intaking,intaked, outtakeReady,aBoolean,outtaked,retract;
     public static double INTIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR,ZERO_POSITION,ZERO_POWER;
     public static String mode = "intake";
 
@@ -108,7 +107,7 @@ public class DriverMode extends OpMode {
 /////////////////////////////////////////////////////
         p=2.5;i=0;d=0;f=0;Target = 0;mode="intake";
         INTIAL_OFFSET = 0.6;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;
-        intaked = false;intaking=false; outtakeReady = false;outtaked=false;aBoolean=false;
+        intaked = false;intaking=false; outtakeReady = false;outtaked=false;aBoolean=false;retract=false;
 
 
     }
@@ -118,16 +117,16 @@ public class DriverMode extends OpMode {
     }
     @Override
     public void start(){
-        grip.setPosition(0.5);
-        arm.setPosition(0);
-        angle.setPosition(0);
+    grip.setPosition(0.5);
+    arm.setPosition(0);
+    angle.setPosition(0);
 
     }
     @Override
     public void loop(){
         //|DATA
         int pixels = (int)pixel1.getValue()+(int)pixel2.getValue();
-        double Pos = ((intake.getCurrentPosition()/8192)+(leftSlides.getCurrentPosition()/537.7)+(rightSlides.getCurrentPosition()/537.7))/3;
+        double Pos = ((intake.getCurrentPosition()/8192.0)+(leftSlides.getCurrentPosition()/537.7)+(rightSlides.getCurrentPosition()/537.7))/3;
         Controller.setPID(p, i, d);
         double PID = Controller.calculate(Pos, Target);
         double Power = f;
@@ -137,6 +136,7 @@ public class DriverMode extends OpMode {
         double currentArmPosition=Math.abs(((getArmPosition.getVoltage()/3.3)*360)-275);
         double currentGripPosition=((getGripPosition.getVoltage()/3.3)*360);
         double clawPusherPosition=((getPusherPosition.getVoltage()/3.3)*360);
+        if(getError(Pos,Target)>ALLOWED_ERROR)atTarget.reset();
         //DATA|
         //|MODE LOGIC
         if(gamepad1.touchpad)mode = "intake";
@@ -172,7 +172,7 @@ public class DriverMode extends OpMode {
             //else if(pixels==2||gamepad1.dpad_down){
                 Target=ZERO_POSITION;
                 intake.setPower(0);
-                if(getError(Pos,Target)<ALLOWED_ERROR)grip.setPosition(1);
+                if(getError(Pos,Target)<ALLOWED_ERROR&&atTarget.milliseconds()>250) grip.setPosition(1);
             }
             if(gamepad1.dpad_right)grip.setPosition(1);
 
@@ -197,7 +197,7 @@ public class DriverMode extends OpMode {
                     Target+=0.1;
                     actionCoolDown.reset();
                 }
-                else if (gamepad1.left_trigger > 0&actionCoolDown.milliseconds()>50) {
+                else if (gamepad1.left_trigger > 0&&actionCoolDown.milliseconds()>50) {
                     Target-=0.1;
                     actionCoolDown.reset();
                 }
@@ -208,13 +208,15 @@ public class DriverMode extends OpMode {
                     angle.setPosition(0.8);
                     outtakeReady = true;
             }
+            if(retract&&Pos>2*INTIAL_OFFSET){
+                arm.setPosition(0);
+                angle.setPosition(0);
+                grip.setPosition(0.5);
+            }
             if(gamepad1.square){
                 if(Pos<2*INTIAL_OFFSET)Target+=1;
-                else {
-                    arm.setPosition(0);
-                    angle.setPosition(0);
-                    grip.setPosition(0.5);
-                }
+                else
+                    retract = true;
             }
             else if(gamepad1.triangle&&actionCoolDown.milliseconds()>50){
                 arm.setPosition(arm.getPosition()-0.03);
@@ -226,9 +228,10 @@ public class DriverMode extends OpMode {
             }
 
             //auto retract
-            if(currentArmPosition<25&&outtaked){
+            if(currentAngle<15&&currentArmPosition<15&&outtaked){
                 Target=0;
                 outtaked=false;
+                retract=false;
                 mode="intake";
             }
 
@@ -245,7 +248,7 @@ public class DriverMode extends OpMode {
         }
         //OUTTAKE|
         //|END GAME
-        else if(mode.equals("end game")){
+        else if(mode.equals("end_game")){
             arm.setPosition(0.5);
             angle.setPosition(0.7);
 
