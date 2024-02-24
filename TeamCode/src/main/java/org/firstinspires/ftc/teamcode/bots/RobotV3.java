@@ -21,6 +21,8 @@ public class RobotV3 extends MecanumDrive{
     final double ALLOWED_ERROR = 0.1;
     ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage;
     DcMotorEx leftSlides,rightSlides,intake;
+    RevBlinkinLedDriver blinkinLedDriverLeft;
+    RevBlinkinLedDriver blinkinLedDriverRight;
     AnalogInput getAngle,getPusherPosition,getArmPosition,getGripPosition,leftIntakeLinkagePosition,rightIntakeLinkagePosition;
     //RevBlinkinLedDriver blinkinLedDriverLeft,blinkinLedDriverRight;
     RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
@@ -64,7 +66,8 @@ public class RobotV3 extends MecanumDrive{
         leftSlides.setMode(RUN_WITHOUT_ENCODER);
         intake.setMode(STOP_AND_RESET_ENCODER);
         intake.setMode(RUN_WITHOUT_ENCODER);
-
+        blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
+        blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         //set direction
         leftSlides.setDirection(DcMotorSimple.Direction.REVERSE);
         leftSlides.setZeroPowerBehavior(DcMotorEx.ZeroPowerBehavior.BRAKE);
@@ -199,5 +202,15 @@ public class RobotV3 extends MecanumDrive{
         return atTarget.milliseconds();
     }
 
+    public void setBothLED(RevBlinkinLedDriver.BlinkinPattern pattern){
+        blinkinLedDriverLeft.setPattern(pattern);
+        blinkinLedDriverRight.setPattern(pattern);
+    }
+    public void setRightLED(RevBlinkinLedDriver.BlinkinPattern pattern){
+        blinkinLedDriverRight.setPattern(pattern);
+    }
+    public void setLeftLED(RevBlinkinLedDriver.BlinkinPattern pattern){
+        blinkinLedDriverLeft.setPattern(pattern);
+    }
 
 }

@@ -6,6 +6,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
 import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -51,6 +52,7 @@ public class ModularDrive extends OpMode {
     public void loop() {
 //        bot.pidTuning(p, i, d, f, Target);
         bot.updateRobotState();
+        ledControls();
         if(!bot.slidesWithinRange(ALLOWED_ERROR)) bot.setLinearSlidePower(bot.getCalculatedPower());
         bot.slideZeroCondition(ZERO_POSITION, ZERO_POWER);
         modeControls();
@@ -90,7 +92,7 @@ public class ModularDrive extends OpMode {
         telemetry.addData("loop time: ", loopTime.milliseconds());
         telemetry.addData("p i d", bot.getController().getP() + " " + bot.getController().getI() + " " + bot.getController().getD());
         telemetry.addData("timeAtTarget: ", bot.getTimeAtTarget());
-        aprilTagDetections();
+//        aprilTagDetections();
         telemetry.update();
         loopTime.reset();
     }
@@ -126,6 +128,11 @@ public class ModularDrive extends OpMode {
         if(gamepad1.square) bot.closeIntake();
         else if(gamepad1.triangle) bot.openIntake();
         if(gamepad1.right_trigger>0){
+            if(bot.getPixels() == 0){
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+            }else if(bot.getPixels() == 1){
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+            }
             bot.setTarget(INITIAL_OFFSET);
             bot.setGripPosition(0.5);
             bot.openIntake();
@@ -214,5 +221,25 @@ public class ModularDrive extends OpMode {
     }
     private void reset(){
 
+    }
+    private void ledControls(){
+        if (gamepad2.circle) {
+            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+        }
+        else if (gamepad2.square) {
+            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+        }
+        else if (gamepad2.triangle) {
+            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+        }
+        else if (gamepad2.cross) {
+            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+        }
+        else if (gamepad2.dpad_up) {
+            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+        }
+        else if (gamepad2.dpad_down) {
+            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RED);
+        }
     }
 }
