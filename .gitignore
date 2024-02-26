@@ -79,3 +79,4 @@ lint/generated/
 lint/outputs/
 lint/tmp/
 # lint/reports/
+TeamCode/src/main/python/model.weights.best_200.hdf5
