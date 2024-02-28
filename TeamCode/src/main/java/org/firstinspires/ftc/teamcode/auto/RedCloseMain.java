@@ -165,17 +165,17 @@ public class RedCloseMain extends LinearOpMode {
         if (color_zone == Zone.RIGHT) {
             start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(0))
-                    .lineToX(33)
+                    .lineToX(35)
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(33,-36,Math.toRadians(0)),Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(35,-36,Math.toRadians(0)),Math.toRadians(90))
 //                    .waitSeconds(1) //drop purple
                     .build();
             plusZero = bot.actionBuilder(new Pose2d(33, -36, Math.toRadians(0)))
                     .setTangent(Math.toRadians(-45))
-                    .splineToSplineHeading(new Pose2d(44,-50,Math.toRadians(180)),Math.toRadians(315))
+                    .splineToSplineHeading(new Pose2d(45,-49,Math.toRadians(180)),Math.toRadians(315))
 //                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(44,-50,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(45 ,-49,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-64)
                     .setTangent(0)
@@ -255,6 +255,7 @@ public class RedCloseMain extends LinearOpMode {
                     .build();
         }
         while(opModeIsActive() && !isStopRequested()){
+            webcam.stopStreaming();
             Log.d("color_zone", String.valueOf(color_zone));
             Actions.runBlocking(new SequentialAction(start,placeGround(bot), retractBack(bot), plusZero, placeLastOnBackBoard(bot), retractBack(bot), park));
             requestOpModeStop();

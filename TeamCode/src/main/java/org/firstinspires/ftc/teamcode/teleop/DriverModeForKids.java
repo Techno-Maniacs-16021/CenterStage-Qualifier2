@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 
 @Config
-@TeleOp
+//@TeleOp
 public class DriverModeForKids extends OpMode {
     /////////////////////////////////////////////
     private MecanumDrive drive;

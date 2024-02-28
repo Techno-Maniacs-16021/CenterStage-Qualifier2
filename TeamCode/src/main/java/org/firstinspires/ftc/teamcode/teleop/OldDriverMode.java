@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 @Config
-@TeleOp
+//@TeleOp
 @Disabled
 public class OldDriverMode extends OpMode {
     /////////////////////////////////////////////

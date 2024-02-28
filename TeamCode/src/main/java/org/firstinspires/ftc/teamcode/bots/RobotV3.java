@@ -19,7 +19,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 public class RobotV3 extends MecanumDrive{
     final double ALLOWED_ERROR = 0.1;
-    ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage;
+    ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage, drone;
     DcMotorEx leftSlides,rightSlides,intake;
     RevBlinkinLedDriver blinkinLedDriverLeft;
     RevBlinkinLedDriver blinkinLedDriverRight;
@@ -43,6 +43,7 @@ public class RobotV3 extends MecanumDrive{
         grip = hardwareMap.get(ServoImplEx.class,"claw_grip");
         leftIntakeLinkage = hardwareMap.get(ServoImplEx.class,"left_intake_linkage");
         rightIntakeLinkage = hardwareMap.get(ServoImplEx.class,"right_intake_linkage");
+        drone = hardwareMap.get(ServoImplEx.class,"drone");
         //pwm ranges
         angle.setPwmRange(new PwmControl.PwmRange(510,2490));
         arm.setPwmRange(new PwmControl.PwmRange(510,2490));
@@ -50,9 +51,11 @@ public class RobotV3 extends MecanumDrive{
         pusher.setPwmRange(new PwmControl.PwmRange(1100,2150));
         leftIntakeLinkage.setPwmRange(new PwmControl.PwmRange(510,2490));
         rightIntakeLinkage.setPwmRange(new PwmControl.PwmRange(510,2490));
+        drone.setPwmRange(new PwmControl.PwmRange(1000,2000));
         //set direction
         pusher.setDirection(Servo.Direction.REVERSE);
         rightIntakeLinkage.setDirection(Servo.Direction.REVERSE);
+        drone.setDirection(Servo.Direction.REVERSE);
         //SERVOS
         //MOTORS
         //hardware map
@@ -211,6 +214,12 @@ public class RobotV3 extends MecanumDrive{
     }
     public void setLeftLED(RevBlinkinLedDriver.BlinkinPattern pattern){
         blinkinLedDriverLeft.setPattern(pattern);
+    }
+    public void shootDrone(){
+        drone.setPosition(1);
+    }
+    public void setDronePosition(double position){
+        drone.setPosition(position);
     }
 
 }

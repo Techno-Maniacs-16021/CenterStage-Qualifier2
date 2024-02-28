@@ -41,7 +41,7 @@ import java.util.Arrays;
  * and then snapshot that value for later use when the START
  * command is issued. The pipeline is re-used from SkystoneDeterminationExample
  */
-@TeleOp
+//@TeleOp
 public class OpenCVExample extends LinearOpMode
 {
     OpenCvWebcam webcam;

@@ -17,7 +17,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
-@TeleOp @Config
+@TeleOp(name = "Drive") @Config
 public class ModularDrive extends OpMode {
     // TODO needs to be removed.
     public static double p,i,d,f,Target;
@@ -110,6 +110,7 @@ public class ModularDrive extends OpMode {
                 break;
             case "get_outtake_ready":
                 getOuttakeReady();
+                bot.setGripPosition(1);
                 retract = false;
                 outtaked = false;
                 break;
@@ -129,9 +130,11 @@ public class ModularDrive extends OpMode {
         else if(gamepad1.triangle) bot.openIntake();
         if(gamepad1.right_trigger>0){
             if(bot.getPixels() == 0){
-                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RED);
             }else if(bot.getPixels() == 1){
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+            }else{
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_PARTY_PALETTE);
             }
             bot.setTarget(INITIAL_OFFSET);
             bot.setGripPosition(0.5);
@@ -215,6 +218,8 @@ public class ModularDrive extends OpMode {
             bot.setTarget(3.3);
         if(gamepad1.cross)
             bot.setTarget(ZERO_POSITION);
+
+        if(gamepad1.dpad_up) bot.shootDrone();
     }
     private void manual(){
 

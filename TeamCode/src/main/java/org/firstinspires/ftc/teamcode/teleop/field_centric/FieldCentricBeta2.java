@@ -26,7 +26,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 @Config
-@TeleOp
+
 public class FieldCentricBeta2 extends OpMode {
     /////////////////////////////////////////////
     ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage;

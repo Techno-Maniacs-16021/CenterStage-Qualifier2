@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.Zone;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
@@ -129,7 +130,7 @@ public class RedFarAlt extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        MecanumDrive drive = new MecanumDrive(hardwareMap, new Pose2d(-36, -64, Math.toRadians(270)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(-36, -64, Math.toRadians(270)));
 
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
@@ -157,14 +158,17 @@ public class RedFarAlt extends LinearOpMode {
 ////////////////////////STATUS UPDATE////////////////
         telemetry.addData("Status", "Initialized");
 /////////////////////////////////////////////////////
-
+        bot.setGripPosition(1);
+        bot.setAnglePosition(0);
+        bot.setArmPosition(0);
+        waitForStart();
         if (color_zone == Zone.RIGHT) {
-            start = drive.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
+            start = bot.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
                     .splineToSplineHeading(new Pose2d(-42,-30,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusOne = drive.actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
+            plusOne = bot.actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
                     .setTangent(Math.toRadians(197))
                     .lineToX(-60)
                     .waitSeconds(1) //pick up white
@@ -176,7 +180,7 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-42)
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
+            plusZero = bot.actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-60)
                     .setTangent(Math.toRadians(0))
@@ -185,11 +189,11 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-42)
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            park = drive.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-56)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-60)
                     .setTangent(Math.toRadians(180))
@@ -207,12 +211,12 @@ public class RedFarAlt extends LinearOpMode {
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
-            start = drive.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
+            start = bot.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(-48,-24,Math.toRadians(180)),Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-54,-28,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusOne = drive.actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
+            plusOne = bot.actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
                     .setTangent(Math.toRadians(225))
                     .lineToX(-60)
                     .waitSeconds(1) //pick up white
@@ -224,7 +228,7 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-36)
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
+            plusZero = bot.actionBuilder(new Pose2d(-48, -24, Math.toRadians(180)))
                     .setTangent(Math.toRadians(288.4349488))
                     .lineToY(-60)
                     .setTangent(Math.toRadians(0))
@@ -233,11 +237,11 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-36)
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            park = drive.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-56)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-60)
                     .setTangent((Math.toRadians(180)))
@@ -255,12 +259,12 @@ public class RedFarAlt extends LinearOpMode {
                     .build();
         }
         else if (color_zone == Zone.LEFT) {
-            start = drive.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
+            start = bot.actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
                     .splineToSplineHeading(new Pose2d(-60,-30,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusOne = drive.actionBuilder(new Pose2d(-60, -30, Math.toRadians(180)))
+            plusOne = bot.actionBuilder(new Pose2d(-60, -30, Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-36)
                     .waitSeconds(1) //pick up white
@@ -272,7 +276,7 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-30)
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            plusZero = drive.actionBuilder(new Pose2d(-60, -30, Math.toRadians(180)))
+            plusZero = bot.actionBuilder(new Pose2d(-60, -30, Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-36)
                     .waitSeconds(1) //pick up white
@@ -284,11 +288,11 @@ public class RedFarAlt extends LinearOpMode {
                     .lineToY(-30)
                     .waitSeconds(1) //drop yellow and white
                     .build();
-            park = drive.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
                     .lineToY(-56)
                     .build();
-            cycle = drive.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
                     .setTangent(Math.toRadians(270))
                     .lineToY(-60)
                     .setTangent(Math.toRadians(180))
@@ -305,22 +309,60 @@ public class RedFarAlt extends LinearOpMode {
                     .waitSeconds(1) //drop yellow and white
                     .build();
         }
-
-        waitForStart();
-
         while(opModeIsActive() && !isStopRequested()){
-            if (plus == 0) {
-                Actions.runBlocking(new SequentialAction(start, plusZero, park));
+                    Actions.runBlocking(new SequentialAction(start,placeGround(bot),retractBack(bot)));
                 requestOpModeStop();
-            }
-            else if (plus == 1) {
-                Actions.runBlocking(new SequentialAction(start, plusOne, park));
-                requestOpModeStop();
-            }
-            else {
-                Actions.runBlocking(new SequentialAction(start, plusOne, cycle, park));
-                requestOpModeStop();
-            }
         }
+    }
+    public Action placeGround(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setAnglePosition(1);
+            bot.setArmPosition(1);
+            if(bot.getCurrentArmPosition() < 180 || bot.getCurrentAngle() < 200) return true;
+            sleep(150);
+            bot.setGripPosition(0);
+            sleep(500);
+            return false;
+        };
+    }
+    public Action retractBack(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.updateRobotState();
+            bot.setAnglePosition(0.02);
+            bot.setArmPosition(0);
+            if(bot.getCurrentArmPosition() > 15 || bot.getCurrentAngle() > 15) return true;
+            sleep(200);
+            bot.setTarget(0);
+            bot.slideZeroCondition(0, 0.2);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+
+            return false;
+        };
+    }
+    public Action placeLastOnBackBoard(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(0.7);
+            bot.setAnglePosition(0.8);
+            if(bot.getCurrentArmPosition() < 120 || bot.getCurrentAngle() < 160) return true;
+            sleep(150);
+            bot.setPusherPosition(1);
+            sleep(250);
+            bot.setPusherPosition(0);
+            sleep(250);
+            return false;
+        };
     }
 }

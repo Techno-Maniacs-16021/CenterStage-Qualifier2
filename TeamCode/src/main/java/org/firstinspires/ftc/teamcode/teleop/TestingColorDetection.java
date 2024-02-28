@@ -18,7 +18,7 @@
 
 
 
-    @TeleOp
+//    @TeleOp
     public class TestingColorDetection extends LinearOpMode
     {
         RevBlinkinLedDriver blinkinLedDriverLeft;

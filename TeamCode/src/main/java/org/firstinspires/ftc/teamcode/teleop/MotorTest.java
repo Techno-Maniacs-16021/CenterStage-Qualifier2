@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 @Config
-@TeleOp
+//@TeleOp
 public class MotorTest extends OpMode {
     DcMotorEx motor;
     @Override

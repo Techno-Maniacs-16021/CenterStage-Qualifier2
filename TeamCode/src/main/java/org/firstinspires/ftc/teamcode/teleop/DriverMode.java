@@ -25,7 +25,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 @Config
-@TeleOp
+//@TeleOp
 public class DriverMode extends OpMode {
     /////////////////////////////////////////////
     ServoImplEx angle,pusher,arm,grip,leftIntakeLinkage,rightIntakeLinkage;

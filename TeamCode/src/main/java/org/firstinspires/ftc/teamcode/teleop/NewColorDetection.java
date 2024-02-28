@@ -30,7 +30,7 @@ import java.util.*;
 
 
 
-@TeleOp
+//@TeleOp
 public class NewColorDetection extends LinearOpMode
 {
     RevBlinkinLedDriver blinkinLedDriverLeft;
