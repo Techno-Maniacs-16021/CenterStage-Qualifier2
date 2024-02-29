@@ -23,6 +23,7 @@ public class ModularDrive extends OpMode {
     public static double p,i,d,f,Target;
     public static double INITIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR,ZERO_POSITION,ZERO_POWER,ZERO_ANGLE;
     public static String mode = "intake";
+    public static String intakePosition = "down";
     RobotV3 bot;
     private ElapsedTime loopTime = new ElapsedTime();
     private ElapsedTime actionCoolDown = new ElapsedTime();
@@ -33,6 +34,8 @@ public class ModularDrive extends OpMode {
     @Override
     public void init() {
 //        p=2.5;i=0;d=0;f=0;
+        mode="intake";
+        intakePosition="down";
         bot = new RobotV3(hardwareMap, new Pose2d(0,0,0));
         INITIAL_OFFSET = 1;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;ZERO_ANGLE=0.0 ;
         tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).build();
@@ -46,14 +49,13 @@ public class ModularDrive extends OpMode {
         bot.setGripPosition(0.5);
         bot.setArmPosition(0);
         bot.setAnglePosition(ZERO_ANGLE);
-        bot.openIntake();
     }
     @Override
     public void loop() {
 //        bot.pidTuning(p, i, d, f, Target);
         bot.updateRobotState();
         ledControls();
-        if(!bot.slidesWithinRange(ALLOWED_ERROR)) bot.setLinearSlidePower(bot.getCalculatedPower());
+        if(!bot.slidesWithinRange(ALLOWED_ERROR)&&!(gamepad1.dpad_down&&mode.equals("end_game"))) bot.setLinearSlidePower(bot.getCalculatedPower());
         bot.slideZeroCondition(ZERO_POSITION, ZERO_POWER);
         modeControls();
         basicTelemetry();
@@ -100,6 +102,7 @@ public class ModularDrive extends OpMode {
         if(gamepad1.touchpad)mode = "intake";
         else if(gamepad1.options){
             bot.setTarget(INITIAL_OFFSET);
+            bot.closeIntake();
             mode = "get_outtake_ready";
         }
         else if(gamepad1.share)mode = "end_game";
@@ -127,7 +130,9 @@ public class ModularDrive extends OpMode {
     private void intakeControls(){
         bot.activateSlides();
         if(gamepad1.square) bot.closeIntake();
-        else if(gamepad1.triangle) bot.openIntake();
+        if(gamepad1.triangle) intakePosition = "top";
+        else if(gamepad1.circle) intakePosition = "middle";
+        else if(gamepad1.cross) intakePosition = "down";
         if(gamepad1.right_trigger>0){
             if(bot.getPixels() == 0){
                 bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RED);
@@ -138,7 +143,12 @@ public class ModularDrive extends OpMode {
             }
             bot.setTarget(INITIAL_OFFSET);
             bot.setGripPosition(0.5);
-            bot.openIntake();
+            if(intakePosition.equals("top"))
+                bot.topIntake();
+            else if(intakePosition.equals( "middle"))
+                bot.middleIntake();
+            else if(intakePosition.equals("down"))
+                bot.downIntake();
             if(bot.getPixels()<2){
                 if(gamepad1.right_trigger>0)bot.setIntakePower(gamepad1.right_trigger);
                 else bot.setIntakePower(0);
@@ -149,9 +159,10 @@ public class ModularDrive extends OpMode {
             if(bot.slidesWithinRange(ALLOWED_ERROR) && bot.getTimeAtTarget() > 500){
                 bot.setGripPosition(1);
                 bot.setIntakePower(0);
-                bot.closeIntake();
+                bot.primeIntake();
             }else bot.setIntakePower(-1);
         }
+
         if(gamepad1.left_trigger>0) bot.setIntakePower(-gamepad1.left_trigger);
         if(gamepad1.dpad_right) bot.setGripPosition(1);
     }
@@ -220,6 +231,7 @@ public class ModularDrive extends OpMode {
             bot.setTarget(ZERO_POSITION);
 
         if(gamepad1.dpad_up) bot.shootDrone();
+        if(gamepad1.dpad_down) bot.setLinearSlidePower(0.3);
     }
     private void manual(){
 

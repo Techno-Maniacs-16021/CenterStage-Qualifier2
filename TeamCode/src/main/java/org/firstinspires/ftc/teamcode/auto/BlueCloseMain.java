@@ -314,7 +314,7 @@ public class BlueCloseMain extends LinearOpMode {
     }
     public Action outtake(RobotV3 bot){
         return telemetryPacket -> {
-            bot.openIntake();
+            bot.downIntake();
             sleep(1000);
             bot.setIntakePower(-1);
             sleep(1000);

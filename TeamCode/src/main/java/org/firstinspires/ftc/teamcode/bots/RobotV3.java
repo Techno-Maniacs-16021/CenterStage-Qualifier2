@@ -63,12 +63,6 @@ public class RobotV3 extends MecanumDrive{
         rightSlides = hardwareMap.get(DcMotorEx.class,"right_slides");
         intake = hardwareMap.get(DcMotorEx.class,"intake");
         //encoder
-        rightSlides.setMode(STOP_AND_RESET_ENCODER);
-        rightSlides.setMode(RUN_WITHOUT_ENCODER);
-        leftSlides.setMode(STOP_AND_RESET_ENCODER);
-        leftSlides.setMode(RUN_WITHOUT_ENCODER);
-        intake.setMode(STOP_AND_RESET_ENCODER);
-        intake.setMode(RUN_WITHOUT_ENCODER);
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         //set direction
@@ -126,13 +120,25 @@ public class RobotV3 extends MecanumDrive{
     public void slideZeroCondition(double zero, double power){
         if(zero == Target) linearSlidePower -= power;
     }
-    public void openIntake(){
+    public void closeIntake(){
+        leftIntakeLinkage.setPosition(.1);
+        rightIntakeLinkage.setPosition(.1);
+    }
+    public void downIntake(){
         leftIntakeLinkage.setPosition(1);
         rightIntakeLinkage.setPosition(1);
     }
-    public void closeIntake(){
-        leftIntakeLinkage.setPosition(0.1);
-        rightIntakeLinkage.setPosition(0.1);
+    public void topIntake(){
+        leftIntakeLinkage.setPosition(0.8);
+        rightIntakeLinkage.setPosition(0.8);
+    }
+    public void middleIntake(){
+        leftIntakeLinkage.setPosition(0.92);
+        rightIntakeLinkage.setPosition(0.92);
+    }
+    public void primeIntake(){
+        leftIntakeLinkage.setPosition(0.5);
+        rightIntakeLinkage.setPosition(0.5);
     }
     public void activateSlides(){
         leftSlides.setPower(linearSlidePower);
@@ -220,6 +226,14 @@ public class RobotV3 extends MecanumDrive{
     }
     public void setDronePosition(double position){
         drone.setPosition(position);
+    }
+    public void resetSlideEncoders(){
+        rightSlides.setMode(STOP_AND_RESET_ENCODER);
+        rightSlides.setMode(RUN_WITHOUT_ENCODER);
+        leftSlides.setMode(STOP_AND_RESET_ENCODER);
+        leftSlides.setMode(RUN_WITHOUT_ENCODER);
+        intake.setMode(STOP_AND_RESET_ENCODER);
+        intake.setMode(RUN_WITHOUT_ENCODER);
     }
 
 }
