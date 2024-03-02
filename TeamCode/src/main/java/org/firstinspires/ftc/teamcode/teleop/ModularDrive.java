@@ -55,8 +55,9 @@ public class ModularDrive extends OpMode {
 //        bot.pidTuning(p, i, d, f, Target);
         bot.updateRobotState();
         ledControls();
+
         if(!bot.slidesWithinRange(ALLOWED_ERROR)&&!(gamepad1.dpad_down&&mode.equals("end_game"))) bot.setLinearSlidePower(bot.getCalculatedPower());
-        bot.slideZeroCondition(ZERO_POSITION, ZERO_POWER);
+        if(!(gamepad1.dpad_down&&mode.equals("end_game")))bot.slideZeroCondition(ZERO_POSITION, ZERO_POWER);
         modeControls();
         basicTelemetry();
         bot.setDrivePowers(new PoseVelocity2d(
@@ -94,6 +95,7 @@ public class ModularDrive extends OpMode {
         telemetry.addData("loop time: ", loopTime.milliseconds());
         telemetry.addData("p i d", bot.getController().getP() + " " + bot.getController().getI() + " " + bot.getController().getD());
         telemetry.addData("timeAtTarget: ", bot.getTimeAtTarget());
+        if((gamepad1.dpad_down&&mode.equals("end_game"))) telemetry.addLine("PID DISABLED");
 //        aprilTagDetections();
         telemetry.update();
         loopTime.reset();
@@ -129,7 +131,10 @@ public class ModularDrive extends OpMode {
     }
     private void intakeControls(){
         bot.activateSlides();
-        if(gamepad1.square) bot.closeIntake();
+        if(gamepad1.square) {
+            bot.closeIntake();
+            bot.setIntakePower(0);
+        }
         if(gamepad1.triangle) intakePosition = "top";
         else if(gamepad1.circle) intakePosition = "middle";
         else if(gamepad1.cross) intakePosition = "down";
@@ -231,7 +236,11 @@ public class ModularDrive extends OpMode {
             bot.setTarget(ZERO_POSITION);
 
         if(gamepad1.dpad_up) bot.shootDrone();
-        if(gamepad1.dpad_down) bot.setLinearSlidePower(0.3);
+        if(gamepad1.dpad_down) {
+            bot.setLinearSlidePower(0.6);
+            bot.setAnglePosition(0.5);
+            bot.setArmPosition(0.4);
+        }
     }
     private void manual(){
 
