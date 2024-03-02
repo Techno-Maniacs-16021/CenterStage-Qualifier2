@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import android.util.Log;
 
@@ -37,7 +37,7 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class BlueCloseMain extends LinearOpMode {
+public class OldRedCloseMain extends LinearOpMode {
     public static String detection = "right";
 
     private ElapsedTime loopTime = new ElapsedTime();
@@ -161,55 +161,95 @@ public class BlueCloseMain extends LinearOpMode {
         bot.setArmPosition(0);
         bot.setAnglePosition(0);
         waitForStart();
-        if (color_zone == Zone.LEFT) {
-            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                    .strafeTo(new Vector2d(22,48))
-                    .waitSeconds(1) //drop purple
-                    .build();
-            plusZero = bot.actionBuilder(new Pose2d(22, 48, Math.toRadians(90)))
+        if (color_zone == Zone.RIGHT) {
+            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(45,48,Math.toRadians(180)),Math.toRadians(0))
-                    .waitSeconds(1) //drop yellow
+                    .lineToX(35)
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(35,-36,Math.toRadians(0)),Math.toRadians(90))
+//                    .waitSeconds(1) //drop purple
                     .build();
-            park = bot.actionBuilder(new Pose2d(45,48,Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,58))
+            plusZero = bot.actionBuilder(new Pose2d(33, -36, Math.toRadians(0)))
+                    .setTangent(Math.toRadians(-45))
+                    .splineToSplineHeading(new Pose2d(45,-49,Math.toRadians(180)),Math.toRadians(315))
+//                    .waitSeconds(1) //drop yellow
                     .build();
-            cycle = bot.actionBuilder(new Pose2d(46,48,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(45 ,-49,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-64)
+                    .setTangent(0)
+                    .lineToX(48)
+                    .build();
+            cycle = bot.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(180))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-44)
                     .waitSeconds(1) //drop white
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
-            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                    .strafeTo(new Vector2d(18,36))
-                    .waitSeconds(1) //drop purple
+            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(73.3007558))
+                    .splineToSplineHeading(new Pose2d(28,-27,Math.toRadians(0)),Math.toRadians(73.3007558))
+                    //.waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(18, 36, Math.toRadians(90)))
+            plusZero = bot.actionBuilder(new Pose2d(28, -27, Math.toRadians(0)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(45,36,Math.toRadians(180)),Math.toRadians(0))
-                    .waitSeconds(1) //drop yellow
+                    .lineToX(32)
+                    .turn(Math.toRadians(180))
+                    .strafeTo(new Vector2d(43, -44))
+                    //.waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(45,36,Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,58))
+            park = bot.actionBuilder(new Pose2d(43, -44,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-64)
+                    .setTangent(0)
+                    .lineToX(48)
                     .build();
-            cycle = bot.actionBuilder(new Pose2d(46,36,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(42,-36,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(180))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-36)
+                    .splineToConstantHeading(new Vector2d(46,-36),Math.toRadians(270))
                     .waitSeconds(1) //drop white
                     .build();
         }
-        else if (color_zone == Zone.RIGHT) {
-            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
+        else if (color_zone == Zone.LEFT) {
+            start = bot.actionBuilder(new Pose2d(12, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(12,48,Math.toRadians(60)),Math.toRadians(270))
-                    .waitSeconds(1) //drop purple
+                    .splineToSplineHeading(new Pose2d(11,-34,Math.toRadians(0)),Math.toRadians(90))
+//                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(12, 48, Math.toRadians(60)))
-                    .setTangent(Math.toRadians(-28.6104597))
-                    .lineToXLinearHeading(45,Math.toRadians(180))
-                    .waitSeconds(1) //drop yellow
+            plusZero = bot.actionBuilder(new Pose2d(11, -34, Math.toRadians(0)))
+                    .setTangent(Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(44,-38,Math.toRadians(180)),Math.toRadians(0))
+//                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(45, 30, Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,58))
+            park = bot.actionBuilder(new Pose2d(44, -38, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-64)
+                    .setTangent(0)
+                    .lineToX(48)
                     .build();
-            cycle = bot.actionBuilder(new Pose2d(46,30,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(180))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-30)
                     .waitSeconds(1) //drop white
                     .build();
         }

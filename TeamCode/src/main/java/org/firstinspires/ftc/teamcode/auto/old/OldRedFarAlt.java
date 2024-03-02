@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -12,7 +12,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.Zone;
@@ -35,7 +34,7 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class RedFarAlt extends LinearOpMode {
+public class OldRedFarAlt extends LinearOpMode {
     public static String detection = "right";
     public static int plus = 0;
 

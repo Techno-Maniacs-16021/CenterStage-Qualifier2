@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -34,7 +34,7 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class RedFarMain extends LinearOpMode {
+public class OldRedFarMain extends LinearOpMode {
     public static String detection = "right";
     private static int plus = 0;
 

@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import android.util.Log;
 
@@ -32,12 +32,11 @@ import org.openftc.easyopencv.OpenCvPipeline;
 import org.openftc.easyopencv.OpenCvWebcam;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Autonomous
 @Config
-public class BlueCloseMain extends LinearOpMode {
+public class OldBlueCloseMain extends LinearOpMode {
     public static String detection = "right";
 
     private ElapsedTime loopTime = new ElapsedTime();
@@ -59,7 +58,6 @@ public class BlueCloseMain extends LinearOpMode {
         ArrayList<Zone> zone_avg = new ArrayList<Zone>();
         Rect size = new Rect();
         int midx;
-        List<Integer> ELEMENT_COLOR = Arrays.asList(0, 0, 0); //(Hue, Sateration, Value), Set to blue alliance at first
         Mat org = new Mat();
         Mat mask0 = new Mat();
         Mat mask1 = new Mat();
@@ -69,10 +67,11 @@ public class BlueCloseMain extends LinearOpMode {
         Mat hier = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
         List<MatOfPoint> max_list = new ArrayList<>();
-        Scalar lower_1 = new Scalar(0.0, 50.0, 0.0);
-        Scalar upper_1 = new Scalar(10.0,255.0,255.0);
-        Scalar lower_2 = new Scalar(170.0,50.0,50.0);
-        Scalar upper_2 = new Scalar(180.0,255.0,255.0);
+        Scalar lower_1 = new Scalar(100.0, 50.0, 0.0);
+        Scalar upper_1 = new Scalar(120.0,255.0,255.0);
+        Scalar lower_2 = new Scalar(100.0,50.0,50.0);
+        Scalar upper_2 = new Scalar(120.0,255.0,255.0);
+
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
@@ -130,7 +129,7 @@ public class BlueCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-64, Math.toRadians(270)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,64, Math.toRadians(90)));
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         blinkinLedDriverRight.setPattern(pattern);
@@ -163,58 +162,98 @@ public class BlueCloseMain extends LinearOpMode {
         waitForStart();
         if (color_zone == Zone.LEFT) {
             start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                    .strafeTo(new Vector2d(22,48))
-                    .waitSeconds(1) //drop purple
-                    .build();
-            plusZero = bot.actionBuilder(new Pose2d(22, 48, Math.toRadians(90)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(45,48,Math.toRadians(180)),Math.toRadians(0))
-                    .waitSeconds(1) //drop yellow
+                    .lineToX(35)
+                    .setTangent(Math.toRadians(270))
+                    .splineToSplineHeading(new Pose2d(35,36,Math.toRadians(0)),Math.toRadians(270))
+//                    .waitSeconds(1) //drop purple
                     .build();
-            park = bot.actionBuilder(new Pose2d(45,48,Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,58))
+            plusZero = bot.actionBuilder(new Pose2d(35, 36, Math.toRadians(0)))
+                    .setTangent(Math.toRadians(-45))
+                    .splineToSplineHeading(new Pose2d(46.5,43.5,Math.toRadians(180)),Math.toRadians(315))
+//                    .waitSeconds(1) //drop yellow
                     .build();
-            cycle = bot.actionBuilder(new Pose2d(46,48,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(46.5,43.5,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(64)
+                    .setTangent(0)
+                    .lineToX(52)
+                    .build();
+            cycle = bot.actionBuilder(new Pose2d(46,-44,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(180))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-44)
                     .waitSeconds(1) //drop white
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
             start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                    .strafeTo(new Vector2d(18,36))
-                    .waitSeconds(1) //drop purple
+//                    .setTangent(Math.toRadians(-73.3007558))
+                    .setTangent(-Math.atan(37/12))
+                    .splineToSplineHeading(new Pose2d(32,27,Math.toRadians(0)),-Math.atan(37/12))
+                    //.waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(18, 36, Math.toRadians(90)))
+            plusZero = bot.actionBuilder(new Pose2d(32, 27, Math.toRadians(0)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(45,36,Math.toRadians(180)),Math.toRadians(0))
-                    .waitSeconds(1) //drop yellow
+                    .lineToX(32)
+                    .turn(Math.toRadians(180))
+                    .strafeTo(new Vector2d(47, 39))
+                    //.waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(45,36,Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,58))
+            park = bot.actionBuilder(new Pose2d(47, 39,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(64)
+                    .setTangent(0)
+                    .lineToX(52)
                     .build();
-            cycle = bot.actionBuilder(new Pose2d(46,36,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(42,-36,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(180))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-36)
+                    .splineToConstantHeading(new Vector2d(46,-36),Math.toRadians(270))
                     .waitSeconds(1) //drop white
                     .build();
         }
         else if (color_zone == Zone.RIGHT) {
             start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToSplineHeading(new Pose2d(14,36,Math.toRadians(0)),Math.toRadians(270))
+//                    .waitSeconds(1) //drop purple
+                    .build();
+            plusZero = bot.actionBuilder(new Pose2d(14, 36, Math.toRadians(0)))
+                    .setTangent(Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(47,30,Math.toRadians(180)),Math.toRadians(0))
+//                    .waitSeconds(1) //drop yellow
+                    .build();
+            park = bot.actionBuilder(new Pose2d(47, 30, Math.toRadians(180)))
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(12,48,Math.toRadians(60)),Math.toRadians(270))
-                    .waitSeconds(1) //drop purple
+                    .lineToY(64)
+                    .setTangent(0)
+                    .lineToX(52)
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(12, 48, Math.toRadians(60)))
-                    .setTangent(Math.toRadians(-28.6104597))
-                    .lineToXLinearHeading(45,Math.toRadians(180))
-                    .waitSeconds(1) //drop yellow
-                    .build();
-            park = bot.actionBuilder(new Pose2d(45, 30, Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,58))
-                    .build();
-            cycle = bot.actionBuilder(new Pose2d(46,30,Math.toRadians(180)))
+            cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
+                    .setTangent(Math.toRadians(90))
+                    .lineToY(-10)
+                    .setTangent(Math.toRadians(180))
+                    .lineToX(-60)
+                    .waitSeconds(1) //pick up white
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-30)
                     .waitSeconds(1) //drop white
                     .build();
         }
         while(opModeIsActive() && !isStopRequested()){
-            webcam.stopStreaming();
             Log.d("color_zone", String.valueOf(color_zone));
             Actions.runBlocking(new SequentialAction(start,placeGround(bot), retractBack(bot), plusZero, placeLastOnBackBoard(bot), retractBack(bot), park));
             requestOpModeStop();
