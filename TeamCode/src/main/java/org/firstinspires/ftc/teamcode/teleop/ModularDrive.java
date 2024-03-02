@@ -181,10 +181,10 @@ public class ModularDrive extends OpMode {
     }
     private void outtakeControls(){
         bot.activateSlides();
-        if (gamepad1.right_trigger > 0 && actionCoolDown.milliseconds()>50) {
+        if (gamepad1.right_trigger > 0 && actionCoolDown.milliseconds()>20) {
             bot.incrementLinearSlideTarget(0.1);
             actionCoolDown.reset();
-        } else if (gamepad1.left_trigger > 0 && actionCoolDown.milliseconds()>50) {
+        } else if (gamepad1.left_trigger > 0 && actionCoolDown.milliseconds()>20) {
             bot.incrementLinearSlideTarget(-0.1);
             actionCoolDown.reset();
         }
