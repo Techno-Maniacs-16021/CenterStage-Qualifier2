@@ -17,6 +17,8 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
+import java.util.List;
+
 @TeleOp(name = "Drive") @Config
 public class ModularDrive extends OpMode {
     // TODO needs to be removed.
@@ -29,6 +31,7 @@ public class ModularDrive extends OpMode {
     private ElapsedTime actionCoolDown = new ElapsedTime();
     private AprilTagProcessor tagProcessor;
     private VisionPortal visionPortal;
+    private List<AprilTagDetection> detections;
     boolean outtaked = false;
     boolean retract = false;
     @Override
@@ -59,16 +62,19 @@ public class ModularDrive extends OpMode {
         if(!bot.slidesWithinRange(ALLOWED_ERROR)&&!(gamepad1.dpad_down&&mode.equals("end_game"))) bot.setLinearSlidePower(bot.getCalculatedPower());
         if(!(gamepad1.dpad_down&&mode.equals("end_game")))bot.slideZeroCondition(ZERO_POSITION, ZERO_POWER);
         modeControls();
+        detections = aprilTagDetections();
         basicTelemetry();
-        bot.setDrivePowers(new PoseVelocity2d(
-                new Vector2d(
-                        -gamepad1.left_stick_y ,
-                        -gamepad1.left_stick_x
-                ),
-                -gamepad1.right_stick_x
-        ));
+        if(!mode.equals("outtake")){
+            bot.setDrivePowers(new PoseVelocity2d(
+                    new Vector2d(
+                            -gamepad1.left_stick_y ,
+                            -gamepad1.left_stick_x
+                    ),
+                    -gamepad1.right_stick_x
+            ));
+        }
     }
-    private void aprilTagDetections(){
+    private List<AprilTagDetection> aprilTagDetections(){
         telemetry.addData("tags", tagProcessor.getDetections().size());
         if (tagProcessor.getDetections().size() > 0){
             AprilTagDetection tag = tagProcessor.getDetections().get(0);
@@ -76,10 +82,12 @@ public class ModularDrive extends OpMode {
             telemetry.addData("x", tag.ftcPose.x);
             telemetry.addData("y", tag.ftcPose.y);
             telemetry.addData("z", tag.ftcPose.z);
+            telemetry.addData("arc",  Math.acos(tag.ftcPose.z/3.4));
             telemetry.addData("roll", tag.ftcPose.roll);
             telemetry.addData("pitch", tag.ftcPose.pitch);
             telemetry.addData("yaw", tag.ftcPose.yaw);
         }
+        return tagProcessor.getDetections();
     }
     private void basicTelemetry(){
         telemetry.addData("pixels in intake: ", bot.getPixels());
@@ -92,11 +100,11 @@ public class ModularDrive extends OpMode {
         telemetry.addData("left slides: ", bot.getLeftSlides().getCurrentPosition());
         telemetry.addData("angle: ", bot.getCurrentAngle());
         telemetry.addData("arm position: ", bot.getCurrentArmPosition());
+        telemetry.addData("arm raw position: ", bot.getArm().getPosition());
         telemetry.addData("loop time: ", loopTime.milliseconds());
         telemetry.addData("p i d", bot.getController().getP() + " " + bot.getController().getI() + " " + bot.getController().getD());
         telemetry.addData("timeAtTarget: ", bot.getTimeAtTarget());
         if((gamepad1.dpad_down&&mode.equals("end_game"))) telemetry.addLine("PID DISABLED");
-//        aprilTagDetections();
         telemetry.update();
         loopTime.reset();
     }
@@ -181,6 +189,16 @@ public class ModularDrive extends OpMode {
     }
     private void outtakeControls(){
         bot.activateSlides();
+        detections = tagProcessor.getDetections();
+        if(gamepad1.circle && detections.size() > 0){
+            AprilTagDetection detection = detections.get(0);
+            if(detection.ftcPose.z > 3.3) bot.setArmPosition(0.9);
+            else{
+                bot.setArmPosition(0.9-(Math.acos(detection.ftcPose.z/3.3)/2.2));
+            }
+        }
+        if(detections.size() > 0)
+            bot.centerBasedOnYaw(detections.get(0).ftcPose.yaw);
         if (gamepad1.right_trigger > 0 && actionCoolDown.milliseconds()>20) {
             bot.incrementLinearSlideTarget(0.1);
             actionCoolDown.reset();
@@ -218,6 +236,19 @@ public class ModularDrive extends OpMode {
         if(bot.getCurrentArmPosition() < 15 && outtaked && bot.getCurrentAngle() < 15){
             bot.setTarget(0);
             mode = "intake";
+        }
+        if(gamepad1.dpad_right){
+            bot.strafeLeft();
+        }else if(gamepad1.dpad_left){
+            bot.strafeRight();
+        }else{
+            bot.setDrivePowers(new PoseVelocity2d(
+                    new Vector2d(
+                            -gamepad1.left_stick_y ,
+                            -gamepad1.left_stick_x
+                    ),
+                    -gamepad1.right_stick_x
+            ));
         }
     }
     private void endGameControls(){

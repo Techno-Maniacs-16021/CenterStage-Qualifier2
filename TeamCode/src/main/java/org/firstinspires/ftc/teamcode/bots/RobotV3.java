@@ -28,7 +28,9 @@ public class RobotV3 extends MecanumDrive{
     RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
     RevTouchSensor pixel1,pixel2;
     public double p,i,d,f,Target;
+    public double p1,i1,d1,f2;
     private PIDController Controller;
+    private PIDController RobotController;
     int pixels;
     double linearSlidePosition, currentAngle, currentArmPosition, currentGripPosition, clawPusherPosition, calculatedPower;
     double linearSlidePower = f;
@@ -80,16 +82,18 @@ public class RobotV3 extends MecanumDrive{
         leftIntakeLinkagePosition = hardwareMap.get(AnalogInput.class,"left_intake_linkage_position");
         rightIntakeLinkagePosition = hardwareMap.get(AnalogInput.class,"right_intake_linkage_position");
         p=2.5;i=0;d=0;f=0;Target = 0;
+        p1=0.04;i1=0.0;d1=0;
         Controller = new PIDController(p,i,d);
+        RobotController = new PIDController(p1,i1,d1);
     }
 
     public void pidTuning(double p, double i, double d, double f, double Target){
-        this.p = p;
-        this.i = i;
-        this.d = d;
+        this.p1 = p;
+        this.i1 = i;
+        this.d1 = d;
         this.f = f;
         this.Target = Target;
-        Controller.setPID(p,i,d);
+        RobotController.setPID(p,i,d);
     }
 
     public void updateRobotState(){
@@ -235,5 +239,30 @@ public class RobotV3 extends MecanumDrive{
         intake.setMode(STOP_AND_RESET_ENCODER);
         intake.setMode(RUN_WITHOUT_ENCODER);
     }
+
+    public double centerBasedOnYaw(double yaw){
+        double power = RobotController.calculate(yaw, 0);
+        if(Math.abs(yaw)>1){
+            leftFront.setPower(leftFront.getPower()+power);
+            leftBack.setPower(leftBack.getPower()+power);
+            rightFront.setPower(rightFront.getPower()-power);
+            rightBack.setPower(rightBack.getPower()-power);
+        }
+        return power;
+    }
+
+    public void strafeLeft(){
+        leftFront.setPower(-0.5);
+        leftBack.setPower(0.5);
+        rightFront.setPower(0.5);
+        rightBack.setPower(-0.5);
+    }
+    public void strafeRight(){
+        leftFront.setPower(0.5);
+        leftBack.setPower(-0.5);
+        rightFront.setPower(-0.5);
+        rightBack.setPower(0.5);
+    }
+
 
 }

@@ -38,7 +38,7 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class RedCloseMain extends LinearOpMode {
+public class RedCloseMainR extends LinearOpMode {
     public static String detection = "right";
 
     private ElapsedTime loopTime = new ElapsedTime();

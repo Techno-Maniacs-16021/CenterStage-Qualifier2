@@ -26,7 +26,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        newBlueCloseMain(meepMeep, myBot);
+        redFarMain(meepMeep, myBot);
 
 
 
@@ -170,7 +170,7 @@ public class MeepMeepTesting {
         if (detection.equals("right")) {
             start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(100.0079798))
-                    .splineToSplineHeading(new Pose2d(-42,-30,Math.toRadians(180)),Math.toRadians(100.0079798))
+                    .splineToSplineHeading(new Pose2d(-30,-30,Math.toRadians(180)),Math.toRadians(100.0079798))
                     .waitSeconds(1) //drop purple
                     .build();
             plusOne = myBot.getDrive().actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
@@ -452,7 +452,7 @@ public class MeepMeepTesting {
     }
 
     public static void redFarMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
-        String detection = "left";
+        String detection = "middle";
         Action start = myBot.getCurrentAction();
         Action plusOne = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();
@@ -460,12 +460,11 @@ public class MeepMeepTesting {
         if (detection.equals("right")) {
             start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(-42,-30,Math.toRadians(180)),Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-32,-30,Math.toRadians(180)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-42, -30, Math.toRadians(180)))
-                    .setTangent(Math.toRadians(131.9872125))
-                    .lineToX(-60)
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-32, -30, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(-56,-10))
                     .waitSeconds(1) //pick up white
                     .setTangent(Math.toRadians(0))
                     .lineToX(46)

@@ -38,16 +38,16 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class RedCloseMain extends LinearOpMode {
+public class RedFarMainR extends LinearOpMode {
     public static String detection = "right";
 
     private ElapsedTime loopTime = new ElapsedTime();
 
     private static Action start;
-    private static Action plusZero;
+    private static Action plusOne;
+    private static Action stack;
     private static Action park;
     private static Action cycle;
-
 
     RevBlinkinLedDriver blinkinLedDriverLeft;
     RevBlinkinLedDriver blinkinLedDriverRight;
@@ -132,7 +132,7 @@ public class RedCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-63, Math.toRadians(270)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(-36,-63, Math.toRadians(270)));
         bot.resetSlideEncoders();
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
@@ -165,12 +165,19 @@ public class RedCloseMain extends LinearOpMode {
         bot.setAnglePosition(0);
         waitForStart();
         if (color_zone == Zone.RIGHT) {
-            start = bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
-                    .strafeTo(new Vector2d(23,-46.5))
+            start = bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(23, -46.5, Math.toRadians(270)))
+            stack = bot.actionBuilder(new Pose2d(-36, -36, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(-40, -36))
+                    .strafeTo(new Vector2d(-52,-10)).build();
+            plusOne = bot.actionBuilder(new Pose2d(-52, -10, Math.toRadians(180)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(52,-48,Math.toRadians(180)),Math.toRadians(0))
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-42)
+                    .strafeTo(new Vector2d(52,-52))
                     .build();
             park = bot.actionBuilder(new Pose2d(52,-48,Math.toRadians(180)))
                     .strafeTo(new Vector2d(45,-58))
@@ -180,14 +187,24 @@ public class RedCloseMain extends LinearOpMode {
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
-            start = bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
-                    .strafeTo(new Vector2d(18,-38))
+            start = bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-44,-27,Math.toRadians(180)),Math.toRadians(90))
+            //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
                     //.waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(18, -38, Math.toRadians(270)))
+            stack = bot.actionBuilder(new Pose2d(-44,-28, Math.toRadians(180)))
+            //        .strafeTo(new Vector2d(-56,-10))
+                    .strafeTo(new Vector2d(-56,-15))
+                    .build();
+            plusOne = bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-42)
+            //        .lineToY(-42)
                     .setTangent(Math.toRadians(0))
                     .splineToSplineHeading(new Pose2d(52,-42,Math.toRadians(180)),Math.toRadians(0))
-                    //.waitSeconds(1) //drop yellow
                     .build();
             park = bot.actionBuilder(new Pose2d(52,-42,Math.toRadians(180)))
                     .strafeTo(new Vector2d(45,-58))
@@ -202,7 +219,9 @@ public class RedCloseMain extends LinearOpMode {
                     .splineToSplineHeading(new Pose2d(9,-40,Math.toRadians(330)),Math.toRadians(90))
 //                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(9, -40, Math.toRadians(330)))
+            stack = bot.actionBuilder(new Pose2d(-44,-28, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(-56,-10)).build();
+            plusOne = bot.actionBuilder(new Pose2d(9, -40, Math.toRadians(330)))
                     .setTangent(Math.toRadians(0))
                     .splineToSplineHeading(new Pose2d(52,-35,Math.toRadians(180)),Math.toRadians(0))
 //                    .waitSeconds(1) //drop yellow
@@ -217,7 +236,7 @@ public class RedCloseMain extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested()){
             webcam.stopStreaming();
             Log.d("color_zone", String.valueOf(color_zone));
-            Actions.runBlocking(new SequentialAction(getArmToGround(bot), start, releaseFirstPixel(bot), retractBack(bot), plusZero, getReadyForBackboard(bot), placeLastOnBackBoard(bot), getReadyForBackboard(bot), retractBack(bot), park));
+            Actions.runBlocking(new SequentialAction(getArmToGround(bot), start, releaseFirstPixel(bot), stack, retractBack(bot), plusOne, getReadyForBackboard(bot), placeLastOnBackBoard(bot), getReadyForBackboard(bot), retractBack(bot)));
             requestOpModeStop();
         }
     }
@@ -254,9 +273,7 @@ public class RedCloseMain extends LinearOpMode {
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
-            if(!bot.slidesWithinRange(0.1)) return true;
-
-            return false;
+            return !bot.slidesWithinRange(0.1);
         };
     }
     public Action placeLastOnBackBoard(RobotV3 bot) {
@@ -270,7 +287,7 @@ public class RedCloseMain extends LinearOpMode {
             bot.setPusherPosition(1);
             sleep(250);
             bot.setPusherPosition(0);
-            sleep(250);
+            sleep(500);
             return false;
         };
     }
