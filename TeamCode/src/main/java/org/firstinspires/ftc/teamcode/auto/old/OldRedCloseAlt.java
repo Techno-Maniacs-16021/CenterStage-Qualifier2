@@ -27,7 +27,7 @@ import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
-import org.firstinspires.ftc.teamcode.teleop.Zone;
+import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;

@@ -13,12 +13,11 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.robot.Robot;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
-import org.firstinspires.ftc.teamcode.teleop.Zone;
+import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -46,6 +45,7 @@ public class RedFarMainR extends LinearOpMode {
     private static Action start;
     private static Action plusOne;
     private static Action stack;
+    private static Action correct;
     private static Action park;
     private static Action cycle;
 
@@ -167,17 +167,20 @@ public class RedFarMainR extends LinearOpMode {
         if (color_zone == Zone.RIGHT) {
             start = bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
                     .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
+                    //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-37,-36,Math.toRadians(180)),Math.toRadians(90))
                     .build();
-            stack = bot.actionBuilder(new Pose2d(-36, -36, Math.toRadians(180)))
+            stack = bot.actionBuilder(new Pose2d(-37, -36, Math.toRadians(180)))
                     .strafeTo(new Vector2d(-40, -36))
-                    .strafeTo(new Vector2d(-52,-10)).build();
-            plusOne = bot.actionBuilder(new Pose2d(-52, -10, Math.toRadians(180)))
+                    //.strafeTo(new Vector2d(-52,-10)).build();
+                    .strafeTo(new Vector2d(-56,-15)).build();
+            plusOne = bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
                     .setTangent(Math.toRadians(0))
                     .lineToX(46)
                     .setTangent(Math.toRadians(270))
-                    .lineToY(-42)
-                    .strafeTo(new Vector2d(52,-52))
+                    .lineToY(-46)
+                    //.strafeTo(new Vector2d(52,-52))
+                    .strafeTo(new Vector2d(52,-46))
                     .build();
             park = bot.actionBuilder(new Pose2d(52,-48,Math.toRadians(180)))
                     .strafeTo(new Vector2d(45,-58))
@@ -201,12 +204,11 @@ public class RedFarMainR extends LinearOpMode {
                     .setTangent(Math.toRadians(0))
                     .lineToX(46)
                     .setTangent(Math.toRadians(270))
-                    .lineToY(-42)
-            //        .lineToY(-42)
+                    .lineToY(-40)
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(52,-42,Math.toRadians(180)),Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(52,-40,Math.toRadians(180)),Math.toRadians(0))
                     .build();
-            park = bot.actionBuilder(new Pose2d(52,-42,Math.toRadians(180)))
+            park = bot.actionBuilder(new Pose2d(52,-40,Math.toRadians(180)))
                     .strafeTo(new Vector2d(45,-58))
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
@@ -214,19 +216,25 @@ public class RedFarMainR extends LinearOpMode {
                     .build();
         }
         else  {
-            start = bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(9,-40,Math.toRadians(330)),Math.toRadians(90))
-//                    .waitSeconds(1) //drop purple
+            start = bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(150))
+                    .splineToSplineHeading(new Pose2d(-48,-17,Math.toRadians(90)),Math.toRadians(90))
                     .build();
-            stack = bot.actionBuilder(new Pose2d(-44,-28, Math.toRadians(180)))
-                    .strafeTo(new Vector2d(-56,-10)).build();
-            plusOne = bot.actionBuilder(new Pose2d(9, -40, Math.toRadians(330)))
+            stack = bot.actionBuilder(new Pose2d(-48,-17,Math.toRadians(90)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToLinearHeading(new Pose2d(-56, -15, Math.toRadians(180)), Math.toRadians(180))
+                    .build();
+            plusOne = bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(52,-35,Math.toRadians(180)),Math.toRadians(0))
-//                    .waitSeconds(1) //drop yellow
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-34)
+                    .setTangent(Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(52,-34,Math.toRadians(180)),Math.toRadians(0))
                     .build();
-            park = bot.actionBuilder(new Pose2d(52, -35, Math.toRadians(180)))
+            correct = bot.actionBuilder(new Pose2d(46.9, -48, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(46.9, -37.5)).build();
+            park = bot.actionBuilder(new Pose2d(52, -48, Math.toRadians(180)))
                     .strafeTo(new Vector2d(45,-58))
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
@@ -276,9 +284,10 @@ public class RedFarMainR extends LinearOpMode {
             return !bot.slidesWithinRange(0.1);
         };
     }
+
     public Action placeLastOnBackBoard(RobotV3 bot) {
         return telemetryPacket -> {
-            bot.setTarget(0);
+            bot.setTarget(0.6);
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
@@ -301,6 +310,26 @@ public class RedFarMainR extends LinearOpMode {
             bot.setArmPosition(0.275);
             bot.setAnglePosition(0.8);
             return bot.getCurrentArmPosition() < 45 || bot.getCurrentAngle() < 160;
+        };
+    }
+
+    public Action correctBoard(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setTarget(0.5);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(0.6);
+            bot.setAnglePosition(0.8);
+            return bot.getCurrentArmPosition() < 100 || bot.getCurrentAngle() < 160;
+        };
+    }
+
+    public Action intake(RobotV3 bot){
+        return telemetryPacket -> {
+
+            return false;
         };
     }
 

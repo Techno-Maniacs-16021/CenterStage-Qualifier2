@@ -30,11 +30,14 @@ public class RobotV3 extends MecanumDrive{
     public double p,i,d,f,Target;
     public double p1,i1,d1,f2;
     private PIDController Controller;
+    private int pixelMemory = 0;
     private PIDController RobotController;
     int pixels;
     double linearSlidePosition, currentAngle, currentArmPosition, currentGripPosition, clawPusherPosition, calculatedPower;
     double linearSlidePower = f;
     ElapsedTime atTarget = new ElapsedTime();
+    ElapsedTime timeIntaking = new ElapsedTime();
+
 
     public RobotV3(HardwareMap hardwareMap, Pose2d pose) {
         super(hardwareMap, pose);
@@ -144,6 +147,10 @@ public class RobotV3 extends MecanumDrive{
         leftIntakeLinkage.setPosition(0.5);
         rightIntakeLinkage.setPosition(0.5);
     }
+    public void topPixelIntake(){
+        leftIntakeLinkage.setPosition(0.75);
+        rightIntakeLinkage.setPosition(0.75);
+    }
     public void activateSlides(){
         leftSlides.setPower(linearSlidePower);
         rightSlides.setPower(linearSlidePower);
@@ -215,6 +222,11 @@ public class RobotV3 extends MecanumDrive{
         return atTarget.milliseconds();
     }
 
+    public double getTimeIntaking() {
+        return timeIntaking.milliseconds();
+    }
+    public void resetTimeIntaking() {timeIntaking.reset();}
+
     public void setBothLED(RevBlinkinLedDriver.BlinkinPattern pattern){
         blinkinLedDriverLeft.setPattern(pattern);
         blinkinLedDriverRight.setPattern(pattern);
@@ -264,5 +276,11 @@ public class RobotV3 extends MecanumDrive{
         rightBack.setPower(0.5);
     }
 
+    public int getPixelMemory() {
+        return pixelMemory;
+    }
 
+    public void setPixelMemory() {
+        pixelMemory = pixels;
+    }
 }

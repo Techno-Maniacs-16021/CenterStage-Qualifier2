@@ -452,7 +452,7 @@ public class MeepMeepTesting {
     }
 
     public static void redFarMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
-        String detection = "middle";
+        String detection = "left";
         Action start = myBot.getCurrentAction();
         Action plusOne = myBot.getCurrentAction();
         Action park = myBot.getCurrentAction();
@@ -521,15 +521,14 @@ public class MeepMeepTesting {
                     .build();
         }
         else if (detection.equals("left")) {
-            start = myBot.getDrive().actionBuilder(new Pose2d(-36, -64, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(-60,-30,Math.toRadians(180)),Math.toRadians(90))
+            start = myBot.getDrive().actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(150))
+                    .splineToSplineHeading(new Pose2d(-48,-10,Math.toRadians(90)),Math.toRadians(90))
                     .waitSeconds(1) //drop purple
                     .build();
-            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-60, -30, Math.toRadians(180)))
-                    .setTangent(Math.toRadians(90))
-                    .lineToY(-10)
-                    .waitSeconds(1) //pick up white
+            plusOne = myBot.getDrive().actionBuilder(new Pose2d(-48,-10,Math.toRadians(90)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToLinearHeading(new Pose2d(-56, -10, Math.toRadians(180)), Math.toRadians(180))
                     .setTangent(Math.toRadians(0))
                     .lineToX(46)
                     .setTangent(Math.toRadians(270))

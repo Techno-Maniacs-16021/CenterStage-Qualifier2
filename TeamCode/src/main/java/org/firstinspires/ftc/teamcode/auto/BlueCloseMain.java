@@ -17,7 +17,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
-import org.firstinspires.ftc.teamcode.teleop.Zone;
+import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -130,7 +130,7 @@ public class BlueCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-64, Math.toRadians(270)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,63, Math.toRadians(90)));
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         blinkinLedDriverRight.setPattern(pattern);
@@ -179,17 +179,18 @@ public class BlueCloseMain extends LinearOpMode {
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
-            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
-                    .strafeTo(new Vector2d(18,36))
-                    .waitSeconds(1) //drop purple
+            start = bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
+                    .strafeTo(new Vector2d(18,38))
+//                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(18, 36, Math.toRadians(90)))
+            plusZero = bot.actionBuilder(new Pose2d(18, 38, Math.toRadians(90)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(45,36,Math.toRadians(180)),Math.toRadians(0))
-                    .waitSeconds(1) //drop yellow
+                    .splineToSplineHeading(new Pose2d(54,37,Math.toRadians(180)),Math.toRadians(0))
+//                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(45,36,Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,58))
+            park = bot.actionBuilder(new Pose2d(54,37,Math.toRadians(180)))
+                    .strafeTo(new Vector2d(45,63))
+                    .strafeTo(new Vector2d(60, 63))
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,36,Math.toRadians(180)))
                     .waitSeconds(1) //drop white
@@ -216,11 +217,11 @@ public class BlueCloseMain extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested()){
             webcam.stopStreaming();
             Log.d("color_zone", String.valueOf(color_zone));
-            Actions.runBlocking(new SequentialAction(start,placeGround(bot), retractBack(bot), plusZero, placeLastOnBackBoard(bot), retractBack(bot), park));
+            Actions.runBlocking(new SequentialAction(getArmToGround(bot), start, releaseFirstPixel(bot), retractBack(bot), plusZero, getReadyForBackboard(bot), placeLastOnBackBoard(bot), getReadyForBackboard(bot), retractBack(bot), park));
             requestOpModeStop();
         }
     }
-    public Action placeGround(RobotV3 bot) {
+    public Action getArmToGround(RobotV3 bot) {
         return telemetryPacket -> {
             bot.setTarget(1);
             bot.updateRobotState();
@@ -231,8 +232,13 @@ public class BlueCloseMain extends LinearOpMode {
             bot.setArmPosition(1);
             if(bot.getCurrentArmPosition() < 180 || bot.getCurrentAngle() < 200) return true;
             sleep(150);
+            return false;
+        };
+    }
+    public Action releaseFirstPixel(RobotV3 bot){
+        return telemetryPacket -> {
             bot.setGripPosition(0);
-            sleep(500);
+            sleep(100);
             return false;
         };
     }
@@ -253,16 +259,13 @@ public class BlueCloseMain extends LinearOpMode {
             return false;
         };
     }
-    public Action placeLastOnBackBoard(RobotV3 bot){
+    public Action placeLastOnBackBoard(RobotV3 bot) {
         return telemetryPacket -> {
-            bot.setTarget(1);
+            bot.setTarget(0);
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
             if(!bot.slidesWithinRange(0.1)) return true;
-            bot.setArmPosition(0.7);
-            bot.setAnglePosition(0.8);
-            if(bot.getCurrentArmPosition() < 120 || bot.getCurrentAngle() < 160) return true;
             sleep(150);
             bot.setPusherPosition(1);
             sleep(250);
@@ -271,6 +274,19 @@ public class BlueCloseMain extends LinearOpMode {
             return false;
         };
     }
+    public Action getReadyForBackboard(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(0.275);
+            bot.setAnglePosition(0.8);
+            return bot.getCurrentArmPosition() < 45 || bot.getCurrentAngle() < 160;
+        };
+    }
+
     public Action outtake(RobotV3 bot){
         return telemetryPacket -> {
             bot.downIntake();
