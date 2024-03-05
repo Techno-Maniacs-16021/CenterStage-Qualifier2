@@ -225,12 +225,12 @@ public class BlueFarMain3 extends LinearOpMode {
                 .build());
 
         middle.setCycle(bot.actionBuilder(new Pose2d(53.5, 32, Math.toRadians(180)))
-                .strafeTo(new Vector2d(46, 11))
+                .strafeTo(new Vector2d(46, 9))
                 .setTangent(Math.toRadians(180))
                 .lineToX(-58)
                 .build());
 
-        middle.setPlusthree(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+        middle.setPlusthree(bot.actionBuilder(new Pose2d(-55, 9, Math.toRadians(180)))
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
@@ -385,7 +385,7 @@ public class BlueFarMain3 extends LinearOpMode {
                 Actions.runBlocking(new SequentialAction(getReadyForBackboard(bot, true), getSlidesForPlacement(bot), releaseFirstPixel(bot), getReadyForBackboard(bot, false), new ParallelAction(config.getWhitePixel(), getSlidesForPlacement(bot)), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
             else
                 Actions.runBlocking(new SequentialAction(getReadyForBackboard(bot, false), getSlidesForPlacement(bot), releaseFirstPixel(bot), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
-            Actions.runBlocking(new SequentialAction(new ParallelAction(config.getCycle(), liftIntake(bot)), getIntakeReady(bot), resetIntakeTimer(bot),intakePixels(bot),
+            Actions.runBlocking(new SequentialAction(new ParallelAction(config.getCycle(), liftIntake(bot)), getIntakeReady(bot), resetIntakeTimer(bot), new ParallelAction(intakePixels(bot), config.getMoveBack()),
                     getReadyForBackboard(bot, true), getSlidesForPlacement(bot), releaseFirstPixel(bot), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
             requestOpModeStop();
         }
