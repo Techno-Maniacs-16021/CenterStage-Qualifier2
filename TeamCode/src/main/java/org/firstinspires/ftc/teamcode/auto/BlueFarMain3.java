@@ -163,6 +163,7 @@ public class BlueFarMain3 extends LinearOpMode {
             public void onError(int errorCode) {}
         });
 
+
         left.setStart(
                 bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
                         .setTangent(Math.toRadians(270))
@@ -183,60 +184,85 @@ public class BlueFarMain3 extends LinearOpMode {
         );
         left.setPlusOne(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
                 .setTangent(Math.toRadians(0))
-                .lineToX(46)
+                .lineToX(42)
                 .setTangent(Math.toRadians(90))
                 .lineToY(42)
                 //.strafeTo(new Vector2d(52,-52))
-                .strafeTo(new Vector2d(52,42))
+                .strafeTo(new Vector2d(52.5,44.5))
                 .build());
-        left.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180)))
-                .strafeTo(new Vector2d(53.5, 32))
+        left.setWhitePixel(bot.actionBuilder(new Pose2d(52.5,44.5,Math.toRadians(180)))
+                .strafeTo(new Vector2d(52.5, 32))
                 .build());
-        left.setPark(bot.actionBuilder(new Pose2d(53.5,48,Math.toRadians(180)))
-                .strafeTo(new Vector2d(45,58))
+        left.setCycle(bot.actionBuilder(new Pose2d(52.5, 32, Math.toRadians(180)))
+                .strafeTo(new Vector2d(46, 11))
+                .setTangent(Math.toRadians(180))
+                .lineToX(-57)
+                .build());
+        left.setSecondMoveBack(bot.actionBuilder(new Pose2d(-57, 11, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-48, 10))
+                .strafeTo(new Vector2d(-57, 12))
+                .strafeTo(new Vector2d(-56, 11))
+                .strafeTo(new Vector2d(-57, 10))
+                .strafeTo(new Vector2d(-56, 11))
+                .strafeTo(new Vector2d(-57, 12))
+                .strafeTo(new Vector2d(-56, 11))
+                .strafeTo(new Vector2d(-57, 10))
+                .strafeTo(new Vector2d(-56, 11))
+                .build());
+        left.setPlusthree(bot.actionBuilder(new Pose2d(-56, 11, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(60)
                 .build());
 
         middle.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
-                .setTangent(Math.toRadians(270))
+                //.setTangent(Math.toRadians(270))
+                .setTangent(Math.toRadians(280))
                 .splineToSplineHeading(new Pose2d(-42,25,Math.toRadians(180)),Math.toRadians(270))
                 //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
                 //.waitSeconds(1) //drop purple
                 .build());
         middle.setStack(bot.actionBuilder(new Pose2d(-42,25, Math.toRadians(180)))
-                //        .strafeTo(new Vector2d(-56,-10))
-                .strafeTo(new Vector2d(-58,11))
+                        //.strafeTo(new Vector2d(-40,18))
+                .strafeTo(new Vector2d(-57,11)) //x=58
                 .build());
 
-        middle.setMoveBack(bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
-                .strafeTo(new Vector2d(-55, 11))
+        middle.setMoveBack(bot.actionBuilder(new Pose2d(-57, 11, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-53, 11)) //x=55
                 .build());
 
-        middle.setPlusOne(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+        middle.setPlusOne(bot.actionBuilder(new Pose2d(-53, 11, Math.toRadians(180)))
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(36)
+                .lineToY(37)
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(53.5,36,Math.toRadians(180)),Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(52.5,37,Math.toRadians(180)),Math.toRadians(0))
                 .build());
 
-        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180)))
-                .strafeTo(new Vector2d(53.5, 32))
+        middle.setWhitePixel(bot.actionBuilder(new Pose2d(52.5,37,Math.toRadians(180)))
+                .strafeTo(new Vector2d(52.5, 33))
                 .build());
 
-        middle.setCycle(bot.actionBuilder(new Pose2d(53.5, 32, Math.toRadians(180)))
-                .strafeTo(new Vector2d(46, 9))
+        middle.setCycle(bot.actionBuilder(new Pose2d(52.5, 32, Math.toRadians(180)))
+                .strafeTo(new Vector2d(46, 11))
                 .setTangent(Math.toRadians(180))
-                .lineToX(-58)
+                .lineToX(-56) //x=-57
+                .build());
+        middle.setSecondMoveBack(bot.actionBuilder(new Pose2d(-56, 11, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-50, 10)) //x=48
+                .strafeTo(new Vector2d(-56, 12)) //x=57
+                .strafeTo(new Vector2d(-52, 11)) //x=56
+                .strafeTo(new Vector2d(-55, 10))
+                .strafeTo(new Vector2d(-53, 11))
+                .strafeTo(new Vector2d(-55, 12))
+                .strafeTo(new Vector2d(-53, 11))
+                .strafeTo(new Vector2d(-55, 10))
+                .strafeTo(new Vector2d(-53, 11))
                 .build());
 
-        middle.setPlusthree(bot.actionBuilder(new Pose2d(-55, 9, Math.toRadians(180)))
+        middle.setPlusthree(bot.actionBuilder(new Pose2d(-53, 11, Math.toRadians(180)))
                 .setTangent(Math.toRadians(0))
-                .lineToX(46)
-                .setTangent(Math.toRadians(90))
-                .lineToY(30)
-                .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(53.5,30,Math.toRadians(180)),Math.toRadians(0))
+                .lineToX(60)
                 .build());
 
         right.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
@@ -252,6 +278,22 @@ public class BlueFarMain3 extends LinearOpMode {
         right.setMoveBack(bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
                 .strafeTo(new Vector2d(-55, 11))
                 .build());
+        right.setSecondMoveBack(bot.actionBuilder(new Pose2d(-57, 11, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-56, 10))
+                .strafeTo(new Vector2d(-57, 12))
+                .strafeTo(new Vector2d(-56, 11))
+                .strafeTo(new Vector2d(-57, 10))
+                .strafeTo(new Vector2d(-56, 11))
+                .strafeTo(new Vector2d(-57, 12))
+                .strafeTo(new Vector2d(-56, 11))
+                .strafeTo(new Vector2d(-57, 10))
+                .strafeTo(new Vector2d(-56, 11))
+                .build());
+
+        right.setSecondMoveFront(bot.actionBuilder(new Pose2d(-56, 9, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-59, 9))
+                .strafeTo(new Vector2d(-57, 9))
+                .build());
 
         right.setPlusOne(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
                 .setTangent(Math.toRadians(0))
@@ -265,6 +307,15 @@ public class BlueFarMain3 extends LinearOpMode {
         right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,30,Math.toRadians(180)))
                 .strafeTo(new Vector2d(53.5, 33))
                 .build());
+        right.setCycle(bot.actionBuilder(new Pose2d(52.5, 32, Math.toRadians(180)))
+                .strafeTo(new Vector2d(46, 11))
+                .setTangent(Math.toRadians(180))
+                .lineToX(-57)
+                .build());
+        right.setPlusthree(bot.actionBuilder(new Pose2d(-54, 11, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(60)
+                .build());
 
 ////////////////////////DASHBOARD TELEMETRY//////////
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -276,6 +327,7 @@ public class BlueFarMain3 extends LinearOpMode {
         bot.setAnglePosition(0);
         bot.resetSlideEncoders();
         waitForStart();
+        bot.resetRunningTime();
 //        while(!isStopRequested() && !opModeIsActive()){
 //            if (color_zone == Zone.LEFT) {
 //                start = bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
@@ -379,17 +431,22 @@ public class BlueFarMain3 extends LinearOpMode {
             if(color_zone==Zone.LEFT) config = left;
             else if(color_zone==Zone.MIDDLE) config = middle;
             else config = right;
-            sleep(250);
-            Actions.runBlocking(new SequentialAction(new ParallelAction(getArmToGround(bot), config.getStart()), releaseFirstPixel(bot), retractBack(bot), config.getStack(), getIntakeReady(bot),takeTopFromStack(bot) ,config.getMoveBack(),resetIntakeTimer(bot),intakePixels(bot), new ParallelAction(transfer(bot), config.getPlusOne())));
+            //sleep(250);
+            Actions.runBlocking(new SequentialAction(new ParallelAction(getArmToGround(bot), config.getStart()), releaseFirstPixel(bot),new ParallelAction( retractBack(bot), config.getStack()), getIntakeReady(bot, 1),takeTopFromStack(bot) ,config.getMoveBack(),resetIntakeTimer(bot),intakePixels(bot,true), new ParallelAction(transfer(bot), config.getPlusOne())));
             if(bot.getPixelMemory() == 2)
                 Actions.runBlocking(new SequentialAction(getReadyForBackboard(bot, true), getSlidesForPlacement(bot), releaseFirstPixel(bot), getReadyForBackboard(bot, false), new ParallelAction(config.getWhitePixel(), getSlidesForPlacement(bot)), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
             else
                 Actions.runBlocking(new SequentialAction(getReadyForBackboard(bot, false), getSlidesForPlacement(bot), releaseFirstPixel(bot), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
-            Actions.runBlocking(new SequentialAction(new ParallelAction(config.getCycle(), liftIntake(bot)), getIntakeReady(bot), resetIntakeTimer(bot), new ParallelAction(intakePixels(bot), config.getMoveBack()),
-                    getReadyForBackboard(bot, true), getSlidesForPlacement(bot), releaseFirstPixel(bot), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
+            if(bot.getRunningTime()<18000)
+                Actions.runBlocking(new SequentialAction(new ParallelAction(config.getCycle(), liftIntake(bot)), getIntakeReady(bot, 0), takeMidFromStack(bot), resetIntakeTimer(bot), new ParallelAction(intakePixels(bot,false), config.getSecondMoveBack()),
+                        new ParallelAction(transfer(bot), config.getPlusthree())));
+            telemetry.addData("time running:", bot.getRunningTime());
+            telemetry.update();
             requestOpModeStop();
         }
+
     }
+
     public Action getArmToGround(RobotV3 bot) {
         return telemetryPacket -> {
             bot.setTarget(1);
@@ -441,14 +498,14 @@ public class BlueFarMain3 extends LinearOpMode {
             return false;
         };
     }
-    public Action getIntakeReady(RobotV3 bot) {
+    public Action getIntakeReady(RobotV3 bot, double intakePower) {
         return telemetryPacket -> {
             bot.updateRobotState();
             bot.setGripPosition(0);
             bot.setPusherPosition(1);
             sleep(100);
             bot.setTarget(1);
-            bot.setIntakePower(1);
+            bot.setIntakePower(intakePower);
             bot.primeIntake();
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
@@ -472,13 +529,24 @@ public class BlueFarMain3 extends LinearOpMode {
             return false;
         };
     }
-    public Action intakePixels(RobotV3 bot) {
+    public Action takeMidFromStack(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.midPixelIntake();
+            sleep(500);
+            return false;
+        };
+    }
+    public Action intakePixels(RobotV3 bot,boolean antiJam) {
         return telemetryPacket -> {
             bot.downIntake();
             bot.updateRobotState();
-            if(bot.getPixels()<2&&bot.getTimeIntaking()<5000){
+            if(bot.getPixels()<2&&bot.getTimeIntaking()<4000&&bot.getRunningTime()<26000){
                 if(bot.getIntake().getCurrent(CurrentUnit.AMPS) >= 6.5){
                     bot.setIntakePower(-1);
+                    bot.setPixelMemory();
+                    sleep(250);
+                    if(antiJam)
+                        return false;
                 }else{
                     bot.setIntakePower(1);
                 }
@@ -487,12 +555,12 @@ public class BlueFarMain3 extends LinearOpMode {
 
             bot.setPixelMemory();
             sleep(250);
-            return false;
+            return bot.getPixels()<2&&bot.getTimeIntaking()<4000;
         };
     }
     public Action transfer(RobotV3 bot){
         return telemetryPacket -> {
-            bot.setIntakePower(-1);
+            if(bot.getPixelMemory() > 0) bot.setIntakePower(-1);
             bot.setTarget(0);
             bot.slideZeroCondition(0, 0.2);
             bot.updateRobotState();
@@ -557,6 +625,12 @@ public class BlueFarMain3 extends LinearOpMode {
             sleep(1000);
             bot.closeIntake();
             //outtake pixel through intake
+            return false;
+        };
+    }
+    public Action resetMatchTimer(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.resetRunningTime();
             return false;
         };
     }

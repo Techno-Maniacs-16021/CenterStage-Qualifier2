@@ -192,6 +192,7 @@ public class BlueCloseMain extends LinearOpMode {
             plusZero = bot.actionBuilder(new Pose2d(18, 38, Math.toRadians(90)))
                     .setTangent(Math.toRadians(0))
                     .splineToSplineHeading(new Pose2d(53.5,37,Math.toRadians(180)),Math.toRadians(0))
+
 //                    .waitSeconds(1) //drop yellow
                     .build();
             park = bot.actionBuilder(new Pose2d(53.5,37,Math.toRadians(180)))

@@ -197,8 +197,8 @@ public class BlueFarMain extends LinearOpMode {
                 .build());
 
         middle.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
-                .setTangent(Math.toRadians(270))
-                .splineToSplineHeading(new Pose2d(-44,23,Math.toRadians(180)),Math.toRadians(270))
+                .setTangent(Math.toRadians(290))
+                .splineToSplineHeading(new Pose2d(-42,25,Math.toRadians(180)),Math.toRadians(270))
                 //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
                 //.waitSeconds(1) //drop purple
                 .build());
@@ -215,13 +215,13 @@ public class BlueFarMain extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(36)
+                .lineToY(37)
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(53.5,36,Math.toRadians(180)),Math.toRadians(0))
+                .strafeTo(new Vector2d(52.5,38))
                 .build());
 
-        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180)))
-                .strafeTo(new Vector2d(53.5, 32))
+        middle.setWhitePixel(bot.actionBuilder(new Pose2d(52.5,38,Math.toRadians(180)))
+                .strafeTo(new Vector2d(52.5, 32))
                 .build());
 
         right.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
@@ -357,6 +357,7 @@ public class BlueFarMain extends LinearOpMode {
 //            }
 //        }
         while(opModeIsActive() && !isStopRequested()){
+
             webcam.stopStreaming();
             Log.d("color_zone", String.valueOf(color_zone));
             AutonConfig config;

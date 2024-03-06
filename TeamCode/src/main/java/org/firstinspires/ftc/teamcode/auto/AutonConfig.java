@@ -10,6 +10,8 @@ public class AutonConfig {
 
     private Action moveBack;
     private Action plusthree;
+    private Action secondMoveBack;
+    private Action secondMoveFront;
     private Action park;
 
     public Action getStart() {
@@ -74,6 +76,22 @@ public class AutonConfig {
 
     public void setPlusthree(Action plusthree) {
         this.plusthree = plusthree;
+    }
+
+    public Action getSecondMoveBack() {
+        return secondMoveBack;
+    }
+
+    public void setSecondMoveBack(Action secondMoveBack) {
+        this.secondMoveBack = secondMoveBack;
+    }
+
+    public Action getSecondMoveFront() {
+        return secondMoveFront;
+    }
+
+    public void setSecondMoveFront(Action secondMoveFront) {
+        this.secondMoveFront = secondMoveFront;
     }
 
     private Action cycle;

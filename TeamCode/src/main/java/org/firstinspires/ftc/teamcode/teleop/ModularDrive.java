@@ -76,6 +76,10 @@ public class ModularDrive extends OpMode {
             ));
         }
     }
+    @Override
+    public void stop() {
+
+    }
     private List<AprilTagDetection> aprilTagDetections(){
         telemetry.addData("tags", tagProcessor.getDetections().size());
         if (tagProcessor.getDetections().size() > 0){

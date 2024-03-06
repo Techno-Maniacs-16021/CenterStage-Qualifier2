@@ -37,6 +37,7 @@ public class RobotV3 extends MecanumDrive{
     double linearSlidePower = f;
     ElapsedTime atTarget = new ElapsedTime();
     ElapsedTime timeIntaking = new ElapsedTime();
+    ElapsedTime runningTime = new ElapsedTime();
 
 
     public RobotV3(HardwareMap hardwareMap, Pose2d pose) {
@@ -151,6 +152,10 @@ public class RobotV3 extends MecanumDrive{
         leftIntakeLinkage.setPosition(0.75);
         rightIntakeLinkage.setPosition(0.75);
     }
+    public void midPixelIntake(){
+        leftIntakeLinkage.setPosition(0.87);
+        rightIntakeLinkage.setPosition(0.87);
+    }
     public void activateSlides(){
         leftSlides.setPower(linearSlidePower);
         rightSlides.setPower(linearSlidePower);
@@ -226,7 +231,8 @@ public class RobotV3 extends MecanumDrive{
         return timeIntaking.milliseconds();
     }
     public void resetTimeIntaking() {timeIntaking.reset();}
-
+    public double getRunningTime(){return runningTime.milliseconds();}
+    public void resetRunningTime(){runningTime.reset();}
     public void setBothLED(RevBlinkinLedDriver.BlinkinPattern pattern){
         blinkinLedDriverLeft.setPattern(pattern);
         blinkinLedDriverRight.setPattern(pattern);
