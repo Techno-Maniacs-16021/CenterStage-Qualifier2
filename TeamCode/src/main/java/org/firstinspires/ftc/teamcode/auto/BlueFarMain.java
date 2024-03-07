@@ -165,13 +165,13 @@ public class BlueFarMain extends LinearOpMode {
 
         left.setStart(
                 bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
-                        .setTangent(Math.toRadians(270))
+                        .setTangent(Math.toRadians(270)) //270
                         //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
-                        .splineToSplineHeading(new Pose2d(-37,36,Math.toRadians(180)),Math.toRadians(270))
+                        .splineToSplineHeading(new Pose2d(-36.65,34.5,Math.toRadians(180)),Math.toRadians(270))
                         .build()
         );
         left.setStack(
-                bot.actionBuilder(new Pose2d(-37, 36, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-36.65, 34.5, Math.toRadians(180))) //x=-37 y=36
                         .strafeTo(new Vector2d(-40, 36))
                         //.strafeTo(new Vector2d(-52,-10)).build();
                         .strafeTo(new Vector2d(-58,11))
@@ -187,22 +187,22 @@ public class BlueFarMain extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .lineToY(42)
                 //.strafeTo(new Vector2d(52,-52))
-                .strafeTo(new Vector2d(52,42))
+                .strafeTo(new Vector2d(53.5,42)) //y=44
                 .build());
-        left.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180)))
-                .strafeTo(new Vector2d(53.5, 32))
+        left.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,42,Math.toRadians(180))) //x=52.5y=44
+                .strafeTo(new Vector2d(53.5, 36)) //y=38
                 .build());
-        left.setPark(bot.actionBuilder(new Pose2d(53.5,48,Math.toRadians(180)))
+        /*left.setPark(bot.actionBuilder(new Pose2d(52.5,38,Math.toRadians(180)))
                 .strafeTo(new Vector2d(45,58))
-                .build());
+                .build());*/
 
         middle.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
-                .setTangent(Math.toRadians(290))
+                .setTangent(Math.toRadians(280)) // 290
                 .splineToSplineHeading(new Pose2d(-42,25,Math.toRadians(180)),Math.toRadians(270))
                 //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
                 //.waitSeconds(1) //drop purple
                 .build());
-        middle.setStack(bot.actionBuilder(new Pose2d(-44,23, Math.toRadians(180)))
+        middle.setStack(bot.actionBuilder(new Pose2d(-42,25, Math.toRadians(180)))
                 //        .strafeTo(new Vector2d(-56,-10))
                 .strafeTo(new Vector2d(-58,11))
                 .build());
@@ -217,11 +217,11 @@ public class BlueFarMain extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .lineToY(37)
                 .setTangent(Math.toRadians(0))
-                .strafeTo(new Vector2d(52.5,38))
+                .strafeTo(new Vector2d(53.5,38)) //x=52.5 y=38
                 .build());
 
-        middle.setWhitePixel(bot.actionBuilder(new Pose2d(52.5,38,Math.toRadians(180)))
-                .strafeTo(new Vector2d(52.5, 32))
+        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,38,Math.toRadians(180))) //y=38
+                .strafeTo(new Vector2d(53.5, 32))
                 .build());
 
         right.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
@@ -244,11 +244,11 @@ public class BlueFarMain extends LinearOpMode {
                 .setTangent(Math.toRadians(90))
                 .lineToY(30)
                 .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(53.5,30,Math.toRadians(180)),Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53.5,31,Math.toRadians(180)),Math.toRadians(0)) //x=52.5 y=33
                 .build());
 
-        right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,30,Math.toRadians(180)))
-                .strafeTo(new Vector2d(53.5, 33))
+        right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,31,Math.toRadians(180))) //y=33
+                .strafeTo(new Vector2d(53.5, 38)) //y=36
                 .build());
 
 ////////////////////////DASHBOARD TELEMETRY//////////

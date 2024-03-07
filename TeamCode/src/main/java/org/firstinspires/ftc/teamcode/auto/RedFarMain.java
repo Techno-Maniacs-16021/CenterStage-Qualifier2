@@ -220,9 +220,9 @@ public class RedFarMain extends LinearOpMode {
                     .setTangent(Math.toRadians(270))
                     .lineToY(-40)
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(52,-40,Math.toRadians(180)),Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(52,-39.5,Math.toRadians(180)),Math.toRadians(0)) //y=-40
                     .build();
-            whitePixel = bot.actionBuilder(new Pose2d(52,-40,Math.toRadians(180)))
+            whitePixel = bot.actionBuilder(new Pose2d(52,-39.5,Math.toRadians(180))) //y=-40
                     .strafeTo(new Vector2d(52, -44))
                     .build();
             park = bot.actionBuilder(new Pose2d(52,-40,Math.toRadians(180)))

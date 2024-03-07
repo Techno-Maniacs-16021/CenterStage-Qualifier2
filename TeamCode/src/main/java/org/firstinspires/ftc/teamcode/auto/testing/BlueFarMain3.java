@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.testing;
 
 import android.util.Log;
 
@@ -18,6 +18,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.auto.AutonConfig;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
 import org.opencv.core.Core;
@@ -223,10 +224,10 @@ public class BlueFarMain3 extends LinearOpMode {
                 .build());
         middle.setStack(bot.actionBuilder(new Pose2d(-42,25, Math.toRadians(180)))
                         //.strafeTo(new Vector2d(-40,18))
-                .strafeTo(new Vector2d(-57,11)) //x=58
+                .strafeTo(new Vector2d(-56,11)) //x=58
                 .build());
 
-        middle.setMoveBack(bot.actionBuilder(new Pose2d(-57, 11, Math.toRadians(180)))
+        middle.setMoveBack(bot.actionBuilder(new Pose2d(-56, 11, Math.toRadians(180)))
                 .strafeTo(new Vector2d(-53, 11)) //x=55
                 .build());
 

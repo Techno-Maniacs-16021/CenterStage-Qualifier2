@@ -165,19 +165,19 @@ public class BlueCloseMain extends LinearOpMode {
         if (color_zone == Zone.RIGHT) {
             start = bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
                     .setTangent(Math.toRadians(270))
-                    .splineToLinearHeading(new Pose2d(20, 35,Math.toRadians(0)),Math.toRadians(180))
-                    .strafeTo(new Vector2d(12, 35))
+                    .splineToLinearHeading(new Pose2d(12, 36,Math.toRadians(0)),Math.toRadians(180)) //x=20 y=35
+                    //.strafeTo(new Vector2d(12, 35))
 //                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(12, 35, Math.toRadians(0)))
+            plusZero = bot.actionBuilder(new Pose2d(12, 36, Math.toRadians(0)))
                     .setTangent(Math.toRadians(0))
                     //.splineToSplineHeading(new Pose2d(52,-35,Math.toRadians(180)),Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(52,32,Math.toRadians(180)),Math.toRadians(0))
+                    .splineToLinearHeading(new Pose2d(53,32,Math.toRadians(180)),Math.toRadians(0))
 //                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(52, 32, Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,60))
-                    .strafeTo(new Vector2d(60, 60))
+            park = bot.actionBuilder(new Pose2d(53, 32, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(48,32)) //x=45 y=60
+                    .strafeTo(new Vector2d(48, 42)) //x=60 y=60
                     //.strafeTo(new Vector2d(45,-58))
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
@@ -186,36 +186,38 @@ public class BlueCloseMain extends LinearOpMode {
         }
         else if (color_zone == Zone.MIDDLE) {
             start = bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
-                    .strafeTo(new Vector2d(18,38))
+                    //.strafeTo(new Vector2d(18,38))
+                    .strafeTo(new Vector2d(17,37))
 //                    .waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(18, 38, Math.toRadians(90)))
+            plusZero = bot.actionBuilder(new Pose2d(17, 37, Math.toRadians(90))) //x=17 y = 37
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(53.5,37,Math.toRadians(180)),Math.toRadians(0))
+                    //.splineToSplineHeading(new Pose2d(53.5,37,Math.toRadians(180)),Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(53,37,Math.toRadians(180)),Math.toRadians(0))
 
 //                    .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(53.5,37,Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,60))
-                    .strafeTo(new Vector2d(60, 60))
+            park = bot.actionBuilder(new Pose2d(53,37,Math.toRadians(180))) //x=53.5 y=37
+                    .strafeTo(new Vector2d(48,39)) //x=45 y=60
+                    .strafeTo(new Vector2d(48, 42)) // x=60 y=60
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,36,Math.toRadians(180)))
                     .waitSeconds(1) //drop white
                     .build();
         }
         else {
-            start = bot.actionBuilder(new Pose2d(12, 64, Math.toRadians(90)))
+            start = bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
                     .strafeTo(new Vector2d(23,47))
                     .waitSeconds(1) //drop purple
                     .build();
             plusZero = bot.actionBuilder(new Pose2d(23, 47, Math.toRadians(90)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(53.5,43,Math.toRadians(180)),Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(53,43,Math.toRadians(180)),Math.toRadians(0)) //x=53.5 y=43
                     .waitSeconds(1) //drop yellow
                     .build();
-            park = bot.actionBuilder(new Pose2d(53.5,43,Math.toRadians(180)))
-                    .strafeTo(new Vector2d(45,60))
-                    .strafeTo(new Vector2d(60,60))
+            park = bot.actionBuilder(new Pose2d(53,43,Math.toRadians(180))) //x=53.5 y=43
+                    .strafeTo(new Vector2d(48,43)) //x=45 y=60
+                    .strafeTo(new Vector2d(48,43)) //x=60 y=60
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,48,Math.toRadians(180)))
                     .waitSeconds(1) //drop white
