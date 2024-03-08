@@ -4,8 +4,10 @@ import android.util.Log;
 import android.util.Size;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Actions;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.PoseVelocity2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -17,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 
 import java.util.List;
@@ -82,16 +85,12 @@ public class ModularDrive extends OpMode {
     }
     private List<AprilTagDetection> aprilTagDetections(){
         telemetry.addData("tags", tagProcessor.getDetections().size());
-        if (tagProcessor.getDetections().size() > 0){
-            AprilTagDetection tag = tagProcessor.getDetections().get(0);
-
-            telemetry.addData("x", tag.ftcPose.x);
-            telemetry.addData("y", tag.ftcPose.y);
-            telemetry.addData("z", tag.ftcPose.z);
-            telemetry.addData("arc",  Math.acos(tag.ftcPose.z/3.4));
-            telemetry.addData("roll", tag.ftcPose.roll);
-            telemetry.addData("pitch", tag.ftcPose.pitch);
-            telemetry.addData("yaw", tag.ftcPose.yaw);
+        if (!tagProcessor.getDetections().isEmpty()){
+            for(AprilTagDetection detection : tagProcessor.getDetections()){
+                AprilTagPoseFtc pose = detection.ftcPose;
+                telemetry.addData(String.valueOf(detection.id), "(" + Math.round(pose.x) + ", " + Math.round(pose.y) + ", "  + Math.round(pose.z) + ") : [" + Math.round(pose.yaw) + ", " + Math.round(pose.pitch) + ", " + Math.round(pose.roll) + "] : | " +  Math.round(Math.acos(detection.ftcPose.z/3.4)) + " |");
+            }
+//            telemetry.update();
         }
         return tagProcessor.getDetections();
     }
@@ -204,7 +203,7 @@ public class ModularDrive extends OpMode {
                 bot.setArmPosition(0.9-(Math.acos(detection.ftcPose.z/3.3)/2.2));
             }
         }
-        if(detections.size() > 0)
+        if(!detections.isEmpty())
             bot.centerBasedOnYaw(detections.get(0).ftcPose.yaw);
         if (gamepad1.right_trigger > 0 && actionCoolDown.milliseconds()>20) {
             bot.incrementLinearSlideTarget(0.1);
@@ -244,11 +243,15 @@ public class ModularDrive extends OpMode {
             bot.setTarget(0);
             mode = "intake";
         }
-        if(gamepad1.dpad_right){
-            bot.strafeLeft();
-        }else if(gamepad1.dpad_left){
-            bot.strafeRight();
-        }else{
+        if(gamepad1.dpad_left){
+            bot.pose = new Pose2d(0,0,Math.toRadians(0));
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(new SequentialAction(bot.actionBuilder(bot.pose).strafeTo(new Vector2d(bot.pose.position.x, bot.pose.position.y - 2)).build()));
+//            bot.strafeLeft();
+        }else if(gamepad1.dpad_right){
+            bot.pose = new Pose2d(0,0,Math.toRadians(0));
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(new SequentialAction(bot.actionBuilder(bot.pose).strafeTo(new Vector2d(bot.pose.position.x, bot.pose.position.y + 2)).build()));
+//            bot.strafeRight();
+        }else {
             bot.setDrivePowers(new PoseVelocity2d(
                     new Vector2d(
                             -gamepad1.left_stick_y ,

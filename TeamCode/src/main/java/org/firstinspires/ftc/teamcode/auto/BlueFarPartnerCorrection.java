@@ -173,9 +173,9 @@ public class BlueFarPartnerCorrection extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(42)
-                //.strafeTo(new Vector2d(52,-52))
-                .strafeTo(new Vector2d(53.5,42)) //y=44
+                .lineToY(26)
+                .strafeTo(new Vector2d(53.5,26)) //intial plunge
+                .strafeTo(new Vector2d(53.5,42)) //Drop Yellow pixel
                 .build());
         left.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,42,Math.toRadians(180))) //x=52.5y=44
                 .strafeTo(new Vector2d(53.5, 36)) //y=38
@@ -203,13 +203,17 @@ public class BlueFarPartnerCorrection extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(37)
-                .setTangent(Math.toRadians(0))
-                .strafeTo(new Vector2d(53.5,38)) //x=52.5 y=38
+                .lineToY(26)
+                .strafeTo(new Vector2d(53.5,26)) //intial plunge
+                .strafeTo(new Vector2d(53.5,32)) //Move Left to center
+                .strafeTo(new Vector2d(48,32))//retract plunge
+                .strafeTo(new Vector2d(48,42))//move to left
+                .strafeTo(new Vector2d(53.5,42)) //second plunge
+                .strafeTo(new Vector2d(53.5,36))//Drop Yellow pixel
                 .build());
 
-        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,38,Math.toRadians(180))) //y=38
-                .strafeTo(new Vector2d(53.5, 32))
+        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180))) //y=38
+                .strafeTo(new Vector2d(53.5, 40))
                 .build());
 
         right.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
@@ -230,12 +234,12 @@ public class BlueFarPartnerCorrection extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(30)
-                .setTangent(Math.toRadians(0))
-                .splineToSplineHeading(new Pose2d(53.5,31,Math.toRadians(180)),Math.toRadians(0)) //x=52.5 y=33
+                .lineToY(42)
+                .strafeTo(new Vector2d(53.5,42)) //intial plunge
+                .strafeTo(new Vector2d(53.5,28)) //Drop Yellow pixel
                 .build());
 
-        right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,31,Math.toRadians(180))) //y=33
+        right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,28,Math.toRadians(180))) //y=33
                 .strafeTo(new Vector2d(53.5, 38)) //y=36
                 .build());
 

@@ -2,6 +2,7 @@ package com.example.meepmeeptesting;
 
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -10,6 +11,7 @@ import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueDark;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeBlueLight;
 import com.noahbres.meepmeep.core.colorscheme.scheme.ColorSchemeRedDark;
 import com.noahbres.meepmeep.roadrunner.DefaultBotBuilder;
+import com.noahbres.meepmeep.roadrunner.DriveShim;
 import com.noahbres.meepmeep.roadrunner.entity.RoadRunnerBotEntity;
 
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +28,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        redFarMain(meepMeep, myBot);
+        blueFarPartnerCorrection(meepMeep, myBot);
 
 
 
@@ -36,6 +38,108 @@ public class MeepMeepTesting {
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
                 .start();
+    }
+
+    public static void blueFarPartnerCorrection(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
+        AutonConfig left = new AutonConfig();
+        AutonConfig right = new AutonConfig();
+        AutonConfig middle = new AutonConfig();
+        DriveShim bot = myBot.getDrive();
+        String detect = "right";
+
+        left.setStart(
+                bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
+                        .setTangent(Math.toRadians(270)) //270
+                        //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
+                        .splineToSplineHeading(new Pose2d(-36.65,34.5,Math.toRadians(180)),Math.toRadians(270))
+                        .build()
+        );
+        left.setStack(
+                bot.actionBuilder(new Pose2d(-36.65, 34.5, Math.toRadians(180))) //x=-37 y=36
+                        .strafeTo(new Vector2d(-40, 36))
+                        //.strafeTo(new Vector2d(-52,-10)).build();
+                        .strafeTo(new Vector2d(-58,11))
+                        .build()
+        );
+        left.setMoveBack(bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-55, 11))
+                .build()
+        );
+        left.setPlusOne(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(46)
+                .setTangent(Math.toRadians(90))
+                .lineToY(26)
+                .strafeTo(new Vector2d(53.5,26)) //intial plunge
+                .strafeTo(new Vector2d(53.5,42)) //Drop Yellow pixel
+                .build());
+        left.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,42,Math.toRadians(180))) //x=52.5y=44
+                .strafeTo(new Vector2d(53.5, 36)) //y=38
+                .build());
+        /*left.setPark(bot.actionBuilder(new Pose2d(52.5,38,Math.toRadians(180)))
+                .strafeTo(new Vector2d(45,58))
+                .build());*/
+
+        middle.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
+                .setTangent(Math.toRadians(280)) // 290
+                .splineToSplineHeading(new Pose2d(-42,25,Math.toRadians(180)),Math.toRadians(270))
+                //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
+                //.waitSeconds(1) //drop purple
+                .build());
+        middle.setStack(bot.actionBuilder(new Pose2d(-42,25, Math.toRadians(180)))
+                //        .strafeTo(new Vector2d(-56,-10))
+                .strafeTo(new Vector2d(-58,11))
+                .build());
+
+        middle.setMoveBack(bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-55, 11))
+                .build());
+
+        middle.setPlusOne(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(46)
+                .setTangent(Math.toRadians(90))
+                .lineToY(26)
+                .strafeTo(new Vector2d(53.5,26)) //intial plunge
+                .strafeTo(new Vector2d(53.5,32)) //Move Left to center
+                .strafeTo(new Vector2d(48,32))//retract plunge
+                .strafeTo(new Vector2d(48,42))//move to left
+                .strafeTo(new Vector2d(53.5,42)) //second plunge
+                .strafeTo(new Vector2d(53.5,36))//Drop Yellow pixel
+                .build());
+
+        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180))) //y=38
+                .strafeTo(new Vector2d(53.5, 40))
+                .build());
+
+        right.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
+                .setTangent(Math.toRadians(-150))
+                .splineToSplineHeading(new Pose2d(-45,17,Math.toRadians(270)),Math.toRadians(270))
+                .build());
+
+        right.setStack(bot.actionBuilder(new Pose2d(-45,17,Math.toRadians(270)))
+                .setTangent(Math.toRadians(90))
+                .splineToLinearHeading(new Pose2d(-58, 11, Math.toRadians(180)), Math.toRadians(180))
+                .build());
+
+        right.setMoveBack(bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-55, 11))
+                .build());
+
+        right.setPlusOne(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(46)
+                .setTangent(Math.toRadians(90))
+                .lineToY(42)
+                .strafeTo(new Vector2d(53.5,42)) //intial plunge
+                .strafeTo(new Vector2d(53.5,28)) //Drop Yellow pixel
+                .build());
+
+        right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,28,Math.toRadians(180))) //y=33
+                .strafeTo(new Vector2d(53.5, 38)) //y=36
+                .build());
+        AutonConfig config = "left".equals(detect) ? left : ("right".equals(detect) ? right : middle);
+        myBot.runAction(new SequentialAction(config.getStart(), config.getStack(),config.getMoveBack(), config.getPlusOne(), config.getWhitePixel()));
     }
 
     public static void newRedCloseMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){

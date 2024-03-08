@@ -1,39 +1,6 @@
-package org.firstinspires.ftc.teamcode.auto;
+package com.example.meepmeeptesting;
 
-import android.util.Log;
-
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
-import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Action;
-import com.acmerobotics.roadrunner.Pose2d;
-import com.acmerobotics.roadrunner.SequentialAction;
-import com.acmerobotics.roadrunner.Vector2d;
-import com.acmerobotics.roadrunner.ftc.Actions;
-import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.bots.RobotV3;
-import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
-import org.opencv.core.Core;
-import org.opencv.core.Mat;
-import org.opencv.core.MatOfPoint;
-import org.opencv.core.Rect;
-import org.opencv.core.Scalar;
-import org.opencv.core.Size;
-import org.opencv.imgproc.Imgproc;
-import org.openftc.easyopencv.OpenCvCamera;
-import org.openftc.easyopencv.OpenCvCameraFactory;
-import org.openftc.easyopencv.OpenCvCameraRotation;
-import org.openftc.easyopencv.OpenCvPipeline;
-import org.openftc.easyopencv.OpenCvWebcam;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AutonConfig {
     private Action start;
