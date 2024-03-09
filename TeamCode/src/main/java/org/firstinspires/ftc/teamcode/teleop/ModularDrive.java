@@ -87,8 +87,10 @@ public class ModularDrive extends OpMode {
         telemetry.addData("tags", tagProcessor.getDetections().size());
         if (!tagProcessor.getDetections().isEmpty()){
             for(AprilTagDetection detection : tagProcessor.getDetections()){
-                AprilTagPoseFtc pose = detection.ftcPose;
-                telemetry.addData(String.valueOf(detection.id), "(" + Math.round(pose.x) + ", " + Math.round(pose.y) + ", "  + Math.round(pose.z) + ") : [" + Math.round(pose.yaw) + ", " + Math.round(pose.pitch) + ", " + Math.round(pose.roll) + "] : | " +  Math.round(Math.acos(detection.ftcPose.z/3.4)) + " |");
+                AprilTagPoseFtc pose = (detection.ftcPose);
+                if(pose != null)
+                    telemetry.addData(String.valueOf(detection.id), "(" + Math.round(pose.x) + ", " + Math.round(pose.y) + ", "  + Math.round(pose.z) + ") : [" + Math.round(pose.yaw) + ", " + Math.round(pose.pitch) + ", " + Math.round(pose.roll) + "] : | " +  Math.round(Math.acos(detection.ftcPose.z/3.4)) + " |");
+                else telemetry.addData("tagdetection", "none");
             }
 //            telemetry.update();
         }
