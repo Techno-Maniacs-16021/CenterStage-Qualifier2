@@ -243,6 +243,7 @@ public class RobotV3 extends MecanumDrive{
     public void setLeftLED(RevBlinkinLedDriver.BlinkinPattern pattern){
         blinkinLedDriverLeft.setPattern(pattern);
     }
+
     public void shootDrone(){
         drone.setPosition(1);
     }

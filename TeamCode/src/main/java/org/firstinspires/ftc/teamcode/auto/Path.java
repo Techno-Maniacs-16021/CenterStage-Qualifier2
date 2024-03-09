@@ -4,8 +4,6 @@ import java.util.HashMap;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Vector2d;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.robot.Robot;
 
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
@@ -245,6 +243,8 @@ public class Path {
                         .setTangent(Math.toRadians(90))
                         //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
                         .splineToSplineHeading(new Pose2d(-37,-36,Math.toRadians(180)),Math.toRadians(90))
+                        .strafeTo(new Vector2d(-32, -36))
+                        .strafeTo(new Vector2d(-37, -36))
                         .build());
 
         right.put("stack",
@@ -273,7 +273,7 @@ public class Path {
                         .setTangent(Math.toRadians(0))
                         .lineToX(46)
                         .setTangent(Math.toRadians(270))
-                        .lineToY(-46)
+                        .lineToY(-40)
                         //.strafeTo(new Vector2d(52,-52))
                         .build());
 
@@ -358,7 +358,7 @@ public class Path {
                         .setTangent(Math.toRadians(0))
                         .lineToX(46)
                         .setTangent(Math.toRadians(270))
-                        .lineToY(-34)
+                        .lineToY(-40)
                         .build());
         left.put("whitePixel",
                 bot.actionBuilder(new Pose2d(52,-34,Math.toRadians(180)))
@@ -386,7 +386,8 @@ public class Path {
 
         right.put("plusZeroWithAprilTags",
                 bot.actionBuilder(new Pose2d(23, -46.5, Math.toRadians(270))) //x=9 y=-40
-                        .setTangent(Math.toRadians(0))
+                        .strafeTo(new Vector2d(32, -46.5))
+                        .setTangent(Math.toRadians(15))
                         .splineToSplineHeading(new Pose2d(48,-33,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
 //                    .waitSeconds(1) //drop yellow
                         .build());
@@ -428,7 +429,8 @@ public class Path {
         left.put("start",
                 bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
                         .setTangent(Math.toRadians(90))
-                        .splineToLinearHeading(new Pose2d(20, -35,Math.toRadians(0)),Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(20, -33,Math.toRadians(0)),Math.toRadians(180))
+                        .strafeTo(new Vector2d(5, -35))
                         .strafeTo(new Vector2d(12, -35))
 //                    .waitSeconds(1) //drop purple
                         .build());
@@ -441,7 +443,7 @@ public class Path {
                         .build());
 
         left.put("plusZeroWithAprilTags",
-                bot.actionBuilder(new Pose2d(10, -40, Math.toRadians(330))) //x=9 y=-40
+                bot.actionBuilder(new Pose2d(12, -35, Math.toRadians(330))) //x=9 y=-40
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(48,-33,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
 //                    .waitSeconds(1) //drop yellow

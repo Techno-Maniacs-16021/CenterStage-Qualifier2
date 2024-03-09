@@ -16,25 +16,23 @@ public class RedFarApril extends AutonBase {
     public void runOpMode() throws InterruptedException {
         RobotV3 bot = initRobot(-36,-63, Math.toRadians(270), AutonConstants.AutonType.RED_FAR_2_PLUS_1);
         waitForStart();
-        while(opModeIsActive() && !isStopRequested()){
-            closeWebcam();
-            Log.d("color_zone", String.valueOf(color_zone));
-            Actions.runBlocking(new SequentialAction(
-                    getArmToGround(bot),
-                    path.get("start", color_zone),
-                    releaseFirstPixel(bot),
-                    path.get("stack", color_zone),
-                    retractBack(bot),
-                    getIntakeReady(bot),
-                    takeTopFromStack(bot),
-                    path.get("moveBack", color_zone),
-                    resetIntakeTimer(bot),
-                    intakePixels(bot),
-                    transfer(bot),
-                    path.get("plusOneWithAprilTags", color_zone)
-                    ));
-            Actions.runBlocking(compensate(bot, color_zone, bot.getPixelMemory()));
-            requestOpModeStop();
-        }
+        closeWebcam();
+        Log.d("color_zone", String.valueOf(color_zone));
+        Actions.runBlocking(new SequentialAction(
+                getArmToGround(bot),
+                path.get("start", color_zone),
+                releaseFirstPixel(bot),
+                path.get("stack", color_zone),
+                retractBack(bot),
+                getIntakeReady(bot),
+                takeTopFromStack(bot),
+                path.get("moveBack", color_zone),
+                resetIntakeTimer(bot),
+                intakePixels(bot),
+                transfer(bot),
+                path.get("plusOneWithAprilTags", color_zone)
+        ));
+        Actions.runBlocking(compensate(bot, color_zone, bot.getPixelMemory()));
+        requestOpModeStop();
     }
 }

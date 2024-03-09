@@ -34,6 +34,8 @@ public class ModularDrive extends OpMode {
     RobotV3 bot;
     private ElapsedTime loopTime = new ElapsedTime();
     private ElapsedTime actionCoolDown = new ElapsedTime();
+    private ElapsedTime ledFlashing = new ElapsedTime();
+
     private AprilTagProcessor tagProcessor;
     private VisionPortal visionPortal;
     private List<AprilTagDetection> detections;
@@ -154,11 +156,12 @@ public class ModularDrive extends OpMode {
         else if(gamepad1.cross) intakePosition = "down";
         if(gamepad1.right_trigger>0){
             if(bot.getPixels() == 0){
-                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RED);
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
             }else if(bot.getPixels() == 1){
-                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+                bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
             }else{
-                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RAINBOW_PARTY_PALETTE);
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.AQUA);
             }
             bot.setTarget(INITIAL_OFFSET);
             bot.setGripPosition(0.5);
@@ -291,22 +294,54 @@ public class ModularDrive extends OpMode {
     }
     private void ledControls(){
         if (gamepad2.circle) {
-            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+            bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
         }
         else if (gamepad2.square) {
-            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+            bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
         }
         else if (gamepad2.triangle) {
-            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.GREEN);
         }
         else if (gamepad2.cross) {
-            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+            bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.WHITE);
         }
         else if (gamepad2.dpad_up) {
-            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+            else{
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+                ledFlashing.reset();
+            }
         }
         else if (gamepad2.dpad_down) {
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+            else{
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+                ledFlashing.reset();
+            }
+        }
+        else if (gamepad2.dpad_right) {
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            else{
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+                ledFlashing.reset();
+            }
+        }
+        else if (gamepad2.dpad_left) {
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+            else{
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+                ledFlashing.reset();
+            }
+        }
+        else if (gamepad2.right_trigger!=0) {
             bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RED);
+        }
+        else if (gamepad2.left_trigger!=0){
+            bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
         }
     }
 }

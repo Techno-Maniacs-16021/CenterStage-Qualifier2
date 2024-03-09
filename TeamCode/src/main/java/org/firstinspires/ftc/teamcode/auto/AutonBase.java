@@ -38,7 +38,6 @@ import java.util.List;
 
 public abstract class AutonBase extends LinearOpMode {
 
-    private ElapsedTime loopTime = new ElapsedTime();
     RevBlinkinLedDriver blinkinLedDriverLeft;
     RevBlinkinLedDriver blinkinLedDriverRight;
     OpenCvWebcam webcam;
@@ -201,10 +200,7 @@ public abstract class AutonBase extends LinearOpMode {
     public RobotV3 initRobot(double x, double y, double heading, AutonConstants.AutonType autonType){
         RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(x, y, heading));
         this.autonType = autonType;
-        blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
-        blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
-        blinkinLedDriverRight.setPattern(pattern);
-        blinkinLedDriverLeft.setPattern(pattern);
+        bot.setBothLED(pattern);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         OpenCvPipeline pipeline = AutonConstants.isBlue(autonType) ? new BluePipeline() : new RedPipeline();
@@ -220,7 +216,9 @@ public abstract class AutonBase extends LinearOpMode {
             }
 
             @Override
-            public void onError(int errorCode) {}
+            public void onError(int errorCode) {
+                Log.e("camera error", String.valueOf(errorCode));
+            }
         });
 
         ////////////////////////DASHBOARD TELEMETRY//////////
@@ -231,7 +229,8 @@ public abstract class AutonBase extends LinearOpMode {
         bot.setGripPosition(1);
         bot.setArmPosition(0);
         bot.setAnglePosition(0);
-
+        bot.closeIntake();
+        bot.resetSlideEncoders();
         path = new Path(bot, autonType);
 
         return bot;
@@ -431,13 +430,13 @@ public abstract class AutonBase extends LinearOpMode {
 
                 switch (zone) {
                     case LEFT:
-                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 1.25 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.5 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (6 - detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (12 - detection.ftcPose.x) : -detection.ftcPose.x)));
+                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (6 - detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (12 - detection.ftcPose.x) : -detection.ftcPose.x)));
                         break;
                     case MIDDLE:
-                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 1.25 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.5 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (6 - detection.ftcPose.x) : -detection.ftcPose.x - 6)));
+                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (6 - detection.ftcPose.x) : -detection.ftcPose.x - 6)));
                         break;
                     default:
-                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 1.25 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.5 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x - 6) : ((detection.id == 6 || detection.id == 3) ? (-detection.ftcPose.x) : -detection.ftcPose.x - 12)));
+                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x - 6) : ((detection.id == 6 || detection.id == 3) ? (-detection.ftcPose.x) : -detection.ftcPose.x - 12)));
                         break;
                 }
             Log.d("Pose Correct", "(" + correct.x + "," + correct.y + ")");
@@ -451,13 +450,14 @@ public abstract class AutonBase extends LinearOpMode {
                         getReadyForBackboardClose(bot),
                         retractBack(bot),
                         AutonConstants.isBlue(autonType) ?
-                                bot.actionBuilder(bot.pose)
-                                        .strafeTo(new Vector2d(48,39)) //x=45 y=60
-                                        .strafeTo(new Vector2d(48, 42)) // x=60 y=60
+                                bot.actionBuilder(new Pose2d(correct.x, correct.y, Math.toRadians(180)))
+                                        .strafeTo(new Vector2d(42,60)) //x=45 y=60
+                                        .strafeTo(new Vector2d(60, 60)) // x=60 y=60
                                         .build()
                                 :
-                                bot.actionBuilder(bot.pose)
-                                    .strafeTo(new Vector2d(48, -58))
+                                bot.actionBuilder(new Pose2d(correct.x, correct.y, Math.toRadians(180)))
+                                    .strafeTo(new Vector2d(48, -60))
+                                        .strafeTo(new Vector2d(60,-60))
                                     .build()
                 );
             }else{
