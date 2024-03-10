@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import android.util.Log;
 
@@ -13,11 +13,13 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.auto.AutonConfig;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
 import org.opencv.core.Core;
@@ -39,8 +41,22 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class BlueFarPartnerCorrection extends LinearOpMode {
+@Disabled
+
+public class BlueFarMain extends LinearOpMode {
     public static String detection = "right";
+
+    private ElapsedTime loopTime = new ElapsedTime();
+
+    private static Action start;
+    private static Action plusOne;
+    private static Action stack;
+    private static Action whitePixel;
+
+    private static Action moveBack;
+    private static Action park;
+    private static Action cycle;
+
     private static AutonConfig left;
     private static AutonConfig right;
     private static AutonConfig middle;
@@ -173,9 +189,9 @@ public class BlueFarPartnerCorrection extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(26)
-                .strafeTo(new Vector2d(53.5,26)) //intial plunge
-                .strafeTo(new Vector2d(53.5,42)) //Drop Yellow pixel
+                .lineToY(42)
+                //.strafeTo(new Vector2d(52,-52))
+                .strafeTo(new Vector2d(53.5,42)) //y=44
                 .build());
         left.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,42,Math.toRadians(180))) //x=52.5y=44
                 .strafeTo(new Vector2d(53.5, 36)) //y=38
@@ -203,17 +219,13 @@ public class BlueFarPartnerCorrection extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(26)
-                .strafeTo(new Vector2d(53.5,26)) //intial plunge
-                .strafeTo(new Vector2d(53.5,32)) //Move Left to center
-                .strafeTo(new Vector2d(48,32))//retract plunge
-                .strafeTo(new Vector2d(48,42))//move to left
-                .strafeTo(new Vector2d(53.5,42)) //second plunge
-                .strafeTo(new Vector2d(53.5,36))//Drop Yellow pixel
+                .lineToY(37)
+                .setTangent(Math.toRadians(0))
+                .strafeTo(new Vector2d(53.5,38)) //x=52.5 y=38
                 .build());
 
-        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180))) //y=38
-                .strafeTo(new Vector2d(53.5, 40))
+        middle.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,38,Math.toRadians(180))) //y=38
+                .strafeTo(new Vector2d(53.5, 32))
                 .build());
 
         right.setStart(bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
@@ -234,12 +246,12 @@ public class BlueFarPartnerCorrection extends LinearOpMode {
                 .setTangent(Math.toRadians(0))
                 .lineToX(46)
                 .setTangent(Math.toRadians(90))
-                .lineToY(42)
-                .strafeTo(new Vector2d(53.5,42)) //intial plunge
-                .strafeTo(new Vector2d(53.5,28)) //Drop Yellow pixel
+                .lineToY(30)
+                .setTangent(Math.toRadians(0))
+                .splineToSplineHeading(new Pose2d(53.5,31,Math.toRadians(180)),Math.toRadians(0)) //x=52.5 y=33
                 .build());
 
-        right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,28,Math.toRadians(180))) //y=33
+        right.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,31,Math.toRadians(180))) //y=33
                 .strafeTo(new Vector2d(53.5, 38)) //y=36
                 .build());
 
@@ -252,6 +264,102 @@ public class BlueFarPartnerCorrection extends LinearOpMode {
         bot.setArmPosition(0);
         bot.setAnglePosition(0);
         waitForStart();
+//        while(!isStopRequested() && !opModeIsActive()){
+//            if (color_zone == Zone.LEFT) {
+//                start = bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
+//                        .setTangent(Math.toRadians(270))
+//                        //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
+//                        .splineToSplineHeading(new Pose2d(-37,36,Math.toRadians(180)),Math.toRadians(270))
+//                        .build();
+//                stack = bot.actionBuilder(new Pose2d(-37, 36, Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(-40, 36))
+//                        //.strafeTo(new Vector2d(-52,-10)).build();
+//                        .strafeTo(new Vector2d(-58,11))
+//                        .build();
+//                moveBack = bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(-55, 11))
+//                        .build();
+//                plusOne = bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+//                        .setTangent(Math.toRadians(0))
+//                        .lineToX(46)
+//                        .setTangent(Math.toRadians(90))
+//                        .lineToY(42)
+//                        //.strafeTo(new Vector2d(52,-52))
+//                        .strafeTo(new Vector2d(52,42))
+//                        .build();
+//                whitePixel = bot.actionBuilder(new Pose2d(52,42,Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(53.5, 39))
+//                        .build();
+//                park = bot.actionBuilder(new Pose2d(53.5,48,Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(45,58))
+//                        .build();
+//                cycle = bot.actionBuilder(new Pose2d(46,48,Math.toRadians(180)))
+//                        .waitSeconds(1) //drop white
+//                        .build();
+//            }
+//            else if (color_zone == Zone.MIDDLE) {
+//                start = bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
+//                        .setTangent(Math.toRadians(270))
+//                        .splineToSplineHeading(new Pose2d(-44,23,Math.toRadians(180)),Math.toRadians(270))
+//                        //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
+//                        //.waitSeconds(1) //drop purple
+//                        .build();
+//                stack = bot.actionBuilder(new Pose2d(-44,23, Math.toRadians(180)))
+//                        //        .strafeTo(new Vector2d(-56,-10))
+//                        .strafeTo(new Vector2d(-58,11))
+//                        .build();
+//                moveBack = bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(-55, 11))
+//                        .build();
+//                plusOne = bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+//                        .setTangent(Math.toRadians(0))
+//                        .lineToX(46)
+//                        .setTangent(Math.toRadians(90))
+//                        .lineToY(36)
+//                        .setTangent(Math.toRadians(0))
+//                        .splineToSplineHeading(new Pose2d(53.5,36,Math.toRadians(180)),Math.toRadians(0))
+//                        .build();
+//                whitePixel = bot.actionBuilder(new Pose2d(53.5,36,Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(53.5, 32))
+//                        .build();
+//                park = bot.actionBuilder(new Pose2d(52,33,Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(45,58))
+//                        .build();
+//                cycle = bot.actionBuilder(new Pose2d(46,36,Math.toRadians(180)))
+//                        //.waitSeconds(1) //drop white
+//                        .build();
+//            }
+//            else  {
+//                start = bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
+//                        .setTangent(Math.toRadians(-150))
+//                        .splineToSplineHeading(new Pose2d(-45,17,Math.toRadians(270)),Math.toRadians(270))
+//                        .build();
+//                stack = bot.actionBuilder(new Pose2d(-45,17,Math.toRadians(270)))
+//                        .setTangent(Math.toRadians(90))
+//                        .splineToLinearHeading(new Pose2d(-58, 11, Math.toRadians(180)), Math.toRadians(180))
+//                        .build();
+//                moveBack = bot.actionBuilder(new Pose2d(-58, 11, Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(-55, 11))
+//                        .build();
+//                plusOne = bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
+//                        .setTangent(Math.toRadians(0))
+//                        .lineToX(46)
+//                        .setTangent(Math.toRadians(90))
+//                        .lineToY(30)
+//                        .setTangent(Math.toRadians(0))
+//                        .splineToSplineHeading(new Pose2d(53.5,30,Math.toRadians(180)),Math.toRadians(0))
+//                        .build();
+//                whitePixel = bot.actionBuilder(new Pose2d(53.5,30,Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(53.5, 33))
+//                        .build();
+//                park = bot.actionBuilder(new Pose2d(52, 34, Math.toRadians(180)))
+//                        .strafeTo(new Vector2d(45,58))
+//                        .build();
+//                cycle = bot.actionBuilder(new Pose2d(46,30,Math.toRadians(180)))
+////                    .waitSeconds(1) //drop white
+//                        .build();
+//            }
+//        }
         while(opModeIsActive() && !isStopRequested()){
 
             webcam.stopStreaming();

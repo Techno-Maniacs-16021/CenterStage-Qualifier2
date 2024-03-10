@@ -14,7 +14,7 @@ public class RedCloseApril extends AutonBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = initRobot(12, -63, Math.toRadians(270), AutonConstants.AutonType.RED_CLOSE_2_PLUS_0);
+        RobotV3 bot = initRobot(12, -64, Math.toRadians(270), AutonConstants.AutonType.RED_CLOSE_2_PLUS_0);
         waitForStart();
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));

@@ -421,13 +421,55 @@ public abstract class AutonBase extends LinearOpMode {
             return false;
         };
     }
-
+    public Action aprilTagFailAction(RobotV3 bot, Zone zone, int numOfPixels){
+        if(AutonConstants.isClose(autonType)){
+            return new SequentialAction(
+                    path.get("aprilTagsFailureCase", zone),
+                    path.get("park", zone)
+            );
+        }
+        if(numOfPixels == 1){
+            return new SequentialAction(
+                    path.get("aprilTagsFailureCase", zone),
+                    getReadyForBackboardFar(bot, false),
+                    getSlidesForPlacement(bot),
+                    releaseFirstPixel(bot),
+                    releaseSecondPixel(bot),
+                    getReadyForBackboardFar(bot, false),
+                    retractBack(bot)
+            );
+        }
+        return new SequentialAction(
+                path.get("aprilTagsFailureCase", zone),
+                getReadyForBackboardFar(bot, true),
+                getSlidesForPlacement(bot),
+                releaseFirstPixel(bot),
+                getReadyForBackboardFar(bot, false),
+                path.get("whitePixel", zone),
+                getSlidesForPlacement(bot),
+                releaseSecondPixel(bot),
+                getReadyForBackboardFar(bot, false),
+                retractBack(bot)
+            );
+    }
     public Action compensate(RobotV3 bot, Zone zone, int numOfPixels){
-        if(!tagProcessor.getDetections().isEmpty()){
-            AprilTagDetection detection = tagProcessor.getDetections().get(0);
+        ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
+        for(int i = 0; i < 20 && detections.isEmpty() && !isStopRequested() && opModeIsActive(); i++){
+            detections = tagProcessor.getDetections();
+            sleep(50);
+        }
+        if(!detections.isEmpty()){
+            AprilTagDetection detection = null;
+            for(int i = 0; i < detections.size() && detection == null && !isStopRequested() && opModeIsActive(); i++){
+                if(detections.get(i) != null && detections.get(i).ftcPose != null)
+                    detection = detections.get(i);
+            }
+            if(detection == null){
+                return aprilTagFailAction(bot, zone, numOfPixels);
+            }
+
             Log.d("Pose", "(" + bot.pose.position.x + "," + bot.pose.position.y + ")" + " | " + detection.id + ": (" + detection.ftcPose.x + "," + detection.ftcPose.y + "," + detection.ftcPose.z + ")");
             Vector2d correct = null;
-
                 switch (zone) {
                     case LEFT:
                         correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (6 - detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (12 - detection.ftcPose.x) : -detection.ftcPose.x)));
@@ -451,12 +493,14 @@ public abstract class AutonBase extends LinearOpMode {
                         retractBack(bot),
                         AutonConstants.isBlue(autonType) ?
                                 bot.actionBuilder(new Pose2d(correct.x, correct.y, Math.toRadians(180)))
+                                        .strafeTo(new Vector2d(42,correct.y)) //x=45 y=60
                                         .strafeTo(new Vector2d(42,60)) //x=45 y=60
                                         .strafeTo(new Vector2d(60, 60)) // x=60 y=60
                                         .build()
                                 :
                                 bot.actionBuilder(new Pose2d(correct.x, correct.y, Math.toRadians(180)))
-                                    .strafeTo(new Vector2d(48, -60))
+                                        .strafeTo(new Vector2d(42,correct.y)) //x=45 y=60
+                                        .strafeTo(new Vector2d(42, -60))
                                         .strafeTo(new Vector2d(60,-60))
                                     .build()
                 );
@@ -471,7 +515,11 @@ public abstract class AutonBase extends LinearOpMode {
                             releaseFirstPixel(bot),
                             releaseSecondPixel(bot),
                             getReadyForBackboardFar(bot, false),
-                            retractBack(bot)
+                            retractBack(bot),
+                            bot.actionBuilder(new Pose2d(correct.x,correct.y,Math.toRadians(180)))
+                                    .strafeTo( AutonConstants.isBlue(autonType) ? new Vector2d(48,12) : new Vector2d(48,-12))
+                                    .build()
+
                     );
                 }
                 return new SequentialAction(
@@ -488,7 +536,10 @@ public abstract class AutonBase extends LinearOpMode {
                         getSlidesForPlacement(bot),
                         releaseSecondPixel(bot),
                         getReadyForBackboardFar(bot, false),
-                        retractBack(bot)
+                        retractBack(bot),
+                        bot.actionBuilder(new Pose2d(correct.x, correct.y + (zone == Zone.RIGHT ? 4 : -4),Math.toRadians(180)))
+                                .strafeTo( AutonConstants.isBlue(autonType) ? new Vector2d(48,12) : new Vector2d(48,-12))
+                                .build()
                 );
             }
 

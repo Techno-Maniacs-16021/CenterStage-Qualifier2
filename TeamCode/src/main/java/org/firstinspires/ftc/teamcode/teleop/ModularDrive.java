@@ -31,6 +31,7 @@ public class ModularDrive extends OpMode {
     public static double INITIAL_OFFSET,PIXEL_LAYER,ALLOWED_ERROR,ZERO_POSITION,ZERO_POWER,ZERO_ANGLE;
     public static String mode = "intake";
     public static String intakePosition = "down";
+    public static String leftLEDStrobe = "none";
     RobotV3 bot;
     private ElapsedTime loopTime = new ElapsedTime();
     private ElapsedTime actionCoolDown = new ElapsedTime();
@@ -46,6 +47,7 @@ public class ModularDrive extends OpMode {
 //        p=2.5;i=0;d=0;f=0;
         mode="intake";
         intakePosition="down";
+        leftLEDStrobe="normal";
         bot = new RobotV3(hardwareMap, new Pose2d(0,0,0));
         INITIAL_OFFSET = 1;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;ZERO_ANGLE=0.0 ;
         tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).build();
@@ -159,11 +161,14 @@ public class ModularDrive extends OpMode {
         if(gamepad1.right_trigger>0){
             if(bot.getPixels() == 0){
                 bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+                leftLEDStrobe="normal";
             }else if(bot.getPixels() == 1){
                 bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.AQUA);
                 bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.HOT_PINK);
+                leftLEDStrobe="normal";
             }else{
                 bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+                leftLEDStrobe="normal";
             }
             bot.setTarget(INITIAL_OFFSET);
             bot.setGripPosition(0.5);
@@ -201,15 +206,15 @@ public class ModularDrive extends OpMode {
     private void outtakeControls(){
         bot.activateSlides();
         detections = tagProcessor.getDetections();
-        if(gamepad1.circle && detections.size() > 0){
-            AprilTagDetection detection = detections.get(0);
-            if(detection.ftcPose.z > 3.3) bot.setArmPosition(0.9);
-            else{
-                bot.setArmPosition(0.9-(Math.acos(detection.ftcPose.z/3.3)/2.2));
-            }
-        }
-        if(!detections.isEmpty())
-            bot.centerBasedOnYaw(detections.get(0).ftcPose.yaw);
+//        if(gamepad1.circle && !detections.isEmpty()){
+//            AprilTagDetection detection = detections.get(0);
+//            if(detection.ftcPose.z > 3.3) bot.setArmPosition(0.9);
+//            else{
+//                bot.setArmPosition(0.9-(Math.acos(detection.ftcPose.z/3.3)/2.2));
+//            }
+//        }
+//        if(!detections.isEmpty())
+//            bot.centerBasedOnYaw(detections.get(0).ftcPose.yaw);
         if (gamepad1.right_trigger > 0 && actionCoolDown.milliseconds()>20) {
             bot.incrementLinearSlideTarget(0.1);
             actionCoolDown.reset();
@@ -250,11 +255,11 @@ public class ModularDrive extends OpMode {
         }
         if(gamepad1.dpad_left){
             bot.pose = new Pose2d(0,0,Math.toRadians(0));
-            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(new SequentialAction(bot.actionBuilder(bot.pose).strafeTo(new Vector2d(bot.pose.position.x, bot.pose.position.y - 2)).build()));
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(new SequentialAction(bot.actionBuilder(bot.pose).strafeTo(new Vector2d(bot.pose.position.x, bot.pose.position.y - 5)).build()));
 //            bot.strafeLeft();
         }else if(gamepad1.dpad_right){
             bot.pose = new Pose2d(0,0,Math.toRadians(0));
-            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(new SequentialAction(bot.actionBuilder(bot.pose).strafeTo(new Vector2d(bot.pose.position.x, bot.pose.position.y + 2)).build()));
+            com.acmerobotics.roadrunner.ftc.Actions.runBlocking(new SequentialAction(bot.actionBuilder(bot.pose).strafeTo(new Vector2d(bot.pose.position.x, bot.pose.position.y + 5)).build()));
 //            bot.strafeRight();
         }else {
             bot.setDrivePowers(new PoseVelocity2d(
@@ -295,6 +300,37 @@ public class ModularDrive extends OpMode {
 
     }
     private void ledControls(){
+        if(leftLEDStrobe.equals("WHITE")){
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.WHITE);
+            else if(ledFlashing.milliseconds()<500)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+            else
+                ledFlashing.reset();
+        }
+        if(leftLEDStrobe.equals("VIOLET")){
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+            else if(ledFlashing.milliseconds()<500)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+            else
+                ledFlashing.reset();
+        }
+        if(leftLEDStrobe.equals("GREEN")){
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.GREEN);
+            else if(ledFlashing.milliseconds()<500)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+            else
+                ledFlashing.reset();
+        }        if(leftLEDStrobe.equals("YELLOW")){
+            if(ledFlashing.milliseconds()<250)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
+            else if(ledFlashing.milliseconds()<500)
+                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
+            else
+                ledFlashing.reset();
+        }
         if (gamepad2.circle) {
             bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
         }
@@ -308,42 +344,24 @@ public class ModularDrive extends OpMode {
             bot.setRightLED(RevBlinkinLedDriver.BlinkinPattern.WHITE);
         }
         else if (gamepad2.dpad_up) {
-            if(ledFlashing.milliseconds()<250)
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.GREEN);
-            else{
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-                ledFlashing.reset();
-            }
+            leftLEDStrobe="GREEN";
         }
         else if (gamepad2.dpad_down) {
-            if(ledFlashing.milliseconds()<250)
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.WHITE);
-            else{
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-                ledFlashing.reset();
-            }
+            leftLEDStrobe="WHITE";
         }
         else if (gamepad2.dpad_right) {
-            if(ledFlashing.milliseconds()<250)
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
-            else{
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-                ledFlashing.reset();
-            }
+            leftLEDStrobe="VIOLET";
         }
         else if (gamepad2.dpad_left) {
-            if(ledFlashing.milliseconds()<250)
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.YELLOW);
-            else{
-                bot.setLeftLED(RevBlinkinLedDriver.BlinkinPattern.BLACK);
-                ledFlashing.reset();
-            }
+            leftLEDStrobe="YELLOW";
         }
         else if (gamepad2.right_trigger!=0) {
             bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.RED);
+            leftLEDStrobe="normal";
         }
         else if (gamepad2.left_trigger!=0){
             bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BLUE);
+            leftLEDStrobe="normal";
         }
     }
 }

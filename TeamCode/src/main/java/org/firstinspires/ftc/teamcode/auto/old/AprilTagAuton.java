@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import android.util.Log;
 
@@ -12,12 +12,16 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
+import org.firstinspires.ftc.vision.VisionPortal;
+import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
@@ -37,7 +41,8 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class BlueCloseMain extends LinearOpMode {
+@Disabled
+public class AprilTagAuton extends LinearOpMode {
     public static String detection = "right";
 
     private ElapsedTime loopTime = new ElapsedTime();
@@ -47,10 +52,14 @@ public class BlueCloseMain extends LinearOpMode {
     private static Action park;
     private static Action cycle;
 
+
     RevBlinkinLedDriver blinkinLedDriverLeft;
     RevBlinkinLedDriver blinkinLedDriverRight;
     RevBlinkinLedDriver.BlinkinPattern pattern = RevBlinkinLedDriver.BlinkinPattern.WHITE;
     OpenCvWebcam webcam;
+
+    private AprilTagProcessor tagProcessor;
+    private VisionPortal visionPortal;
 
     public static Zone color_zone = Zone.MIDDLE;
 
@@ -59,6 +68,7 @@ public class BlueCloseMain extends LinearOpMode {
         ArrayList<Zone> zone_avg = new ArrayList<Zone>();
         Rect size = new Rect();
         int midx;
+        List<Integer> ELEMENT_COLOR = Arrays.asList(0, 0, 0); //(Hue, Sateration, Value), Set to blue alliance at first
         Mat org = new Mat();
         Mat mask0 = new Mat();
         Mat mask1 = new Mat();
@@ -68,10 +78,10 @@ public class BlueCloseMain extends LinearOpMode {
         Mat hier = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
         List<MatOfPoint> max_list = new ArrayList<>();
-        Scalar lower_1 = new Scalar(100.0, 50.0, 0.0);
-        Scalar upper_1 = new Scalar(120.0,255.0,255.0);
-        Scalar lower_2 = new Scalar(100.0,50.0,50.0);
-        Scalar upper_2 = new Scalar(120.0,255.0,255.0);
+        Scalar lower_1 = new Scalar(0.0, 50.0, 0.0);
+        Scalar upper_1 = new Scalar(10.0,255.0,255.0);
+        Scalar lower_2 = new Scalar(170.0,50.0,50.0);
+        Scalar upper_2 = new Scalar(180.0,255.0,255.0);
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
@@ -129,27 +139,30 @@ public class BlueCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,63, Math.toRadians(90)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-63, Math.toRadians(180)));
+        bot.resetSlideEncoders();
+        tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).build();
+        visionPortal = new VisionPortal.Builder().addProcessor(tagProcessor).setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")).setCameraResolution(new android.util.Size(640, 480)).setStreamFormat(VisionPortal.StreamFormat.MJPEG).build();
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
         blinkinLedDriverRight.setPattern(pattern);
         blinkinLedDriverLeft.setPattern(pattern);
         int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
-        Pipeline pipeline = new Pipeline();
-        webcam.setPipeline(pipeline);
+//        webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
+//        Pipeline pipeline = new Pipeline();
+//        webcam.setPipeline(pipeline);
 
-        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
-        {
-            @Override
-            public void onOpened()
-            {
-                webcam.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
-            }
-
-            @Override
-            public void onError(int errorCode) {}
-        });
+//        webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()
+//        {
+//            @Override
+//            public void onOpened()
+//            {
+//                webcam.startStreaming(640,480, OpenCvCameraRotation.UPRIGHT);
+//            }
+//
+//            @Override
+//            public void onError(int errorCode) {}
+//        });
 
 ////////////////////////DASHBOARD TELEMETRY//////////
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -159,74 +172,11 @@ public class BlueCloseMain extends LinearOpMode {
         bot.setGripPosition(1);
         bot.setArmPosition(0);
         bot.setAnglePosition(0);
-
         waitForStart();
-
-        if (color_zone == Zone.RIGHT) {
-            start = bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
-                    .setTangent(Math.toRadians(270))
-                    .splineToLinearHeading(new Pose2d(12, 36,Math.toRadians(0)),Math.toRadians(180)) //x=20 y=35
-                    //.strafeTo(new Vector2d(12, 35))
-//                    .waitSeconds(1) //drop purple
-                    .build();
-            plusZero = bot.actionBuilder(new Pose2d(12, 36, Math.toRadians(0)))
-                    .setTangent(Math.toRadians(0))
-                    //.splineToSplineHeading(new Pose2d(52,-35,Math.toRadians(180)),Math.toRadians(0))
-                    .splineToLinearHeading(new Pose2d(53,32,Math.toRadians(180)),Math.toRadians(0))
-//                    .waitSeconds(1) //drop yellow
-                    .build();
-            park = bot.actionBuilder(new Pose2d(53, 32, Math.toRadians(180)))
-                    .strafeTo(new Vector2d(48,32)) //x=45 y=60
-                    .strafeTo(new Vector2d(48, 42)) //x=60 y=60
-                    //.strafeTo(new Vector2d(45,-58))
-                    .build();
-            cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
-//                    .waitSeconds(1) //drop white
-                    .build();
-        }
-        else if (color_zone == Zone.MIDDLE) {
-            start = bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
-                    //.strafeTo(new Vector2d(18,38))
-                    .strafeTo(new Vector2d(17,37))
-//                    .waitSeconds(1) //drop purple
-                    .build();
-            plusZero = bot.actionBuilder(new Pose2d(17, 37, Math.toRadians(90))) //x=17 y = 37
-                    .setTangent(Math.toRadians(0))
-                    //.splineToSplineHeading(new Pose2d(53.5,37,Math.toRadians(180)),Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(53,37,Math.toRadians(180)),Math.toRadians(0))
-
-//                    .waitSeconds(1) //drop yellow
-                    .build();
-            park = bot.actionBuilder(new Pose2d(53,37,Math.toRadians(180))) //x=53.5 y=37
-                    .strafeTo(new Vector2d(48,39)) //x=45 y=60
-                    .strafeTo(new Vector2d(48, 42)) // x=60 y=60
-                    .build();
-            cycle = bot.actionBuilder(new Pose2d(46,36,Math.toRadians(180)))
-                    .waitSeconds(1) //drop white
-                    .build();
-        }
-        else {
-            start = bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
-                    .strafeTo(new Vector2d(23,47))
-                    .waitSeconds(1) //drop purple
-                    .build();
-            plusZero = bot.actionBuilder(new Pose2d(23, 47, Math.toRadians(90)))
-                    .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(53,43,Math.toRadians(180)),Math.toRadians(0)) //x=53.5 y=43
-                    .waitSeconds(1) //drop yellow
-                    .build();
-            park = bot.actionBuilder(new Pose2d(53,43,Math.toRadians(180))) //x=53.5 y=43
-                    .strafeTo(new Vector2d(48,43)) //x=45 y=60
-                    .strafeTo(new Vector2d(48,43)) //x=60 y=60
-                    .build();
-            cycle = bot.actionBuilder(new Pose2d(46,48,Math.toRadians(180)))
-                    .waitSeconds(1) //drop white
-                    .build();
-        }
         while(opModeIsActive() && !isStopRequested()){
-            webcam.stopStreaming();
+//            webcam.stopStreaming();
             Log.d("color_zone", String.valueOf(color_zone));
-            Actions.runBlocking(new SequentialAction(getArmToGround(bot), start, releaseFirstPixel(bot), retractBack(bot), plusZero, getReadyForBackboard(bot), placeLastOnBackBoard(bot), getReadyForBackboard(bot), retractBack(bot), park));
+            Actions.runBlocking(new SequentialAction(alignWithBoard(bot, 12, -63, Math.toRadians(180))));
             requestOpModeStop();
         }
     }
@@ -306,5 +256,25 @@ public class BlueCloseMain extends LinearOpMode {
             //outtake pixel through intake
             return false;
         };
+    }
+
+    public Action alignWithBoard(RobotV3 bot, double x, double y, double head){
+        ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
+            AprilTagDetection top = detections.get(0);
+            double deviate = 0;
+            switch (top.id){
+                case 4:
+                    deviate = top.ftcPose.x;
+                    break;
+                case 5:
+                    deviate = top.ftcPose.x - 6;
+                    break;
+                case 6:
+                    deviate = top.ftcPose.x - 12;
+            }
+            return bot.actionBuilder((new Pose2d(x, y, head)))
+                    .strafeTo(new Vector2d(x,y - deviate))
+                    .build();
+
     }
 }

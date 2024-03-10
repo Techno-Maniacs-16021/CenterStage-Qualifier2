@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.auto.old;
 
 import android.util.Log;
 
@@ -12,10 +12,12 @@ import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
 import org.opencv.core.Core;
@@ -37,16 +39,21 @@ import java.util.List;
 
 @Autonomous
 @Config
-public class RedCloseMain extends LinearOpMode {
+@Disabled
+
+public class RedFarMain extends LinearOpMode {
     public static String detection = "right";
 
     private ElapsedTime loopTime = new ElapsedTime();
 
     private static Action start;
-    private static Action plusZero;
+    private static Action plusOne;
+    private static Action stack;
+    private static Action whitePixel;
+
+    private static Action moveBack;
     private static Action park;
     private static Action cycle;
-
 
     RevBlinkinLedDriver blinkinLedDriverLeft;
     RevBlinkinLedDriver blinkinLedDriverRight;
@@ -131,7 +138,7 @@ public class RedCloseMain extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(12,-63, Math.toRadians(270)));
+        RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(-36,-63, Math.toRadians(270)));
         bot.resetSlideEncoders();
         blinkinLedDriverLeft = hardwareMap.get(RevBlinkinLedDriver.class, "left_led");
         blinkinLedDriverRight = hardwareMap.get(RevBlinkinLedDriver.class, "right_led");
@@ -162,59 +169,97 @@ public class RedCloseMain extends LinearOpMode {
         bot.setGripPosition(1);
         bot.setArmPosition(0);
         bot.setAnglePosition(0);
+        bot.resetSlideEncoders();
         waitForStart();
         if (color_zone == Zone.RIGHT) {
-            start = bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
-                    .strafeTo(new Vector2d(23,-46.5))
+            start = bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-37,-36,Math.toRadians(180)),Math.toRadians(90))
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(23, -46.5, Math.toRadians(270)))
+            stack = bot.actionBuilder(new Pose2d(-37, -36, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(-40, -36))
+                    //.strafeTo(new Vector2d(-52,-10)).build();
+                    .strafeTo(new Vector2d(-59,-15))
+                    .build();
+            moveBack = bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(-56, -15))
+                    .build();
+            plusOne = bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
                     .setTangent(Math.toRadians(0))
-                    //.splineToSplineHeading(new Pose2d(52,-48,Math.toRadians(180)),Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(51.75,-44.5,Math.toRadians(180)),Math.toRadians(0))
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-46)
+                    //.strafeTo(new Vector2d(52,-52))
+                    .strafeTo(new Vector2d(52,-46))
                     .build();
-            park = bot.actionBuilder(new Pose2d(51.75,-44.5,Math.toRadians(180))) //x=52 y=-48
-                    //.strafeTo(new Vector2d(45,-58))
-                    .strafeTo(new Vector2d(48,-44.5))
-                    .strafeTo(new Vector2d(48,-58))
+            whitePixel = bot.actionBuilder(new Pose2d(52,-46,Math.toRadians(180)))
+                    .strafeTo(new Vector2d(52, -42))
+                    .build();
+            park = bot.actionBuilder(new Pose2d(52,-48,Math.toRadians(180)))
+                    .strafeTo(new Vector2d(45,-58))
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,-48,Math.toRadians(180)))
                     .waitSeconds(1) //drop white
                     .build();
         }
         else if (color_zone == Zone.MIDDLE) {
-            start = bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
-                    .strafeTo(new Vector2d(17,-37)) //x=18 y=-38
+            start = bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(90))
+                    .splineToSplineHeading(new Pose2d(-44,-27,Math.toRadians(180)),Math.toRadians(90))
+                    //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
                     //.waitSeconds(1) //drop purple
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(17, -37, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(51.75,-39,Math.toRadians(180)),Math.toRadians(0)) //x= 52 y=-42
-                    //.waitSeconds(1) //drop yellow
+            stack = bot.actionBuilder(new Pose2d(-44,-27, Math.toRadians(180)))
+                    //        .strafeTo(new Vector2d(-56,-10))
+                    .strafeTo(new Vector2d(-59,-15))
                     .build();
-            park = bot.actionBuilder(new Pose2d(51.75,-39,Math.toRadians(180))) //y=-41
-                    //.strafeTo(new Vector2d(45,-58))
-                    .strafeTo(new Vector2d(48,-39))
-                    .strafeTo(new Vector2d(48,-58))
+            moveBack = bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(-56, -15))
+                    .build();
+            plusOne = bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
+                    .setTangent(Math.toRadians(0))
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-40)
+                    .setTangent(Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(52,-39.5,Math.toRadians(180)),Math.toRadians(0)) //y=-40
+                    .build();
+            whitePixel = bot.actionBuilder(new Pose2d(52,-39.5,Math.toRadians(180))) //y=-40
+                    .strafeTo(new Vector2d(52, -44))
+                    .build();
+            park = bot.actionBuilder(new Pose2d(52,-40,Math.toRadians(180)))
+                    .strafeTo(new Vector2d(45,-58))
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
                     //.waitSeconds(1) //drop white
                     .build();
         }
         else  {
-            start = bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
-                    .setTangent(Math.toRadians(90))
-                    .splineToSplineHeading(new Pose2d(10,-40,Math.toRadians(330)),Math.toRadians(90)) //x=9 y=-40
-//                    .waitSeconds(1) //drop purple
+            start = bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                    .setTangent(Math.toRadians(150))
+                    .splineToSplineHeading(new Pose2d(-48,-17,Math.toRadians(90)),Math.toRadians(90))
                     .build();
-            plusZero = bot.actionBuilder(new Pose2d(10, -40, Math.toRadians(330))) //x=9 y=-40
+            stack = bot.actionBuilder(new Pose2d(-48,-17,Math.toRadians(90)))
+                    .setTangent(Math.toRadians(270))
+                    .splineToLinearHeading(new Pose2d(-59, -15, Math.toRadians(180)), Math.toRadians(180))
+                    .build();
+            moveBack = bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(-56, -15))
+                    .build();
+            plusOne = bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
                     .setTangent(Math.toRadians(0))
-                    .splineToSplineHeading(new Pose2d(51.75,-33,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
-//                    .waitSeconds(1) //drop yellow
+                    .lineToX(46)
+                    .setTangent(Math.toRadians(270))
+                    .lineToY(-34)
+                    .setTangent(Math.toRadians(0))
+                    .splineToSplineHeading(new Pose2d(52,-34,Math.toRadians(180)),Math.toRadians(0))
                     .build();
-            park = bot.actionBuilder(new Pose2d(51.75, -33, Math.toRadians(180))) //y=-35
-                    //.strafeTo(new Vector2d(45,-58))
-                    .strafeTo(new Vector2d(48,-33))
-                    .strafeTo(new Vector2d(48,-58))
+            whitePixel = bot.actionBuilder(new Pose2d(52,-34,Math.toRadians(180)))
+                    .strafeTo(new Vector2d(52, -38))
+                    .build();
+            park = bot.actionBuilder(new Pose2d(52, -48, Math.toRadians(180)))
+                    .strafeTo(new Vector2d(45,-58))
                     .build();
             cycle = bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
 //                    .waitSeconds(1) //drop white
@@ -223,7 +268,11 @@ public class RedCloseMain extends LinearOpMode {
         while(opModeIsActive() && !isStopRequested()){
             webcam.stopStreaming();
             Log.d("color_zone", String.valueOf(color_zone));
-            Actions.runBlocking(new SequentialAction(getArmToGround(bot), start, releaseFirstPixel(bot), retractBack(bot), plusZero, getReadyForBackboard(bot), placeLastOnBackBoard(bot), getReadyForBackboard(bot), retractBack(bot), park));
+            Actions.runBlocking(new SequentialAction(getArmToGround(bot), start, releaseFirstPixel(bot), stack, retractBack(bot),getIntakeReady(bot),takeTopFromStack(bot),moveBack,resetIntakeTimer(bot),intakePixels(bot), transfer(bot), plusOne));
+            if(bot.getPixelMemory() == 2)
+                Actions.runBlocking(new SequentialAction(getReadyForBackboard(bot, true), getSlidesForPlacement(bot), releaseFirstPixel(bot), getReadyForBackboard(bot, false), whitePixel, getSlidesForPlacement(bot), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
+            else
+                Actions.runBlocking(new SequentialAction(getReadyForBackboard(bot, false), getSlidesForPlacement(bot), releaseFirstPixel(bot), releaseSecondPixel(bot), getReadyForBackboard(bot, false), retractBack(bot)));
             requestOpModeStop();
         }
     }
@@ -244,7 +293,16 @@ public class RedCloseMain extends LinearOpMode {
     public Action releaseFirstPixel(RobotV3 bot){
         return telemetryPacket -> {
             bot.setGripPosition(0);
-            sleep(100);
+            sleep(250);
+            return false;
+        };
+    }
+    public Action releaseSecondPixel(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setPusherPosition(1);
+            sleep(250);
+            bot.setPusherPosition(0);
+            sleep(250);
             return false;
         };
     }
@@ -260,36 +318,113 @@ public class RedCloseMain extends LinearOpMode {
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
+            return !bot.slidesWithinRange(0.1);
+        };
+    }
+    public Action getIntakeReady(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.updateRobotState();
+            bot.setGripPosition(0);
+            bot.setPusherPosition(1);
+            sleep(100);
+            bot.setTarget(1);
+            bot.setIntakePower(1);
+            bot.primeIntake();
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
             if(!bot.slidesWithinRange(0.1)) return true;
-
+            bot.setPusherPosition(0);
+            bot.setGripPosition(0.5);
             return false;
         };
     }
-    public Action placeLastOnBackBoard(RobotV3 bot) {
+    public Action resetIntakeTimer(RobotV3 bot) {
         return telemetryPacket -> {
+            bot.resetTimeIntaking();
+            return false;
+        };
+    }
+    public Action takeTopFromStack(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.topPixelIntake();
+            sleep(500);
+            return false;
+        };
+    }
+    public Action intakePixels(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.downIntake();
+            bot.updateRobotState();
+            if(bot.getPixels()<2&&bot.getTimeIntaking()<5000){
+                if(bot.getIntake().getCurrent(CurrentUnit.AMPS) >= 6.5){
+                    bot.setIntakePower(-1);
+                }else{
+                    bot.setIntakePower(1);
+                }
+                return true;
+            }
+            bot.setPixelMemory();
+            sleep(250);
+            return false;
+        };
+    }
+    public Action transfer(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setIntakePower(-1);
             bot.setTarget(0);
+            bot.slideZeroCondition(0, 0.2);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            if(bot.getTimeAtTarget()<750)return true;
+            bot.setGripPosition(1);
+            return false;
+        };
+    }
+    public Action getSlidesForPlacement(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.setIntakePower(0);
+            bot.setTarget(0.6);
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
             if(!bot.slidesWithinRange(0.1)) return true;
             sleep(150);
-            bot.setPusherPosition(1);
-            sleep(250);
-            bot.setPusherPosition(0);
-            sleep(250);
             return false;
         };
     }
-    public Action getReadyForBackboard(RobotV3 bot){
+    public Action getReadyForBackboard(RobotV3 bot,boolean twoPixels){
         return telemetryPacket -> {
             bot.setTarget(1);
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
             if(!bot.slidesWithinRange(0.1)) return true;
-            bot.setArmPosition(0.275);
+            bot.setArmPosition(twoPixels ? 0.264 : 0.275);
             bot.setAnglePosition(0.8);
-            return bot.getCurrentArmPosition() < 45 || bot.getCurrentAngle() < 160;
+            return bot.getCurrentArmPosition() < (twoPixels ? 43 : 45) || bot.getCurrentAngle() < 160;
+        };
+    }
+
+    public Action correctBoard(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setTarget(0.5);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(0.6);
+            bot.setAnglePosition(0.8);
+            return bot.getCurrentArmPosition() < 100 || bot.getCurrentAngle() < 160;
+        };
+    }
+
+    public Action intake(RobotV3 bot){
+        return telemetryPacket -> {
+
+            return false;
         };
     }
 

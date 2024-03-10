@@ -13,9 +13,10 @@ import org.firstinspires.ftc.teamcode.bots.RobotV3;
 @Config
 @TeleOp
 public class ResetEncoders extends OpMode {
-    RobotV3 bot = new RobotV3(hardwareMap, new Pose2d(0,0,0));
+    RobotV3 bot;
     @Override
     public void init(){
+        bot = new RobotV3(hardwareMap, new Pose2d(0,0,0));
         bot.resetSlideEncoders();
     }
     @Override

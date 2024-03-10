@@ -9,6 +9,7 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -16,6 +17,8 @@ import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 
 @Autonomous
 @Config
+@Disabled
+
 public class RedCloseAltSpline extends LinearOpMode {
     public static String detection = "right";
 

@@ -7,6 +7,7 @@ import com.acmerobotics.roadrunner.Vector2d;
 
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
+import org.opencv.core.Mat;
 
 public class Path {
     private HashMap<String, Action> left;
@@ -75,6 +76,10 @@ public class Path {
                         .setTangent(Math.toRadians(90))
                         .lineToY(34)
                         .build());
+        left.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48, 34, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(53.5,42)) //y=44
+                        .build());
         left.put("whitePixel",
                 bot.actionBuilder(new Pose2d(53.5,42,Math.toRadians(180))) //x=52.5y=44
                         .strafeTo(new Vector2d(53.5, 36)) //y=38
@@ -113,6 +118,11 @@ public class Path {
                         .setTangent(Math.toRadians(90))
                         .lineToY(34) //x=52.5 y=38
                         .build());
+        middle.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48, 34, Math.toRadians(180)))
+                        .setTangent(Math.toRadians(0))
+                        .strafeTo(new Vector2d(53.5,38)) //x=52.5 y=38
+                        .build());
         middle.put("whitePixel",
                 bot.actionBuilder(new Pose2d(53.5,38,Math.toRadians(180))) //y=38
                         .strafeTo(new Vector2d(53.5, 32))
@@ -148,6 +158,11 @@ public class Path {
                         .setTangent(Math.toRadians(90))
                         .lineToY(34)
                         .build());
+        right.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48,34,Math.toRadians(180)))
+                        .setTangent(Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(53.5,31,Math.toRadians(180)),Math.toRadians(0)) //x=52.5 y=33
+                        .build());
         right.put("whitePixel",
                 bot.actionBuilder(new Pose2d(53.5,31,Math.toRadians(180))) //y=33
                         .strafeTo(new Vector2d(53.5, 38)) //y=36
@@ -176,6 +191,10 @@ public class Path {
                         //.splineToSplineHeading(new Pose2d(52,-35,Math.toRadians(180)),Math.toRadians(0))
                         .splineToLinearHeading(new Pose2d(48,34,Math.toRadians(180)),Math.toRadians(0))
 //                    .waitSeconds(1) //drop yellow
+                        .build());
+        right.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48,34, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(53, 32))
                         .build());
         right.put("park",
                 bot.actionBuilder(new Pose2d(53, 32, Math.toRadians(180)))
@@ -207,6 +226,10 @@ public class Path {
 
 //                    .waitSeconds(1) //drop yellow
                         .build());
+        middle.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48, 34, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(53, 37))
+                        .build());
         middle.put("park",
                 bot.actionBuilder(new Pose2d(53,37,Math.toRadians(180))) //x=53.5 y=37
                         .strafeTo(new Vector2d(48,39)) //x=45 y=60
@@ -229,6 +252,10 @@ public class Path {
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(48,34,Math.toRadians(180)),Math.toRadians(0)) //x=53.5 y=43
                         .waitSeconds(1) //drop yellow
+                        .build());
+        left.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48,34, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(53, 43))
                         .build());
         left.put("park",
                 bot.actionBuilder(new Pose2d(53,43,Math.toRadians(180))) //x=53.5 y=43
@@ -277,6 +304,11 @@ public class Path {
                         //.strafeTo(new Vector2d(52,-52))
                         .build());
 
+        right.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(46, -40, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(52,-46))
+                        .build());
+
         right.put("whitePixel",
                 bot.actionBuilder(new Pose2d(52,-46,Math.toRadians(180)))
                         .strafeTo(new Vector2d(52, -42))
@@ -320,6 +352,11 @@ public class Path {
                         .setTangent(Math.toRadians(270))
                         .lineToY(-40)
                         .build());
+        middle.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(46, -40, Math.toRadians(180)))
+                        .setTangent(Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(52,-39.5,Math.toRadians(180)),Math.toRadians(0)) //y=-40
+                        .build());
         middle.put("whitePixel",
                 bot.actionBuilder(new Pose2d(52,-39.5,Math.toRadians(180))) //y=-40
                         .strafeTo(new Vector2d(52, -44))
@@ -360,6 +397,11 @@ public class Path {
                         .setTangent(Math.toRadians(270))
                         .lineToY(-40)
                         .build());
+        left.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(40, -40, Math.toRadians(180)))
+                        .setTangent(Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(52,-34,Math.toRadians(180)),Math.toRadians(0))
+                        .build());
         left.put("whitePixel",
                 bot.actionBuilder(new Pose2d(52,-34,Math.toRadians(180)))
                         .strafeTo(new Vector2d(52, -38))
@@ -392,6 +434,11 @@ public class Path {
 //                    .waitSeconds(1) //drop yellow
                         .build());
 
+        right.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48, -33, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(51.74, -44.5))
+                        .build());
+
         right.put("park",
                 bot.actionBuilder(new Pose2d(51.75,-44.5,Math.toRadians(180))) //x=52 y=-48
                         //.strafeTo(new Vector2d(45,-58))
@@ -417,6 +464,11 @@ public class Path {
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(48,-33,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
 //                    .waitSeconds(1) //drop yellow
+                        .build());
+
+        middle.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48, -33, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(51.75, -39))
                         .build());
 
         middle.put("park",
@@ -447,6 +499,11 @@ public class Path {
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(48,-33,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
 //                    .waitSeconds(1) //drop yellow
+                        .build());
+
+        left.put("aprilTagsFailureCase",
+                bot.actionBuilder(new Pose2d(48, -33, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(51.75, -33))
                         .build());
 
         left.put("park",

@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.auto;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
@@ -14,11 +16,12 @@ public class RedFarApril extends AutonBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = initRobot(-36,-63, Math.toRadians(270), AutonConstants.AutonType.RED_FAR_2_PLUS_1);
+        RobotV3 bot = initRobot(-36,-64, Math.toRadians(270), AutonConstants.AutonType.RED_FAR_2_PLUS_1);
         waitForStart();
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));
         Actions.runBlocking(new SequentialAction(
+                new SleepAction(3),
                 getArmToGround(bot),
                 path.get("start", color_zone),
                 releaseFirstPixel(bot),

@@ -6,15 +6,18 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 
 @Autonomous
 @Config
+
 public class BlueFarApril extends AutonBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = initRobot(-36,63, Math.toRadians(90), AutonConstants.AutonType.BLUE_FAR_2_PLUS_1);
+        RobotV3 bot = initRobot(-36,64, Math.toRadians(90), AutonConstants.AutonType.BLUE_FAR_2_PLUS_1);
         waitForStart();
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));
