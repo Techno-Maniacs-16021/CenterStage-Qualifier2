@@ -544,7 +544,7 @@ public abstract class AutonBase extends LinearOpMode {
             }
 
         }
-        return new SequentialAction(
+        /*return new SequentialAction(
                 bot.actionBuilder(bot.pose)
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(51.75,-33,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
@@ -555,7 +555,8 @@ public abstract class AutonBase extends LinearOpMode {
                 getReadyForBackboardClose(bot),
                 retractBack(bot),
                 path.get("park", zone)
-        );
+        );*/
+       return aprilTagFailAction(bot, zone, numOfPixels);
     }
     public void closeWebcam() {
         webcam.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener() {

@@ -21,7 +21,6 @@ public class RedFarApril extends AutonBase {
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));
         Actions.runBlocking(new SequentialAction(
-                new SleepAction(3),
                 getArmToGround(bot),
                 path.get("start", color_zone),
                 releaseFirstPixel(bot),

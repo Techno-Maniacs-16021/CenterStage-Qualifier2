@@ -251,6 +251,7 @@ public class ModularDrive extends OpMode {
         else bot.setPusherPosition(0);
         if(bot.getCurrentArmPosition() < 15 && outtaked && bot.getCurrentAngle() < 15){
             bot.setTarget(0);
+            intakePosition = "down";
             mode = "intake";
         }
         if(gamepad1.dpad_left){
