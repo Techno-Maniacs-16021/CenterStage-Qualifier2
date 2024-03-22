@@ -119,6 +119,13 @@ public abstract class AutonBase extends LinearOpMode {
 //            }
             telemetry.addData("X pos",midx);
             telemetry.update();
+            org.release();
+            mask0.release();
+            mask1.release();
+            mask.release();
+            edge.release();
+            max.release();
+            hier.release();
             return input;
         }
     }
