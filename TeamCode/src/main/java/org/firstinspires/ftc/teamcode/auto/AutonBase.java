@@ -156,12 +156,15 @@ public abstract class AutonBase extends LinearOpMode {
         Scalar upper_1 = new Scalar(10.0,255.0,255.0);
         Scalar lower_2 = new Scalar(170.0,50.0,50.0);
         Scalar upper_2 = new Scalar(180.0,255.0,255.0);
+        Rect bounds = new Rect(0, 20, 600, 120);
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
             contours.clear();
             max.empty();
+
             input.copyTo(org);
+            org = input.submat(bounds);
             Imgproc.GaussianBlur(input,input, new Size(101,101),0);
             Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
             Core.inRange(input,lower_1,upper_1,mask0);
@@ -221,7 +224,7 @@ public abstract class AutonBase extends LinearOpMode {
             edge.empty();
             max.empty();
             hier.empty();
-
+            Imgproc.rectangle(input, bounds, new Scalar(255.0, 0.0, 0.0), 2);
             return input;
         }
     }
