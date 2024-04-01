@@ -71,7 +71,7 @@ public abstract class AutonBase extends LinearOpMode {
             max_list.clear();
             contours.clear();
             max.empty();
-            org = input;
+            input.copyTo(org);
             Imgproc.GaussianBlur(input,input, new Size(101,101),0);
             Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
             Core.inRange(input,lower_1,upper_1,mask0);
@@ -126,8 +126,16 @@ public abstract class AutonBase extends LinearOpMode {
             edge.release();
             max.release();
             hier.release();
+            org.empty();
+            mask.empty();
+            mask0.empty();
+            mask1.empty();
+            edge.empty();
+            max.empty();
+            hier.empty();
             return input;
         }
+
     }
     public class RedPipeline extends OpenCvPipeline {
 
@@ -153,7 +161,7 @@ public abstract class AutonBase extends LinearOpMode {
             max_list.clear();
             contours.clear();
             max.empty();
-            org = input;
+            input.copyTo(org);
             Imgproc.GaussianBlur(input,input, new Size(101,101),0);
             Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
             Core.inRange(input,lower_1,upper_1,mask0);
@@ -175,11 +183,9 @@ public abstract class AutonBase extends LinearOpMode {
                         max = contours.get(i);
                         max_list.clear();
                         max_list.add(contours.get(i));
-
                     }
                 }
             }
-
 
             Imgproc.drawContours(org,max_list,-1,new Scalar(255,0,0),3);
             size = Imgproc.boundingRect(max);
@@ -201,6 +207,21 @@ public abstract class AutonBase extends LinearOpMode {
 //            }
             telemetry.addData("X pos",midx);
             telemetry.update();
+            org.release();
+            mask0.release();
+            mask1.release();
+            mask.release();
+            edge.release();
+            max.release();
+            hier.release();
+            org.empty();
+            mask.empty();
+            mask0.empty();
+            mask1.empty();
+            edge.empty();
+            max.empty();
+            hier.empty();
+
             return input;
         }
     }
@@ -212,6 +233,7 @@ public abstract class AutonBase extends LinearOpMode {
         webcam = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam 1"), cameraMonitorViewId);
         OpenCvPipeline pipeline = AutonConstants.isBlue(autonType) ? new BluePipeline() : new RedPipeline();
         webcam.setPipeline(pipeline);
+
 
 
         webcam.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener()

@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.bots.MecanumDrive;
 import org.firstinspires.ftc.teamcode.TankDrive;
-@Disabled
+//@Disabled
 public final class SplineTest extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
