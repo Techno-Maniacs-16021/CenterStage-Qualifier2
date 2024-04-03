@@ -28,7 +28,7 @@ public class MeepMeepTesting {
                 .build();
 
 
-        blueFarPartnerCorrection(meepMeep, myBot);
+        test(meepMeep, myBot);
 
 
 
@@ -45,7 +45,7 @@ public class MeepMeepTesting {
         AutonConfig right = new AutonConfig();
         AutonConfig middle = new AutonConfig();
         DriveShim bot = myBot.getDrive();
-        String detect = "right";
+        String detect = "left";
 
         left.setStart(
                 bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
@@ -67,11 +67,9 @@ public class MeepMeepTesting {
         );
         left.setPlusOne(bot.actionBuilder(new Pose2d(-55, 11, Math.toRadians(180)))
                 .setTangent(Math.toRadians(0))
-                .lineToX(46)
+                .lineToX(48)
                 .setTangent(Math.toRadians(90))
-                .lineToY(26)
-                .strafeTo(new Vector2d(53.5,26)) //intial plunge
-                .strafeTo(new Vector2d(53.5,42)) //Drop Yellow pixel
+                .lineToY(34)
                 .build());
         left.setWhitePixel(bot.actionBuilder(new Pose2d(53.5,42,Math.toRadians(180))) //x=52.5y=44
                 .strafeTo(new Vector2d(53.5, 36)) //y=38
@@ -140,6 +138,100 @@ public class MeepMeepTesting {
                 .build());
         AutonConfig config = "left".equals(detect) ? left : ("right".equals(detect) ? right : middle);
         myBot.runAction(new SequentialAction(config.getStart(), config.getStack(),config.getMoveBack(), config.getPlusOne(), config.getWhitePixel()));
+    }
+
+
+    public static void test(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
+        AutonConfig left = new AutonConfig();
+        AutonConfig right = new AutonConfig();
+        AutonConfig middle = new AutonConfig();
+        DriveShim bot = myBot.getDrive();
+        String detect = "middle";
+
+        left.setStart(
+                bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                        .setTangent(Math.toRadians(150))
+                        .splineToSplineHeading(new Pose2d(-48,-17,Math.toRadians(90)),Math.toRadians(90))
+                        .build());
+        left.setStack(
+                bot.actionBuilder(new Pose2d(-48, -17, Math.toRadians(90))) //x=-37 y=36
+                        .setTangent(Math.toRadians(270))
+                        .splineToLinearHeading(new Pose2d(-59, -15, Math.toRadians(180)), Math.toRadians(180))
+                        .build());
+        left.setMoveBack(bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-56, -15))
+                .build());
+        left.setPlusOne(bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(46)
+                .setTangent(Math.toRadians(270))
+                .lineToY(-40)
+                .build());
+        left.setWhitePixel(bot.actionBuilder(new Pose2d(46,-40,Math.toRadians(180))) //x=52.5y=44
+                .strafeTo(new Vector2d(52, -38))
+                .build());
+        /*left.setPark(bot.actionBuilder(new Pose2d(52.5,38,Math.toRadians(180)))
+                .strafeTo(new Vector2d(45,58))
+                .build());*/
+
+        middle.setStart(bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                .setTangent(Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(-44,-27,Math.toRadians(180)),Math.toRadians(90))
+                //        .splineToSplineHeading(new Pose2d(-44,-28,Math.toRadians(180)),Math.toRadians(90))
+                //.waitSeconds(1) //drop purple
+                .build());
+        middle.setStack(bot.actionBuilder(new Pose2d(-44,-27, Math.toRadians(180)))
+                //        .strafeTo(new Vector2d(-56,-10))
+                .strafeTo(new Vector2d(-59,-15))
+                .build());
+
+        middle.setMoveBack(bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-56, -15))
+                .build());
+
+        middle.setPlusOne(bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(46)
+                .setTangent(Math.toRadians(270))
+                .lineToY(-40)
+                .build());
+
+        middle.setWhitePixel(bot.actionBuilder(new Pose2d(46,-40,Math.toRadians(180))) //y=38
+                .strafeTo(new Vector2d(52, -44))
+                .build());
+
+        right.setStart(bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
+                .setTangent(Math.toRadians(90))
+                //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
+                .splineToSplineHeading(new Pose2d(-37,-36,Math.toRadians(180)),Math.toRadians(90))
+                .strafeTo(new Vector2d(-32, -36))
+                .strafeTo(new Vector2d(-37, -36))
+                .build());
+
+        right.setStack(bot.actionBuilder(new Pose2d(-37,-36,Math.toRadians(180)))
+                .strafeTo(new Vector2d(-40, -36))
+                //.strafeTo(new Vector2d(-52,-10)).build();
+                .strafeTo(new Vector2d(-59,-15))
+                .build());
+
+        right.setMoveBack(bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                .strafeTo(new Vector2d(-56, -15))
+                .build());
+
+        right.setPlusOne(bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
+                .setTangent(Math.toRadians(0))
+                .lineToX(46)
+                .setTangent(Math.toRadians(270))
+                .lineToY(-40)
+                //.strafeTo(new Vector2d(52,-52))
+                .build());
+
+        right.setWhitePixel(bot.actionBuilder(new Pose2d(46,-40,Math.toRadians(180))) //y=33
+                .strafeTo(new Vector2d(52, -42))
+                .build());
+
+        AutonConfig config = "left".equals(detect) ? left : ("right".equals(detect) ? right : middle);
+        myBot.runAction(new SequentialAction(config.getStart(), config.getStack(),config.getMoveBack(), config.getPlusOne()));
     }
 
     public static void newRedCloseMain(MeepMeep meepMeep, RoadRunnerBotEntity myBot){
