@@ -21,6 +21,7 @@ import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
 import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
+import org.opencv.core.Mat;
 
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class ModularDrive extends OpMode {
         leftLEDStrobe="normal";
         bot = new RobotV3(hardwareMap, new Pose2d(0,0,0));
         INITIAL_OFFSET = 1;PIXEL_LAYER= 0.5;ALLOWED_ERROR=0.1;ZERO_POWER=0.2;ZERO_ANGLE=0.0 ;
-        tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).build();
+        tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).setLensIntrinsics(432.589,432.589,323.751,226.862).build();
         visionPortal = new VisionPortal.Builder().addProcessor(tagProcessor).setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")).setCameraResolution(new Size(640, 480)).setStreamFormat(VisionPortal.StreamFormat.MJPEG).build();
     }
     @Override
@@ -92,8 +93,13 @@ public class ModularDrive extends OpMode {
         if (!tagProcessor.getDetections().isEmpty()){
             for(AprilTagDetection detection : tagProcessor.getDetections()){
                 AprilTagPoseFtc pose = (detection.ftcPose);
-                if(pose != null)
-                    telemetry.addData(String.valueOf(detection.id), "(" + Math.round(pose.x) + ", " + Math.round(pose.y) + ", "  + Math.round(pose.z) + ") : [" + Math.round(pose.yaw) + ", " + Math.round(pose.pitch) + ", " + Math.round(pose.roll) + "] : | " +  Math.round(Math.acos(detection.ftcPose.z/3.4)) + " |");
+                if(pose != null) {
+                    telemetry.addData(String.valueOf(detection.id), "(" + Math.round(pose.x) + ", " + Math.round(pose.y) + ", " + Math.round((pose.z / 2) * Math.sqrt(3)) + ") : [" + Math.round(pose.yaw) + ", " + Math.round(pose.pitch) + ", " + Math.round(pose.roll) + "] : | " + Math.round(Math.acos(detection.ftcPose.z / 3.4)) + " |");
+                    if(pose.y<5.5)
+                        bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BEATS_PER_MINUTE_RAINBOW_PALETTE);
+                    else
+                        bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.AQUA);
+                }
                 else telemetry.addData("tagdetection", "none");
             }
 //            telemetry.update();

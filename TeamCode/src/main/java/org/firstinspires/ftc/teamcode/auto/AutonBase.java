@@ -381,7 +381,7 @@ public abstract class AutonBase extends LinearOpMode {
     public Action getSlidesForPlacement(RobotV3 bot) {
         return telemetryPacket -> {
             bot.setIntakePower(0);
-            bot.setTarget(0.55);
+            bot.setTarget(1);
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
@@ -412,9 +412,9 @@ public abstract class AutonBase extends LinearOpMode {
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
             if(!bot.slidesWithinRange(0.1)) return true;
-            bot.setArmPosition(0.35);
+            bot.setArmPosition(0.6);
             bot.setAnglePosition(0.8);
-            return bot.getCurrentArmPosition() < (60) || bot.getCurrentAngle() < 160;
+            return bot.getCurrentArmPosition() < (100) || bot.getCurrentAngle() < 160;
         };
     }
     public Action correctBoard(RobotV3 bot){
@@ -501,39 +501,39 @@ public abstract class AutonBase extends LinearOpMode {
             if (detection == null) return telemetryPacket -> false;
             if(detection.id==1){
                 //y = 42
-                //x = 62
-                correctY = 42 - detection.ftcPose.x;
-                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+                //x = 62.5
+                correctY = 42 + detection.ftcPose.x;
+                correctX = 62.5 - detection.ftcPose.y;
             }
             else if(detection.id==2){
                 //y = 36
-                //x = 62
-                correctY = 36 - detection.ftcPose.x;
-                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+                //x = 62.5
+                correctY = 36 + detection.ftcPose.x;
+                correctX = 62.5 - detection.ftcPose.y;
             }
             else if(detection.id==3){
                 //y = 30
-                //x = 62
-                correctY = 30 - detection.ftcPose.x;
-                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+                //x = 62.5
+                correctY = 30 + detection.ftcPose.x;
+                correctX = 62.5 - detection.ftcPose.y;
             }
             else if(detection.id==4){
                 //y =-30
-                //x = 62
-                correctY = -30 - detection.ftcPose.x;
-                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+                //x = 62.5
+                correctY = -30 + detection.ftcPose.x;
+                correctX = 62.5 - detection.ftcPose.y;
             }
             else if(detection.id==5){
                 //y = -36
-                //x = 62
-                correctY = -36 - detection.ftcPose.x;
-                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+                //x = 62.5
+                correctY = -36 + detection.ftcPose.x;
+                correctX = 62.5 - detection.ftcPose.y;
             }
             else if(detection.id==6){
                 //y = -42
-                //x = 62
-                correctY = -42 - detection.ftcPose.x;
-                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+                //x = 62.5
+                correctY = -42 + detection.ftcPose.x;
+                correctX = 62.5 - detection.ftcPose.y;
             }
 
         }
@@ -657,7 +657,7 @@ public abstract class AutonBase extends LinearOpMode {
         webcam.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener() {
             @Override
             public void onClose() {
-                tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).build();
+                tagProcessor = new AprilTagProcessor.Builder().setDrawTagID(true).setDrawTagOutline(true).setDrawAxes(true).setDrawCubeProjection(true).setLensIntrinsics(432.589,432.589,323.751,226.862).build();
                 visionPortal = new VisionPortal.Builder().addProcessor(tagProcessor).setCamera(hardwareMap.get(WebcamName.class, "Webcam 1")).setCameraResolution(new android.util.Size(640, 480)).setStreamFormat(VisionPortal.StreamFormat.MJPEG).build();
             }
         });
