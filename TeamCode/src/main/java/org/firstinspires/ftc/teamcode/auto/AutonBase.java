@@ -484,6 +484,69 @@ public abstract class AutonBase extends LinearOpMode {
                 retractBack(bot)
             );
     }
+    public Action relocalize(RobotV3 bot){
+        double correctX = 0;
+        double correctY = 0;
+        ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
+        for(int i = 0; i < 20 && detections.isEmpty() && !isStopRequested() && opModeIsActive(); i++){
+            detections = tagProcessor.getDetections();
+            sleep(50);
+        }
+        if(!detections.isEmpty()) {
+            AprilTagDetection detection = null;
+            for (int i = 0; i < detections.size() && detection == null && !isStopRequested() && opModeIsActive(); i++) {
+                if (detections.get(i) != null && detections.get(i).ftcPose != null)
+                    detection = detections.get(i);
+            }
+            if (detection == null) return telemetryPacket -> false;
+            if(detection.id==1){
+                //y = 42
+                //x = 62
+                correctY = 42 - detection.ftcPose.x;
+                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+            }
+            else if(detection.id==2){
+                //y = 36
+                //x = 62
+                correctY = 36 - detection.ftcPose.x;
+                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+            }
+            else if(detection.id==3){
+                //y = 30
+                //x = 62
+                correctY = 30 - detection.ftcPose.x;
+                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+            }
+            else if(detection.id==4){
+                //y =-30
+                //x = 62
+                correctY = -30 - detection.ftcPose.x;
+                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+            }
+            else if(detection.id==5){
+                //y = -36
+                //x = 62
+                correctY = -36 - detection.ftcPose.x;
+                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+            }
+            else if(detection.id==6){
+                //y = -42
+                //x = 62
+                correctY = -42 - detection.ftcPose.x;
+                correctX = 62 - (detection.ftcPose.z/2)*Math.sqrt(3);
+            }
+
+        }
+        Pose2d relocalizedPose = new Pose2d(correctX, correctY, Math.toRadians(180));
+        if(correctY!=0&&correctX!=0){
+            return telemetryPacket -> {
+                bot.pose = relocalizedPose;
+                sleep(100);
+                return false;
+            };
+        }
+        return telemetryPacket -> false;
+    }
     public Action compensate(RobotV3 bot, Zone zone, int numOfPixels){
         ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
         for(int i = 0; i < 20 && detections.isEmpty() && !isStopRequested() && opModeIsActive(); i++){
