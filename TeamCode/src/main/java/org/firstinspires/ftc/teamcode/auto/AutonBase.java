@@ -515,37 +515,37 @@ public abstract class AutonBase extends LinearOpMode {
                 //y = 42
                 //x = 62.5
                 correctY = 42 + detection.ftcPose.x;
-                correctX = 62.5 - detection.ftcPose.y;
+                correctX = 54.25 - detection.ftcPose.y;
             }
             else if(detection.id==2){
                 //y = 36
                 //x = 62.5
                 correctY = 36 + detection.ftcPose.x;
-                correctX = 62.5 - detection.ftcPose.y;
+                correctX = 54.25 - detection.ftcPose.y;
             }
             else if(detection.id==3){
                 //y = 30
                 //x = 62.5
                 correctY = 30 + detection.ftcPose.x;
-                correctX = 62.5 - detection.ftcPose.y;
+                correctX = 54.25 - detection.ftcPose.y;
             }
             else if(detection.id==4){
                 //y =-30
                 //x = 62.5
                 correctY = -30 + detection.ftcPose.x;
-                correctX = 62.5 - detection.ftcPose.y;
+                correctX = 54.25 - detection.ftcPose.y;
             }
             else if(detection.id==5){
                 //y = -36
                 //x = 62.5
                 correctY = -36 + detection.ftcPose.x;
-                correctX = 62.5 - detection.ftcPose.y;
+                correctX = 54.25 - detection.ftcPose.y;
             }
             else if(detection.id==6){
                 //y = -42
                 //x = 62.5
                 correctY = -42 + detection.ftcPose.x;
-                correctX = 62.5 - detection.ftcPose.y;
+                correctX = 54.25 - detection.ftcPose.y;
             }
 
         }

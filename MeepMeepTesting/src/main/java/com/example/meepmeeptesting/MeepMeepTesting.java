@@ -146,14 +146,21 @@ public class MeepMeepTesting {
         AutonConfig right = new AutonConfig();
         AutonConfig middle = new AutonConfig();
         DriveShim bot = myBot.getDrive();
-        String detect = "middle";
+        String detect = "left";
 
         left.setStart(
-                bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
-                        .setTangent(Math.toRadians(150))
-                        .splineToSplineHeading(new Pose2d(-48,-17,Math.toRadians(90)),Math.toRadians(90))
+                bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
+                        .setTangent(Math.toRadians(90))
+                        .splineToLinearHeading(new Pose2d(20, -35,Math.toRadians(0)),Math.toRadians(180))
+                        .strafeTo(new Vector2d(5, -37))
+                        .strafeTo(new Vector2d(12, -37))
+                        .setTangent(Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(46.5,-38,Math.toRadians(180)),Math.toRadians(0))
+                        .strafeTo(new Vector2d(46.5, -66))
+                        .strafeTo(new Vector2d(60,-66))
+//                    .waitSeconds(1) //drop purple
                         .build());
-        left.setStack(
+        /*left.setStack(
                 bot.actionBuilder(new Pose2d(-48, -17, Math.toRadians(90))) //x=-37 y=36
                         .setTangent(Math.toRadians(270))
                         .splineToLinearHeading(new Pose2d(-59, -15, Math.toRadians(180)), Math.toRadians(180))
@@ -170,7 +177,7 @@ public class MeepMeepTesting {
         left.setWhitePixel(bot.actionBuilder(new Pose2d(46,-40,Math.toRadians(180))) //x=52.5y=44
                 .strafeTo(new Vector2d(52, -38))
                 .build());
-        /*left.setPark(bot.actionBuilder(new Pose2d(52.5,38,Math.toRadians(180)))
+        left.setPark(bot.actionBuilder(new Pose2d(52.5,38,Math.toRadians(180)))
                 .strafeTo(new Vector2d(45,58))
                 .build());*/
 
