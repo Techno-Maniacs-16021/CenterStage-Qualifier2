@@ -173,95 +173,68 @@ public class Path {
         right.put("start",
                 bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
                         .setTangent(Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(12, 36,Math.toRadians(0)),Math.toRadians(180)) //x=20 y=35
-                        //.strafeTo(new Vector2d(12, 35))
+                        .splineToLinearHeading(new Pose2d(20, 35,Math.toRadians(0)),Math.toRadians(180))
+                        .strafeTo(new Vector2d(5, 37))
+                        .strafeTo(new Vector2d(12, 37))
 //                    .waitSeconds(1) //drop purple
                         .build());
 
         right.put("plusZero",
-                bot.actionBuilder(new Pose2d(12, 36, Math.toRadians(0)))
+                bot.actionBuilder(new Pose2d(12, 37, Math.toRadians(0))) //x=9 y=-40
                         .setTangent(Math.toRadians(0))
-                        //.splineToSplineHeading(new Pose2d(52,-35,Math.toRadians(180)),Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(53,32,Math.toRadians(180)),Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(46.5,38,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
 //                    .waitSeconds(1) //drop yellow
                         .build());
-        right.put("plusZeroWithAprilTags",
-                bot.actionBuilder(new Pose2d(12, 36, Math.toRadians(0)))
-                        .setTangent(Math.toRadians(0))
-                        //.splineToSplineHeading(new Pose2d(52,-35,Math.toRadians(180)),Math.toRadians(0))
-                        .splineToLinearHeading(new Pose2d(48,34,Math.toRadians(180)),Math.toRadians(0))
-//                    .waitSeconds(1) //drop yellow
-                        .build());
-        right.put("aprilTagsFailureCase",
-                bot.actionBuilder(new Pose2d(48,34, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(53, 32))
-                        .build());
+
         right.put("park",
-                bot.actionBuilder(new Pose2d(53, 32, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(48,32)) //x=45 y=60
-                        .strafeTo(new Vector2d(48, 42)) //x=60 y=60
-                        //.strafeTo(new Vector2d(45,-58))
+                bot.actionBuilder(new Pose2d(46.5, 38, Math.toRadians(180))) //y=-35
+                        .strafeTo(new Vector2d(46.5, 66))
+                        .strafeTo(new Vector2d(60,66))
                         .build());
+
 
         middle = new HashMap<>();
         middle.put("start",
                 bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
-                        //.strafeTo(new Vector2d(18,38))
-                        .strafeTo(new Vector2d(17,37))
-//                    .waitSeconds(1) //drop purple
+                        .strafeTo(new Vector2d(17,38)) //x=18 y=-38
+                        //.waitSeconds(1) //drop purple
                         .build());
+
         middle.put("plusZero",
-                bot.actionBuilder(new Pose2d(17, 37, Math.toRadians(90))) //x=17 y = 37
+                bot.actionBuilder(new Pose2d(17, 38, Math.toRadians(90)))
+                        .setTangent(Math.toRadians(45))
+                        .splineToSplineHeading(new Pose2d(24,48,Math.toRadians(180)),Math.toRadians(0)) //x= 52 y=-42
                         .setTangent(Math.toRadians(0))
-                        //.splineToSplineHeading(new Pose2d(53.5,37,Math.toRadians(180)),Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(53,37,Math.toRadians(180)),Math.toRadians(0))
+                        .splineToSplineHeading(new Pose2d(46.5,40,Math.toRadians(180)),Math.toRadians(0)) //x= 52 y=-42
+                        //.waitSeconds(1) //drop yellow
+                        .build());
 
-//                    .waitSeconds(1) //drop yellow
-                        .build());
-        middle.put("plusZeroWithAprilTags",
-                bot.actionBuilder(new Pose2d(17, 37, Math.toRadians(90))) //x=17 y = 37
-                        .setTangent(Math.toRadians(0))
-                        //.splineToSplineHeading(new Pose2d(53.5,37,Math.toRadians(180)),Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(48,34,Math.toRadians(180)),Math.toRadians(0))
-
-//                    .waitSeconds(1) //drop yellow
-                        .build());
-        middle.put("aprilTagsFailureCase",
-                bot.actionBuilder(new Pose2d(48, 34, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(53, 37))
-                        .build());
         middle.put("park",
-                bot.actionBuilder(new Pose2d(53,37,Math.toRadians(180))) //x=53.5 y=37
-                        .strafeTo(new Vector2d(48,39)) //x=45 y=60
-                        .strafeTo(new Vector2d(48, 42)) // x=60 y=60
+                bot.actionBuilder(new Pose2d(46.5,40,Math.toRadians(180))) //y=-41
+                        .strafeTo(new Vector2d(46.5, 60))
+                        .strafeTo(new Vector2d(60,60))
                         .build());
+
         left = new HashMap<>();
         left.put("start",
                 bot.actionBuilder(new Pose2d(12, 63, Math.toRadians(90)))
-                        .strafeTo(new Vector2d(23,47))
-                        .waitSeconds(1) //drop purple
+                        .strafeTo(new Vector2d(23,46.5))
                         .build());
+
         left.put("plusZero",
-                bot.actionBuilder(new Pose2d(23, 47, Math.toRadians(90)))
+                bot.actionBuilder(new Pose2d(23, 46.5, Math.toRadians(90)))
+                        .setTangent(Math.toRadians(60))
+                        .splineToSplineHeading(new Pose2d(32,54,Math.toRadians(90)),Math.toRadians(30))
                         .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(53,43,Math.toRadians(180)),Math.toRadians(0)) //x=53.5 y=43
-                        .waitSeconds(1) //drop yellow
+                        .splineToSplineHeading(new Pose2d(46.5,46,Math.toRadians(180)),Math.toRadians(0))
                         .build());
-        left.put("plusZeroWithAprilTags",
-                bot.actionBuilder(new Pose2d(23, 47, Math.toRadians(90)))
-                        .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(48,34,Math.toRadians(180)),Math.toRadians(0)) //x=53.5 y=43
-                        .waitSeconds(1) //drop yellow
-                        .build());
-        left.put("aprilTagsFailureCase",
-                bot.actionBuilder(new Pose2d(48,34, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(53, 43))
-                        .build());
+
         left.put("park",
-                bot.actionBuilder(new Pose2d(53,43,Math.toRadians(180))) //x=53.5 y=43
-                        .strafeTo(new Vector2d(48,43)) //x=45 y=60
-                        .strafeTo(new Vector2d(48,43)) //x=60 y=60
+                bot.actionBuilder(new Pose2d(46.5,46,Math.toRadians(180))) //x=52 y=-48
+                        .strafeTo(new Vector2d(46.5, 60))
+                        .strafeTo(new Vector2d(60,60))
                         .build());
+
     }
     private void buildRedFar2PlusOne(RobotV3 bot){
         right = new HashMap<>();
@@ -526,7 +499,7 @@ public class Path {
                         .build());
 
         left.put("plusZero",
-                bot.actionBuilder(new Pose2d(12, -35, Math.toRadians(0))) //x=9 y=-40
+                bot.actionBuilder(new Pose2d(12, -37, Math.toRadians(0))) //x=9 y=-40
                         .setTangent(Math.toRadians(0))
                         .splineToSplineHeading(new Pose2d(46.5,-38,Math.toRadians(180)),Math.toRadians(0))//x=52 y=-35
 //                    .waitSeconds(1) //drop yellow

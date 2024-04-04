@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -14,7 +15,7 @@ public class BlueCloseApril extends AutonBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = initRobot(12,64, Math.toRadians(90), AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0);
+        RobotV3 bot = initRobot(12,63, Math.toRadians(90), AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0);
         waitForStart();
         Log.d("color_zone", String.valueOf(color_zone));
         closeWebcam();
@@ -22,10 +23,11 @@ public class BlueCloseApril extends AutonBase {
                 getArmToGround(bot),
                 path.get("start", color_zone),
                 releaseFirstPixel(bot),
+                new ParallelAction(path.get("plusZero", color_zone), closePlaceOnBackBoard(bot)),
+                releaseSecondPixel(bot),
                 retractBack(bot),
-                path.get("plusZeroWithAprilTags", color_zone)
+                path.get("park",color_zone)
         ));
-        Actions.runBlocking(compensate(bot, color_zone, 1));
         requestOpModeStop();
     }
 }

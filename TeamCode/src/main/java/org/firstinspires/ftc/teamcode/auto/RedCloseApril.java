@@ -15,23 +15,19 @@ public class RedCloseApril extends AutonBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = initRobot(12, -64, Math.toRadians(270), AutonConstants.AutonType.RED_CLOSE_2_PLUS_0);
+        RobotV3 bot = initRobot(12, -63, Math.toRadians(270), AutonConstants.AutonType.RED_CLOSE_2_PLUS_0);
         waitForStart();
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));
         Actions.runBlocking(new SequentialAction(
                 getArmToGround(bot),
                 path.get("start", color_zone),
-                releaseFirstPixel(bot),new ParallelAction(path.get("plusZero", color_zone),closePlaceOnBackBoard(bot)),
+                releaseFirstPixel(bot),
+                new ParallelAction(path.get("plusZero", color_zone), closePlaceOnBackBoard(bot)),
                 releaseSecondPixel(bot),
                 retractBack(bot),
                 path.get("park",color_zone)
         ));
-        /*Actions.runBlocking(relocalize(bot));
-        Actions.runBlocking(new SequentialAction(
-
-        ));*/
-        //Actions.runBlocking(compensate(bot, color_zone, 1));
         requestOpModeStop();
     }
 }

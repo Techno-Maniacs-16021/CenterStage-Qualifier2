@@ -16,7 +16,7 @@ public class RedFarApril extends AutonBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        RobotV3 bot = initRobot(-36,-64, Math.toRadians(270), AutonConstants.AutonType.RED_FAR_2_PLUS_1);
+        RobotV3 bot = initRobot(-36,-63, Math.toRadians(270), AutonConstants.AutonType.RED_FAR_2_PLUS_1);
         waitForStart();
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));
