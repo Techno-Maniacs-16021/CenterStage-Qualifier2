@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import android.util.Log;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -21,11 +22,16 @@ public class RedCloseApril extends AutonBase {
         Actions.runBlocking(new SequentialAction(
                 getArmToGround(bot),
                 path.get("start", color_zone),
-                releaseFirstPixel(bot),
+                releaseFirstPixel(bot),new ParallelAction(path.get("plusZero", color_zone),closePlaceOnBackBoard(bot)),
+                releaseSecondPixel(bot),
                 retractBack(bot),
-                path.get("plusZeroWithAprilTags", color_zone)
+                path.get("park",color_zone)
         ));
-        Actions.runBlocking(compensate(bot, color_zone, 1));
+        /*Actions.runBlocking(relocalize(bot));
+        Actions.runBlocking(new SequentialAction(
+
+        ));*/
+        //Actions.runBlocking(compensate(bot, color_zone, 1));
         requestOpModeStop();
     }
 }

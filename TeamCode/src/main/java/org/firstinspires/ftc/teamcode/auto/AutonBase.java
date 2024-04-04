@@ -405,6 +405,18 @@ public abstract class AutonBase extends LinearOpMode {
             return false;
         };
     }
+    public Action closePlaceOnBackBoard(RobotV3 bot) {
+        return telemetryPacket -> {
+            bot.setTarget(1);
+            bot.updateRobotState();
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            bot.activateSlides();
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(0.6);
+            bot.setAnglePosition(0.8);
+            return bot.getCurrentArmPosition() < (100) || bot.getCurrentAngle() < 160;
+        };
+    }
     public Action getReadyForBackboardFar(RobotV3 bot,boolean twoPixels){
         return telemetryPacket -> {
             bot.setTarget(1);
