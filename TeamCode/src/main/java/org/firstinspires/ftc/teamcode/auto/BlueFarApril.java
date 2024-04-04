@@ -33,9 +33,39 @@ public class BlueFarApril extends AutonBase {
                 resetIntakeTimer(bot),
                 intakePixels(bot),
                 transfer(bot),
-                path.get("plusOneWithAprilTags", color_zone)
+                path.get("readAprilTags", color_zone)
         ));
-        Actions.runBlocking(compensate(bot, color_zone, bot.getPixelMemory()));
+        //re-localize
+        Actions.runBlocking(relocalize(bot));
+        if(bot.getPixelMemory()==2){
+            //place 2 pixels
+            Actions.runBlocking(new SequentialAction(
+                    path.get("plusOne", color_zone),
+                    getReadyForBackboardFar(bot, true),
+                    getSlidesForPlacement(bot),
+                    releaseFirstPixel(bot),
+                    getReadyForBackboardFar(bot, false),
+                    path.get("whitePixel",color_zone),
+                    getSlidesForPlacement(bot),
+                    releaseSecondPixel(bot),
+                    getReadyForBackboardFar(bot, false),
+                    retractBack(bot)
+            ));
+        }
+        else if(bot.getPixelMemory()==1){
+            //place 1 pixel
+            Actions.runBlocking(new SequentialAction(
+                    path.get("plusOne", color_zone),
+                    getReadyForBackboardFar(bot, false),
+                    getSlidesForPlacement(bot),
+                    releaseFirstPixel(bot),
+                    releaseSecondPixel(bot),
+                    getReadyForBackboardFar(bot, false),
+                    retractBack(bot)
+            ));
+        }
+        //park
+        Actions.runBlocking(path.get("park",color_zone));
         requestOpModeStop();
     }
 }

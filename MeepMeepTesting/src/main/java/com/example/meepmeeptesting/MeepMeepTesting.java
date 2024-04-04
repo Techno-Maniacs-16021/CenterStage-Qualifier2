@@ -149,16 +149,22 @@ public class MeepMeepTesting {
         String detect = "left";
 
         left.setStart(
-                bot.actionBuilder(new Pose2d(12, -63, Math.toRadians(270)))
-                        .strafeTo(new Vector2d(23,-46.5))
-                        .setTangent(Math.toRadians(300))
-                        .splineToSplineHeading(new Pose2d(32,-54,Math.toRadians(270)),Math.toRadians(330))
-                        //.splineToSplineHeading(new Pose2d(31,-56,Math.toRadians(180)),Math.toRadians(0))
-                        //.splineToSplineHeading(new Pose2d(52,-48,Math.toRadians(180)),Math.toRadians(0))
+                bot.actionBuilder(new Pose2d(-36, 63, Math.toRadians(90)))
+                        .setTangent(Math.toRadians(210))
+                        .splineToSplineHeading(new Pose2d(-48,17,Math.toRadians(270)),Math.toRadians(270))
+                        .setTangent(Math.toRadians(330))
+                        .splineToLinearHeading(new Pose2d(-48, 12, Math.toRadians(180)), Math.toRadians(180))
+                        .setTangent(Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-59, 15, Math.toRadians(180)), Math.toRadians(180))
+                        .strafeTo(new Vector2d(-56 , 15))
                         .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(46.5,-46,Math.toRadians(180)),Math.toRadians(0))
-                        .strafeTo(new Vector2d(46.5, -60))
-                        .strafeTo(new Vector2d(60,-60))
+                        .lineToX(44)
+                        .setTangent(Math.toRadians(90))
+                        .lineToY(36)
+                        .strafeTo(new Vector2d(46.5,30))
+                        .strafeTo(new Vector2d(46.5, 36))
+                        .strafeTo(new Vector2d(46.5,12))
+
                         .build());
 
 
