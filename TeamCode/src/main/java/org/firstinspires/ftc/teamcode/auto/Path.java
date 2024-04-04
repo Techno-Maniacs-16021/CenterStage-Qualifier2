@@ -269,20 +269,20 @@ public class Path {
                 bot.actionBuilder(new Pose2d(-36, -63, Math.toRadians(270)))
                         .setTangent(Math.toRadians(90))
                         //.splineToSplineHeading(new Pose2d(-36,-36,Math.toRadians(180)),Math.toRadians(90))
-                        .splineToSplineHeading(new Pose2d(-37,-36,Math.toRadians(180)),Math.toRadians(90))
-                        .strafeTo(new Vector2d(-32, -36))
-                        .strafeTo(new Vector2d(-37, -36))
+                        .splineToSplineHeading(new Pose2d(-37,-34,Math.toRadians(180)),Math.toRadians(90))
+                        .strafeTo(new Vector2d(-32, -34))
+                        .strafeTo(new Vector2d(-37, -34))
                         .build());
 
         right.put("stack",
-                bot.actionBuilder(new Pose2d(-37, -36, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-37, -34, Math.toRadians(180)))
                         .strafeTo(new Vector2d(-40, -36))
                         //.strafeTo(new Vector2d(-52,-10)).build();
-                        .strafeTo(new Vector2d(-59,-15))
+                        .strafeTo(new Vector2d(-60,-15))
                         .build());
 
         right.put("moveBack",
-                bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-60, -15, Math.toRadians(180)))
                         .strafeTo(new Vector2d(-56, -15))
                         .build());
 
@@ -300,7 +300,7 @@ public class Path {
                         .build());
 
         right.put("whitePixel",
-                bot.actionBuilder(new Pose2d(54.5,-42,Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(54,-42,Math.toRadians(180)))
                         .strafeTo(new Vector2d(54, -38))
                         .build());
 
@@ -335,32 +335,35 @@ public class Path {
         middle.put("stack",
                 bot.actionBuilder(new Pose2d(-44,-27, Math.toRadians(180)))
                         //        .strafeTo(new Vector2d(-56,-10))
-                        .strafeTo(new Vector2d(-59,-15))
+                        .strafeTo(new Vector2d(-60,-15))
                         .build());
 
         middle.put("moveBack",
-                bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-60, -15, Math.toRadians(180)))
                         .strafeTo(new Vector2d(-56, -15))
                         .build());
 
-        middle.put("plusOne",
+        middle.put("readAprilTags",
                 bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
-                        .lineToX(46)
+                        .lineToX(44)
                         .setTangent(Math.toRadians(270))
-                        .lineToY(-40)
-                        .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(52,-39.5,Math.toRadians(180)),Math.toRadians(0)) //y=-40
+                        .lineToY(-36)
+                        .build());
+
+        middle.put("plusOne",
+                bot.actionBuilder(new Pose2d(44, -36, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(54,-36))
                         .build());
 
         middle.put("whitePixel",
-                bot.actionBuilder(new Pose2d(52,-39.5,Math.toRadians(180))) //y=-40
-                        .strafeTo(new Vector2d(52, -44))
+                bot.actionBuilder(new Pose2d(54,-36,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(54, -32))
                         .build());
 
         middle.put("park",
-                bot.actionBuilder(new Pose2d(52,-40,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(45,-58))
+                bot.actionBuilder(new Pose2d(54,-32,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(54,-12))
                         .build());
 
         ///NOT USED
@@ -389,32 +392,35 @@ public class Path {
         left.put("stack",
                 bot.actionBuilder(new Pose2d(-48,-17,Math.toRadians(90)))
                         .setTangent(Math.toRadians(270))
-                        .splineToLinearHeading(new Pose2d(-59, -15, Math.toRadians(180)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-60, -15, Math.toRadians(180)), Math.toRadians(180))
                         .build());
 
         left.put("moveBack",
-                bot.actionBuilder(new Pose2d(-59, -15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-60, -15, Math.toRadians(180)))
                         .strafeTo(new Vector2d(-56, -15))
                         .build());
 
-        left.put("plusOne",
+        left.put("readAprilTags",
                 bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
-                        .lineToX(46)
+                        .lineToX(44)
                         .setTangent(Math.toRadians(270))
-                        .lineToY(-34)
-                        .setTangent(Math.toRadians(0))
-                        .splineToSplineHeading(new Pose2d(52,-34,Math.toRadians(180)),Math.toRadians(0))
+                        .lineToY(-36)
+                        .build());
+
+        left.put("plusOne",
+                bot.actionBuilder(new Pose2d(44, -36, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(54,-30))
                         .build());
 
         left.put("whitePixel",
-                bot.actionBuilder(new Pose2d(52,-34,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(52, -38))
+                bot.actionBuilder(new Pose2d(54,-30,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(54, -34))
                         .build());
 
         left.put("park",
-                bot.actionBuilder(new Pose2d(52, -48, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(45,-58))
+                bot.actionBuilder(new Pose2d(54,-38,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(54,-12))
                         .build());
 
         ///NOT USED
