@@ -24,7 +24,7 @@ public class BlueFarApril extends AutonBase {
         Actions.runBlocking(new SequentialAction(
                 getArmToGround(bot),
                 path.get("start", color_zone),
-                releaseFirstPixel(bot),
+                releaseFirstPixelPusher(bot),
                 path.get("stack", color_zone),
                 retractBack(bot),
                 getIntakeReady(bot),
@@ -44,6 +44,7 @@ public class BlueFarApril extends AutonBase {
                     getReadyForBackboardFar(bot, true),
                     getSlidesForPlacement(bot),
                     releaseFirstPixel(bot),
+                    wait(bot,250),
                     getReadyForBackboardFar(bot, false),
                     path.get("whitePixel",color_zone),
                     getSlidesForPlacement(bot),
@@ -60,6 +61,7 @@ public class BlueFarApril extends AutonBase {
                     getSlidesForPlacement(bot),
                     releaseFirstPixel(bot),
                     releaseSecondPixel(bot),
+                    wait(bot,250),
                     getReadyForBackboardFar(bot, false),
                     retractBack(bot)
             ));

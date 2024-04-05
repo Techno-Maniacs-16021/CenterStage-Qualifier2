@@ -13,15 +13,21 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.matrices.MatrixF;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 import org.firstinspires.ftc.teamcode.teleop.imagerec.Zone;
 import org.firstinspires.ftc.vision.VisionPortal;
 import org.firstinspires.ftc.vision.apriltag.AprilTagDetection;
+import org.firstinspires.ftc.vision.apriltag.AprilTagMetadata;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseFtc;
+import org.firstinspires.ftc.vision.apriltag.AprilTagPoseRaw;
 import org.firstinspires.ftc.vision.apriltag.AprilTagProcessor;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -53,7 +59,6 @@ public abstract class AutonBase extends LinearOpMode {
         ArrayList<Zone> zone_avg = new ArrayList<Zone>();
         Rect size = new Rect();
         int midx;
-        Mat org = new Mat();
         Mat mask0 = new Mat();
         Mat mask1 = new Mat();
         Mat mask = new Mat();
@@ -66,12 +71,13 @@ public abstract class AutonBase extends LinearOpMode {
         Scalar upper_1 = new Scalar(120.0,255.0,255.0);
         Scalar lower_2 = new Scalar(100.0,50.0,50.0);
         Scalar upper_2 = new Scalar(120.0,255.0,255.0);
+        Rect bounds = new Rect(0, 40, 640, 120);
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
             contours.clear();
             max.empty();
-            input.copyTo(org);
+            input = input.submat(bounds);
             Imgproc.GaussianBlur(input,input, new Size(101,101),0);
             Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
             Core.inRange(input,lower_1,upper_1,mask0);
@@ -85,7 +91,7 @@ public abstract class AutonBase extends LinearOpMode {
             Imgproc.Canny(input,edge,30,70);
             Imgproc.findContours(edge, contours,hier,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_NONE);
 
-            Imgproc.drawContours(org,contours,-1,new Scalar(0,255,0),3);
+            Imgproc.drawContours(input,contours,-1,new Scalar(0,255,0),3);
             if(!contours.isEmpty()){
                 max = contours.get(0);
                 for (int i = 0; i < contours.size() && !opModeIsActive() && !isStopRequested(); i++){
@@ -99,7 +105,7 @@ public abstract class AutonBase extends LinearOpMode {
             }
 
 
-            Imgproc.drawContours(org,max_list,-1,new Scalar(255,0,0),3);
+            Imgproc.drawContours(input,max_list,-1,new Scalar(255,0,0),3);
             size = Imgproc.boundingRect(max);
             midx = size.x+size.width/2;
             if(!opModeIsActive()){
@@ -119,14 +125,12 @@ public abstract class AutonBase extends LinearOpMode {
 //            }
             telemetry.addData("X pos",midx);
             telemetry.update();
-            org.release();
             mask0.release();
             mask1.release();
             mask.release();
             edge.release();
             max.release();
             hier.release();
-            org.empty();
             mask.empty();
             mask0.empty();
             mask1.empty();
@@ -143,28 +147,28 @@ public abstract class AutonBase extends LinearOpMode {
         Rect size = new Rect();
         int midx;
         List<Integer> ELEMENT_COLOR = Arrays.asList(0, 0, 0); //(Hue, Sateration, Value), Set to blue alliance at first
-        Mat org = new Mat();
         Mat mask0 = new Mat();
         Mat mask1 = new Mat();
         Mat mask = new Mat();
         Mat edge = new Mat();
         Mat max = new Mat();
         Mat hier = new Mat();
+        Mat org = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
         List<MatOfPoint> max_list = new ArrayList<>();
         Scalar lower_1 = new Scalar(0.0, 50.0, 0.0);
         Scalar upper_1 = new Scalar(10.0,255.0,255.0);
         Scalar lower_2 = new Scalar(170.0,50.0,50.0);
         Scalar upper_2 = new Scalar(180.0,255.0,255.0);
-        Rect bounds = new Rect(0, 20, 600, 120);
+        Rect bounds = new Rect(0, 40, 640, 120);
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
             contours.clear();
             max.empty();
-
+            telemetry.addLine(input.size()+"");
+//            input = input.submat(bounds);
             input.copyTo(org);
-            org = input.submat(bounds);
             Imgproc.GaussianBlur(input,input, new Size(101,101),0);
             Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
             Core.inRange(input,lower_1,upper_1,mask0);
@@ -191,41 +195,43 @@ public abstract class AutonBase extends LinearOpMode {
             }
 
             Imgproc.drawContours(org,max_list,-1,new Scalar(255,0,0),3);
-            size = Imgproc.boundingRect(max);
-            midx = size.x+size.width/2;
-            if(!opModeIsActive()){
-                if(midx<input.size().width/3){
-                    color_zone = Zone.LEFT;
-                    telemetry.addLine("Left detected");
-                }else if (midx>input.size().width*2/3){
-                    color_zone = Zone.RIGHT;
-                    telemetry.addLine("Right detected");
-                }else{
-                    color_zone = Zone.MIDDLE;
-                    telemetry.addLine("Middle detected");
+            if(!max.empty()){
+                size = Imgproc.boundingRect(max);
+                midx = size.x+size.width/2;
+                if(!opModeIsActive()){
+                    if(midx<input.size().width/3){
+                        color_zone = Zone.LEFT;
+                        telemetry.addLine("Left detected");
+                    }else if (midx>input.size().width*2/3){
+                        color_zone = Zone.RIGHT;
+                        telemetry.addLine("Right detected");
+                    }else{
+                        color_zone = Zone.MIDDLE;
+                        telemetry.addLine("Middle detected");
+                    }
                 }
             }
-//            if(max_list.size()!=0){
+//            if(max
+//            _list.size()!=0){
 //                Imgproc.drawContours(org,max_list,-1,new Scalar(0,255,0),3);
 //            }
             telemetry.addData("X pos",midx);
             telemetry.update();
-            org.release();
             mask0.release();
             mask1.release();
             mask.release();
             edge.release();
             max.release();
             hier.release();
-            org.empty();
+
+
             mask.empty();
             mask0.empty();
             mask1.empty();
             edge.empty();
             max.empty();
             hier.empty();
-            Imgproc.rectangle(input, bounds, new Scalar(255.0, 0.0, 0.0), 2);
-            return input;
+            return org;
         }
     }
     public RobotV3 initRobot(double x, double y, double heading, AutonConstants.AutonType autonType){
@@ -287,6 +293,16 @@ public abstract class AutonBase extends LinearOpMode {
         return telemetryPacket -> {
             bot.setGripPosition(0);
             sleep(250);
+            return false;
+        };
+    }
+    public Action releaseFirstPixelPusher(RobotV3 bot){
+        return telemetryPacket -> {
+            bot.setPusherPosition(1);
+            bot.setGripPosition(0.8);
+            sleep(250);
+            bot.setPusherPosition(0);
+            bot.setGripPosition(1);
             return false;
         };
     }
@@ -443,14 +459,14 @@ public abstract class AutonBase extends LinearOpMode {
     }
     public Action getReadyForBackboardClose(RobotV3 bot) {
         return telemetryPacket -> {
-            bot.setTarget(1);
+            bot.setTarget(0.7);
             bot.updateRobotState();
-            if (!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
+            if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();
-            if (!bot.slidesWithinRange(0.1)) return true;
-            bot.setArmPosition(0.28);
+            if(!bot.slidesWithinRange(0.1)) return true;
+            bot.setArmPosition(0.6);
             bot.setAnglePosition(0.8);
-            return bot.getCurrentArmPosition() < 45 || bot.getCurrentAngle() < 160;
+            return bot.getCurrentArmPosition() < (100) || bot.getCurrentAngle() < 160;
         };
     }
 
@@ -462,6 +478,12 @@ public abstract class AutonBase extends LinearOpMode {
             sleep(1000);
             bot.closeIntake();
             //outtake pixel through intake
+            return false;
+        };
+    }
+    public Action wait(RobotV3 bot,int time){
+        return telemetryPacket -> {
+            sleep(time);
             return false;
         };
     }
@@ -499,12 +521,18 @@ public abstract class AutonBase extends LinearOpMode {
     public Action relocalize(RobotV3 bot){
         double correctX = 0;
         double correctY = 0;
-        ArrayList<AprilTagDetection> detections = tagProcessor.getDetections();
-        for(int i = 0; i < 20 && detections.isEmpty() && !isStopRequested() && opModeIsActive(); i++){
-            detections = tagProcessor.getDetections();
+        ArrayList<AprilTagDetection> detections = tagProcessor.getFreshDetections();
+        //detections = tagProcessor.getDetections();
+        /*if(detections==null) {
+            detections.add(new AprilTagDetection(0,0,0,new Point(0,0),new Point[1],new AprilTagMetadata(1,"",1, DistanceUnit.CM),new AprilTagPoseFtc(0,0,0,0,0,0,0,0,0), new AprilTagPoseRaw(0,0,0, MatrixF.identityMatrix(1)),0) );
+            detections.clear();
+        }*/
+        for(int i = 0; i < 20 && detections==null && !isStopRequested() && opModeIsActive(); i++){
+            detections = tagProcessor.getFreshDetections();
             sleep(50);
         }
-        if(!detections.isEmpty()) {
+        if(detections==null){}
+        else if(!detections.isEmpty()) {
             AprilTagDetection detection = null;
             for (int i = 0; i < detections.size() && detection == null && !isStopRequested() && opModeIsActive(); i++) {
                 if (detections.get(i) != null && detections.get(i).ftcPose != null)
@@ -553,7 +581,9 @@ public abstract class AutonBase extends LinearOpMode {
         if(correctY!=0&&correctX!=0){
             return telemetryPacket -> {
                 bot.pose = relocalizedPose;
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.GREEN);
                 sleep(100);
+                bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.AQUA);
                 return false;
             };
         }

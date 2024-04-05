@@ -22,9 +22,14 @@ public class RedCloseApril extends AutonBase {
         Actions.runBlocking(new SequentialAction(
                 getArmToGround(bot),
                 path.get("start", color_zone),
-                releaseFirstPixel(bot),
-                new ParallelAction(path.get("plusZero", color_zone), closePlaceOnBackBoard(bot)),
+                releaseFirstPixelPusher(bot),
+                new ParallelAction(path.get("readAprilTags", color_zone), getReadyForBackboardClose(bot))
+        ));
+        Actions.runBlocking(relocalize(bot));
+        Actions.runBlocking(new SequentialAction(
+                path.get("plusZero",color_zone),
                 releaseSecondPixel(bot),
+                wait(bot,250),
                 retractBack(bot),
                 path.get("park",color_zone)
         ));

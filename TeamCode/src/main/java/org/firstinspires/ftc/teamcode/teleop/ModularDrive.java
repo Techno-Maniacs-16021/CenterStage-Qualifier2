@@ -95,7 +95,7 @@ public class ModularDrive extends OpMode {
                 AprilTagPoseFtc pose = (detection.ftcPose);
                 if(pose != null) {
                     telemetry.addData(String.valueOf(detection.id), "(" + Math.round(pose.x) + ", " + Math.round(pose.y) + ", " + Math.round((pose.z / 2) * Math.sqrt(3)) + ") : [" + Math.round(pose.yaw) + ", " + Math.round(pose.pitch) + ", " + Math.round(pose.roll) + "] : | " + Math.round(Math.acos(detection.ftcPose.z / 3.4)) + " |");
-                    if(pose.y<5.5)
+                    if(pose.y<6)
                         bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.BEATS_PER_MINUTE_RAINBOW_PALETTE);
                     else
                         bot.setBothLED(RevBlinkinLedDriver.BlinkinPattern.AQUA);
