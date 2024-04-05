@@ -56,16 +56,16 @@ public class Path {
         left.put("stack",
                 bot.actionBuilder(new Pose2d(-37, 38, Math.toRadians(180)))
                         .strafeTo(new Vector2d(-40, 36))
-                        .strafeTo(new Vector2d(-60,15))
+                        .strafeTo(new Vector2d(-60,14))
                         .build());
 
         left.put("moveBack",
-                bot.actionBuilder(new Pose2d(-60, 15, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(-57, 15))
+                bot.actionBuilder(new Pose2d(-60, 14, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(-57, 14))
                         .build());
 
         left.put("readAprilTags",
-                bot.actionBuilder(new Pose2d(-57, 15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-57, 14, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
                         .lineToX(44)
                         .setTangent(Math.toRadians(90))
@@ -96,16 +96,16 @@ public class Path {
 
         middle.put("stack",
                 bot.actionBuilder(new Pose2d(-44,27, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(-60,15))
+                        .strafeTo(new Vector2d(-60,14))
                         .build());
 
         middle.put("moveBack",
-                bot.actionBuilder(new Pose2d(-60, 15, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(-57, 15))
+                bot.actionBuilder(new Pose2d(-60, 14, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(-57, 14))
                         .build());
 
         middle.put("readAprilTags",
-                bot.actionBuilder(new Pose2d(-57, 15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-57, 14, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
                         .lineToX(44)
                         .setTangent(Math.toRadians(90))
@@ -139,16 +139,16 @@ public class Path {
                         .setTangent(Math.toRadians(330))
                         .splineToLinearHeading(new Pose2d(-48, 12, Math.toRadians(180)), Math.toRadians(180))
                         .setTangent(Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-59, 15, Math.toRadians(180)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-59, 14, Math.toRadians(180)), Math.toRadians(180))
                         .build());
 
         right.put("moveBack",
-                bot.actionBuilder(new Pose2d(-60, 15, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(-56 , 15))
+                bot.actionBuilder(new Pose2d(-60, 14, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(-56 , 14))
                         .build());
 
         right.put("readAprilTags",
-                bot.actionBuilder(new Pose2d(-56, 15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-56, 14, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
                         .lineToX(44)
                         .setTangent(Math.toRadians(90))
@@ -266,16 +266,16 @@ public class Path {
                 bot.actionBuilder(new Pose2d(-37, -38, Math.toRadians(180)))
                         .strafeTo(new Vector2d(-40, -36))
                         //.strafeTo(new Vector2d(-52,-10)).build();
-                        .strafeTo(new Vector2d(-60,-15))
+                        .strafeTo(new Vector2d(-60,-14))
                         .build());
 
         right.put("moveBack",
-                bot.actionBuilder(new Pose2d(-60, -15, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(-57, -15))
+                bot.actionBuilder(new Pose2d(-60, -14, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(-57, -14))
                         .build());
 
         right.put("readAprilTags",
-                bot.actionBuilder(new Pose2d(-57, -15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-57, -14, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
                         .lineToX(44)
                         .setTangent(Math.toRadians(270))
@@ -323,16 +323,16 @@ public class Path {
         middle.put("stack",
                 bot.actionBuilder(new Pose2d(-44,-27, Math.toRadians(180)))
                         //        .strafeTo(new Vector2d(-56,-10))
-                        .strafeTo(new Vector2d(-60,-15))
+                        .strafeTo(new Vector2d(-60,-14))
                         .build());
 
         middle.put("moveBack",
-                bot.actionBuilder(new Pose2d(-60, -15, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(-57, -15))
+                bot.actionBuilder(new Pose2d(-60, -14, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(-57, -14))
                         .build());
 
         middle.put("readAprilTags",
-                bot.actionBuilder(new Pose2d(-57, -15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-57, -14, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
                         .lineToX(44)
                         .setTangent(Math.toRadians(270))
@@ -366,16 +366,16 @@ public class Path {
                         .setTangent(Math.toRadians(30))
                         .splineToLinearHeading(new Pose2d(-48, -12, Math.toRadians(180)), Math.toRadians(180))
                         .setTangent(Math.toRadians(180))
-                        .splineToLinearHeading(new Pose2d(-59, -15, Math.toRadians(180)), Math.toRadians(180))
+                        .splineToLinearHeading(new Pose2d(-59, -14, Math.toRadians(180)), Math.toRadians(180))
                         .build());
 
         left.put("moveBack",
-                bot.actionBuilder(new Pose2d(-60, -15, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(-56 , -15))
+                bot.actionBuilder(new Pose2d(-60, -14, Math.toRadians(180)))
+                        .strafeTo(new Vector2d(-56 , -14))
                         .build());
 
         left.put("readAprilTags",
-                bot.actionBuilder(new Pose2d(-56, -15, Math.toRadians(180)))
+                bot.actionBuilder(new Pose2d(-56, -14, Math.toRadians(180)))
                         .setTangent(Math.toRadians(0))
                         .lineToX(44)
                         .setTangent(Math.toRadians(270))

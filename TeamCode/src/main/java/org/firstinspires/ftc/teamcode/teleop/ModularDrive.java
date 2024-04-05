@@ -178,6 +178,8 @@ public class ModularDrive extends OpMode {
             }
             bot.setTarget(INITIAL_OFFSET);
             bot.setGripPosition(0.5);
+            if(bot.getTimeAtTarget()<100) bot.setPusherPosition(0.5);
+            else bot.setPusherPosition(0);
             if(intakePosition.equals("top"))
                 bot.topIntake();
             else if(intakePosition.equals( "middle"))

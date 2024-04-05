@@ -42,7 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public abstract class AutonBase extends LinearOpMode {
+public abstract class asdasdasd extends LinearOpMode {
 
     RevBlinkinLedDriver blinkinLedDriverLeft;
     RevBlinkinLedDriver blinkinLedDriverRight;
@@ -59,7 +59,6 @@ public abstract class AutonBase extends LinearOpMode {
         ArrayList<Zone> zone_avg = new ArrayList<Zone>();
         Rect size = new Rect();
         int midx;
-//        Mat org = new Mat();
         Mat mask0 = new Mat();
         Mat mask1 = new Mat();
         Mat mask = new Mat();
@@ -72,12 +71,13 @@ public abstract class AutonBase extends LinearOpMode {
         Scalar upper_1 = new Scalar(120.0,255.0,255.0);
         Scalar lower_2 = new Scalar(100.0,50.0,50.0);
         Scalar upper_2 = new Scalar(120.0,255.0,255.0);
+        Rect bounds = new Rect(0, 40, 640, 120);
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
             contours.clear();
             max.empty();
-//            input.copyTo(org);
+            input = input.submat(bounds);
             Imgproc.GaussianBlur(input,input, new Size(101,101),0);
             Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
             Core.inRange(input,lower_1,upper_1,mask0);
@@ -91,7 +91,7 @@ public abstract class AutonBase extends LinearOpMode {
             Imgproc.Canny(input,edge,30,70);
             Imgproc.findContours(edge, contours,hier,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_NONE);
 
-//            Imgproc.drawContours(org,contours,-1,new Scalar(0,255,0),3);
+            Imgproc.drawContours(input,contours,-1,new Scalar(0,255,0),3);
             if(!contours.isEmpty()){
                 max = contours.get(0);
                 for (int i = 0; i < contours.size() && !opModeIsActive() && !isStopRequested(); i++){
@@ -105,37 +105,32 @@ public abstract class AutonBase extends LinearOpMode {
             }
 
 
-//            Imgproc.drawContours(org,max_list,-1,new Scalar(255,0,0),3);
-            if(!max.empty()){
-                size = Imgproc.boundingRect(max);
-                midx = size.x+size.width/2;
-                if(!opModeIsActive()){
-                    if(midx<input.size().width/3){
-                        color_zone = Zone.LEFT;
-                        telemetry.addLine("Left detected");
-                    }else if (midx>input.size().width*2/3){
-                        color_zone = Zone.RIGHT;
-                        telemetry.addLine("Right detected    ");
-                    }else{
-                        color_zone = Zone.MIDDLE;
-                        telemetry.addLine("Middle detected");
-                    }
+            Imgproc.drawContours(input,max_list,-1,new Scalar(255,0,0),3);
+            size = Imgproc.boundingRect(max);
+            midx = size.x+size.width/2;
+            if(!opModeIsActive()){
+                if(midx<input.size().width/3){
+                    color_zone = Zone.LEFT;
+                    telemetry.addLine("Left detected");
+                }else if (midx>input.size().width*2/3){
+                    color_zone = Zone.RIGHT;
+                    telemetry.addLine("Right detected");
+                }else{
+                    color_zone = Zone.MIDDLE;
+                    telemetry.addLine("Middle detected");
                 }
             }
-
 //            if(max_list.size()!=0){
 //                Imgproc.drawContours(org,max_list,-1,new Scalar(0,255,0),3);
 //            }
             telemetry.addData("X pos",midx);
             telemetry.update();
-//            org.release();
             mask0.release();
             mask1.release();
             mask.release();
             edge.release();
             max.release();
             hier.release();
-//            org.empty();
             mask.empty();
             mask0.empty();
             mask1.empty();
@@ -152,28 +147,28 @@ public abstract class AutonBase extends LinearOpMode {
         Rect size = new Rect();
         int midx;
         List<Integer> ELEMENT_COLOR = Arrays.asList(0, 0, 0); //(Hue, Sateration, Value), Set to blue alliance at first
-//        Mat org = new Mat();
         Mat mask0 = new Mat();
         Mat mask1 = new Mat();
         Mat mask = new Mat();
         Mat edge = new Mat();
         Mat max = new Mat();
         Mat hier = new Mat();
+        Mat org = new Mat();
         List<MatOfPoint> contours = new ArrayList<>();
         List<MatOfPoint> max_list = new ArrayList<>();
         Scalar lower_1 = new Scalar(0.0, 50.0, 0.0);
         Scalar upper_1 = new Scalar(10.0,255.0,255.0);
         Scalar lower_2 = new Scalar(170.0,50.0,50.0);
         Scalar upper_2 = new Scalar(180.0,255.0,255.0);
-        Rect bounds = new Rect(0, 20, 600, 120);
+        Rect bounds = new Rect(0, 40, 640, 200);
         @Override
         public Mat processFrame(Mat input) {
             max_list.clear();
             contours.clear();
             max.empty();
-
-//            input.copyTo(org);
-//            org = input.submat(bounds);
+            telemetry.addLine(input.size()+"");
+//            input = input.submat(bounds);
+            input.copyTo(org);
             Imgproc.GaussianBlur(input,input, new Size(101,101),0);
             Imgproc.cvtColor(input,input,Imgproc.COLOR_RGB2HSV);
             Core.inRange(input,lower_1,upper_1,mask0);
@@ -187,7 +182,7 @@ public abstract class AutonBase extends LinearOpMode {
             Imgproc.Canny(input,edge,30,70);
             Imgproc.findContours(edge, contours,hier,Imgproc.RETR_EXTERNAL,Imgproc.CHAIN_APPROX_NONE);
 
-//            Imgproc.drawContours(org,contours,-1,new Scalar(0,255,0),3);
+            Imgproc.drawContours(org,contours,-1,new Scalar(0,255,0),3);
             if(!contours.isEmpty()){
                 max = contours.get(0);
                 for (int i = 0; i < contours.size() && !opModeIsActive() && !isStopRequested(); i++){
@@ -198,45 +193,46 @@ public abstract class AutonBase extends LinearOpMode {
                     }
                 }
             }
-
-//
-//           Imgproc.drawContours(org,max_list,-1,new Scalar(255,0,0),3);
-            if(!max.empty()){
-                size = Imgproc.boundingRect(max);
-                midx = size.x+size.width/2;
-                if(!opModeIsActive()){
-                    if(midx<input.size().width/3){
-                        color_zone = Zone.LEFT;
-                        telemetry.addLine("Left detected");
-                    }else if (midx>input.size().width*2/3){
-                        color_zone = Zone.RIGHT;
-                        telemetry.addLine("Right detected");
-                    }else{
-                        color_zone = Zone.MIDDLE;
-                        telemetry.addLine("Middle detected");
+            telemetry.addLine(max_list.size()+"");
+            Imgproc.drawContours(org,max_list,-1,new Scalar(255,0,0),3);
+            if(!max_list.isEmpty()){
+                if(!max_list.get(0).empty()){
+                    size = Imgproc.boundingRect(max_list.get(0));
+                    midx = size.x+size.width/2;
+                    if(!opModeIsActive()){
+                        if(midx<input.size().width/3){
+                            color_zone = Zone.LEFT;
+                            telemetry.addLine("Left detected");
+                        }else if (midx>input.size().width*2/3){
+                            color_zone = Zone.RIGHT;
+                            telemetry.addLine("Right detected");
+                        }else{
+                            color_zone = Zone.MIDDLE;
+                            telemetry.addLine("Middle detected");
+                        }
                     }
-                }
-            }
-//            if(max_list.size()!=0){
+                }}
+//            if(max
+//            _list.size()!=0){
 //                Imgproc.drawContours(org,max_list,-1,new Scalar(0,255,0),3);
 //            }
             telemetry.addData("X pos",midx);
             telemetry.update();
-//            org.release();
             mask0.release();
             mask1.release();
             mask.release();
             edge.release();
             max.release();
             hier.release();
-//            org.empty();
+
+
             mask.empty();
             mask0.empty();
             mask1.empty();
             edge.empty();
             max.empty();
             hier.empty();
-            return input;
+            return org;
         }
     }
     public RobotV3 initRobot(double x, double y, double heading, AutonConstants.AutonType autonType){
@@ -313,8 +309,6 @@ public abstract class AutonBase extends LinearOpMode {
     }
     public Action releaseSecondPixel(RobotV3 bot){
         return telemetryPacket -> {
-            bot.setGripPosition(0);
-            sleep(100);
             bot.setPusherPosition(1);
             sleep(250);
             bot.setPusherPosition(0);
@@ -523,7 +517,7 @@ public abstract class AutonBase extends LinearOpMode {
                 releaseSecondPixel(bot),
                 getReadyForBackboardFar(bot, false),
                 retractBack(bot)
-            );
+        );
     }
     public Action relocalize(RobotV3 bot){
         double correctX = 0;
@@ -614,17 +608,17 @@ public abstract class AutonBase extends LinearOpMode {
 
             Log.d("Pose", "(" + bot.pose.position.x + "," + bot.pose.position.y + ")" + " | " + detection.id + ": (" + detection.ftcPose.x + "," + detection.ftcPose.y + "," + detection.ftcPose.z + ")");
             Vector2d correct = null;
-                switch (zone) {
-                    case LEFT:
-                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (6 - detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (12 - detection.ftcPose.x) : -detection.ftcPose.x)));
-                        break;
-                    case MIDDLE:
-                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (6 - detection.ftcPose.x) : -detection.ftcPose.x - 6)));
-                        break;
-                    default:
-                        correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x - 6) : ((detection.id == 6 || detection.id == 3) ? (-detection.ftcPose.x) : -detection.ftcPose.x - 12)));
-                        break;
-                }
+            switch (zone) {
+                case LEFT:
+                    correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (6 - detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (12 - detection.ftcPose.x) : -detection.ftcPose.x)));
+                    break;
+                case MIDDLE:
+                    correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x) : ((detection.id == 6 || detection.id == 3) ? (6 - detection.ftcPose.x) : -detection.ftcPose.x - 6)));
+                    break;
+                default:
+                    correct = new Vector2d(bot.pose.position.x + detection.ftcPose.z + 2.5 + (autonType == AutonConstants.AutonType.BLUE_CLOSE_2_PLUS_0 ? 0.9 : 0) - (autonType == AutonConstants.AutonType.BLUE_FAR_2_PLUS_1 ? 0.35 : 0), bot.pose.position.y + ((detection.id == 5 || detection.id == 2) ? (-detection.ftcPose.x - 6) : ((detection.id == 6 || detection.id == 3) ? (-detection.ftcPose.x) : -detection.ftcPose.x - 12)));
+                    break;
+            }
             Log.d("Pose Correct", "(" + correct.x + "," + correct.y + ")");
             if(AutonConstants.isClose(autonType)) {
                 return new SequentialAction(
@@ -646,7 +640,7 @@ public abstract class AutonBase extends LinearOpMode {
                                         .strafeTo(new Vector2d(42,correct.y)) //x=45 y=60
                                         .strafeTo(new Vector2d(42, -60))
                                         .strafeTo(new Vector2d(60,-60))
-                                    .build()
+                                        .build()
                 );
             }else{
                 if (numOfPixels == 1) {
@@ -700,7 +694,7 @@ public abstract class AutonBase extends LinearOpMode {
                 retractBack(bot),
                 path.get("park", zone)
         );*/
-       return aprilTagFailAction(bot, zone, numOfPixels);
+        return aprilTagFailAction(bot, zone, numOfPixels);
     }
     public void closeWebcam() {
         webcam.closeCameraDeviceAsync(new OpenCvCamera.AsyncCameraCloseListener() {
