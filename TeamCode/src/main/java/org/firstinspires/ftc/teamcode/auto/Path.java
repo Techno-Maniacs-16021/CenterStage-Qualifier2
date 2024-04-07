@@ -284,17 +284,17 @@ public class Path {
 
         right.put("plusOne",
                 bot.actionBuilder(new Pose2d(44, -36, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5,-42))
+                        .strafeTo(new Vector2d(46,-42))
                         .build());
 
         right.put("whitePixel",
-                bot.actionBuilder(new Pose2d(46.5,-42,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5, -38))
+                bot.actionBuilder(new Pose2d(46,-42,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(46, -38))
                         .build());
 
         right.put("park",
-                bot.actionBuilder(new Pose2d(46.5,-38,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5,-12))
+                bot.actionBuilder(new Pose2d(46,-38,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(46,-12))
                         .build());
         ///NOT USED
         right.put("plusOneWithAprilTags",
@@ -341,17 +341,17 @@ public class Path {
 
         middle.put("plusOne",
                 bot.actionBuilder(new Pose2d(44, -36, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5,-36))
+                        .strafeTo(new Vector2d(46,-36))
                         .build());
 
         middle.put("whitePixel",
-                bot.actionBuilder(new Pose2d(46.5,-36,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5, -30))
+                bot.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(46, -30))
                         .build());
 
         middle.put("park",
-                bot.actionBuilder(new Pose2d(46.5,-30,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5,-12))
+                bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(46,-12))
                         .build());
 
         left = new HashMap<>();
@@ -384,17 +384,17 @@ public class Path {
 
         left.put("plusOne",
                 bot.actionBuilder(new Pose2d(44, -36, Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5,-30))
+                        .strafeTo(new Vector2d(46,-30))
                         .build());
 
         left.put("whitePixel",
-                bot.actionBuilder(new Pose2d(46.5,-30,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5, -36))
+                bot.actionBuilder(new Pose2d(46,-30,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(46, -36))
                         .build());
 
         left.put("park",
-                bot.actionBuilder(new Pose2d(46.5,-36,Math.toRadians(180)))
-                        .strafeTo(new Vector2d(46.5,-12))
+                bot.actionBuilder(new Pose2d(46,-36,Math.toRadians(180)))
+                        .strafeTo(new Vector2d(46,-12))
                         .build());
 
         ///NOT USED

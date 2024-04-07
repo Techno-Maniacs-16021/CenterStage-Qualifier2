@@ -404,7 +404,7 @@ public abstract class AutonBase extends LinearOpMode {
     public Action getSlidesForPlacement(RobotV3 bot) {
         return telemetryPacket -> {
             bot.setIntakePower(0);
-            bot.setTarget(1);
+            bot.setTarget(1.2);
             bot.updateRobotState();
             if(!bot.slidesWithinRange(0.1)) bot.setLinearSlidePower(bot.getCalculatedPower());
             bot.activateSlides();

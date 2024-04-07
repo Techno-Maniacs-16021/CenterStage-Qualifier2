@@ -8,14 +8,11 @@ import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 
 @Autonomous
 @Config
-@Disabled
-public class RedFarApril extends AutonBase {
+public class RedFarGNCE extends AutonBase {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,7 +21,6 @@ public class RedFarApril extends AutonBase {
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));
         Actions.runBlocking(new SequentialAction(
-                wait(bot,8500),
                 getArmToGround(bot),
                 path.get("start", color_zone),
                 releaseFirstPixelPusher(bot),
@@ -59,14 +55,14 @@ public class RedFarApril extends AutonBase {
         else if(bot.getPixelMemory()==1){
             //place 1 pixel
             Actions.runBlocking(new SequentialAction(
-                path.get("plusOne", color_zone),
-                getReadyForBackboardFar(bot, false),
-                getSlidesForPlacement(bot),
-                releaseFirstPixel(bot),
-                releaseSecondPixel(bot),
-                wait(bot,250),
-                getReadyForBackboardFar(bot, false),
-                retractBack(bot)
+                    path.get("plusOne", color_zone),
+                    getReadyForBackboardFar(bot, false),
+                    getSlidesForPlacement(bot),
+                    releaseFirstPixel(bot),
+                    releaseSecondPixel(bot),
+                    wait(bot,250),
+                    getReadyForBackboardFar(bot, false),
+                    retractBack(bot)
             ));
         }
         //park

@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.bots.RobotV3;
 
 @Autonomous
 @Config
-
+@Disabled
 public class BlueFarApril extends AutonBase {
 
     @Override
@@ -22,6 +22,7 @@ public class BlueFarApril extends AutonBase {
         closeWebcam();
         Log.d("color_zone", String.valueOf(color_zone));
         Actions.runBlocking(new SequentialAction(
+                wait(bot,6000),
                 getArmToGround(bot),
                 path.get("start", color_zone),
                 releaseFirstPixelPusher(bot),

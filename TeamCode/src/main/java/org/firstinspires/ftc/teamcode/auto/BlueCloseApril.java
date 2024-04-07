@@ -11,10 +11,13 @@ import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
+
 import org.firstinspires.ftc.teamcode.bots.RobotV3;
 
 @Autonomous
 @Config
+@Disabled
 public class BlueCloseApril extends AutonBase {
 
     @Override
