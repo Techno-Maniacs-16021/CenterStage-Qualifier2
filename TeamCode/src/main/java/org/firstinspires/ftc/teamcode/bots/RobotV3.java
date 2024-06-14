@@ -133,8 +133,8 @@ public class RobotV3 extends MecanumDrive{
         rightIntakeLinkage.setPosition(.1);
     }
     public void downIntake(){
-        leftIntakeLinkage.setPosition(1);
-        rightIntakeLinkage.setPosition(1);
+        leftIntakeLinkage.setPosition(0.875);
+        rightIntakeLinkage.setPosition(0.875);
     }
     public void topIntake(){
         leftIntakeLinkage.setPosition(0.8);
